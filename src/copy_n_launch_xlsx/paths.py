@@ -22,14 +22,10 @@ def pull_in_configured_path_or_use_default():
     filled_sheets_dir_configured = config_mngr.get(service="copy-n-launch",item="filled-sheet-dir") # allows retrieval of edited value
 
     filled_sheets_dir = DEFAULT_FILLED_SHEETS_DIR 
-    if filled_sheets_dir_configured == "":
-        pass
-    else:    
+    if not filled_sheets_dir_configured == "":  
         filled_sheets_path_hypothetical = Path(filled_sheets_dir_configured).expanduser().resolve()
         if filled_sheets_path_hypothetical is in the form of a a full local path:
             filled_sheets_dir = filled_sheets_path_hypothetical
-        else:
-            pass
 
     return filled_sheets_dir
 
