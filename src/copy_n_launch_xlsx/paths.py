@@ -26,7 +26,7 @@ def pull_in_configured_path_or_use_default():
         pass
     else:    
         filled_sheets_path_hypothetical = Path(filled_sheets_dir_configured).expanduser().resolve()
-        if filled_sheets_path_hypothetical is not in the form of a a full local path:
+        if filled_sheets_path_hypothetical is in the form of a a full local path:
             filled_sheets_dir = filled_sheets_path_hypothetical
         else:
             pass
