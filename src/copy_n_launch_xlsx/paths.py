@@ -17,19 +17,26 @@ config_mngr = DworshakConfig(path= APP_DIR)
 
 # can i use a string to effectively define the dir where i want the copied and renamed sheet to land?
 # it can be in
-filled_sheets_dir = config_mngr.set(service="copy-n-launch",item="filled-sheet-dir",value="",overwrite=False) # creates file and defauly value if it doesn't exist
-filled_sheets_dir = config_mngr.get(service="copy-n-launch",item="filled-sheet-dir") # allows retrieval of edited value
+def pull_in_configured_path_or_use_default():
+    filled_sheets_dir = config_mngr.set(service="copy-n-launch",item="filled-sheet-dir",value="",overwrite=False) # creates file and defauly value if it doesn't exist
+    filled_sheets_dir = config_mngr.get(service="copy-n-launch",item="filled-sheet-dir") # allows retrieval of edited value
 
-filled_sheets_path = DEFAULT_FILLED_SHEETS_DIR
-
-if filled_sheets_dir == "":
-    pass
-else:    
-    filled_sheets_path_hypothetical = Path(filled_sheets_dir).expanduser().resolve()
-    if filled_sheets_path_hypothetical is not in the form of a a full local path:
-        filled_sheets_path = filled_sheets_path_hypothetical
-    else:
+    filled_sheets_path = DEFAULT_FILLED_SHEETS_DIR 
+    if filled_sheets_dir == "":
         pass
+    else:    
+        filled_sheets_path_hypothetical = Path(filled_sheets_dir).expanduser().resolve()
+        if filled_sheets_path_hypothetical is not in the form of a a full local path:
+            filled_sheets_path = filled_sheets_path_hypothetical
+        else:
+            pass
 
-filled_sheet_canary_file = filled_sheets_path / ".canary"
-filled_sheet_canary_file.parent.mkdir(parents=True, exist_ok=True)
+    return filled_sheets_path
+
+def ensure_filled_sheet_dir(filled_sheets_path):
+    filled_sheet_canary_file = filled_sheets_path / ".canary"
+    filled_sheet_canary_file.parent.mkdir(parents=True, exist_ok=True)
+
+filled_sheets_path = pull_in_configured_path_or_use_default()
+ensure_filled_sheet_dir(filled_sheets_path)
+
