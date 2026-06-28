@@ -11,7 +11,6 @@ dependencies = [
     "typer>=0.20.0",
     "click>=8.1.8",
     "openpyxl>=3.1.5",
-    "dworshak-prompt>=0.3.11",
 ]
 
 #license = "MIT"
@@ -53,7 +52,8 @@ Issues = "https://github.com/city-of-memphis-wastewater/copy-n-launch-xlsx/issue
 Changelog = "https://raw.githubusercontent.com/city-of-memphis-wastewater/copy-n-launch-xlsx/main/docs/CHANGELOG.md"
 
 [project.scripts]
-copy-n-launch-xlsx = "copy_n_launch_xlsx.cli:app"
+copy-n-launch-xlsx = "copy_n_launch_xlsx.__main__:app"
+cnlx = "copy_n_launch_xlsx.__main__:app"
 
 #[project.optional-dependencies]
 
