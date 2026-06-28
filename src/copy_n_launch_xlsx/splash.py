@@ -1,9 +1,8 @@
 # src/copy_n_launch_xlsx/splash.py
 import tkinter as tk
 from tkinter import ttk
-from copy_n_launch_xlsx.tk_utils import center_window_on_primary
-
-APP_NAME = "COPY N LAUNCH XLSX"
+from .tk_utils import center_window_on_primary
+from .paths import APP_NAME
 
 class SplashFrame:
 
@@ -20,7 +19,7 @@ class SplashFrame:
 
 
         # UI Components
-        tk.Label(self.top, text=APP_NAME, fg="white", bg="#2b2b2b",
+        tk.Label(self.top, text=APP_NAME.upper(), fg="white", bg="#2b2b2b",
                  font=("Arial", 12, "bold")).pack(pady=(15, 5))
 
         self.progress = ttk.Progressbar(self.top, mode='indeterminate', length=250)

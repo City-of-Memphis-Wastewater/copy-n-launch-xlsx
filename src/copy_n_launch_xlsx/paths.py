@@ -4,7 +4,9 @@ from pathlib import Path
 from dworshak_config import DworshakConfig
 from dworshak_env import DworshakEnv
 
-APP_DIR = Path.home() / ".copy-n-launch-xlsx"
+APP_NAME = "copy-n-lauch-xlsx"
+
+APP_DIR = Path.home() / f".{APP_NAME}"
 BLANK_DAILY_XLSX = Path.cwd() / "assets" / "xlsx" / "daily_blank.xlsx"
 
 DEFAULT_FILLED_SHEETS_DIR = APP_DIR / "filled_daily"

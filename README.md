@@ -1,8 +1,11 @@
 # copy-n-launch-xlsx
 
-Bild a GUI that:
+Build a GUI that:
+
     - Copies a blank spreadsheet files
+
     - Renames it, with the date in the filename
+
     - Moves te new renamed file to a target folder
     
 In this way, the stable file can be updated in a centralized way. 
