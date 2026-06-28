@@ -26,12 +26,25 @@ def pull_in_configured_path_or_use_default():
 
     return filled_sheets_dir
 
+def pull_in_env_path_or_use_default():
+    filled_sheets_dir_configured = env_mngr.set("TARGETCOPYDIR",value="",overwrite=False) # creates file and defauly value if it doesn't exist
+    filled_sheets_dir_configured = env_mngr.get("TARGETCOPYDIR") # allows retrieval of edited value
+
+    filled_sheets_dir = DEFAULT_FILLED_SHEETS_DIR 
+    if not filled_sheets_dir_configured == "":  
+        filled_sheets_path_hypothetical = Path(filled_sheets_dir_configured).expanduser().resolve()
+        if filled_sheets_path_hypothetical.is_absolute(): # is in the form of a a full local path:
+            filled_sheets_dir = filled_sheets_path_hypothetical
+
+    return filled_sheets_dir
+
 def ensure_filled_sheet_dir(filled_sheets_path):
     filled_sheet_canary_file = filled_sheets_path / ".canary"
     filled_sheet_canary_file.parent.mkdir(parents=True, exist_ok=True)
 
 def get_target_copy_dir():
-    filled_sheets_dir = pull_in_configured_path_or_use_default()
+    #filled_sheets_dir = pull_in_configured_path_or_use_default()
+    filled_sheets_dir = pull_in_env_path_or_use_default()
     ensure_filled_sheet_dir(filled_sheets_dir)
     return filled_sheets_dir
 
