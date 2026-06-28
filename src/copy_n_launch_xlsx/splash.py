@@ -36,4 +36,4 @@ class SplashFrame:
     def teardown(self):
         """Cleanly shutdown the splash window."""
         self.progress.stop()
-        self.top.destroy()% 
+        self.top.destroy()

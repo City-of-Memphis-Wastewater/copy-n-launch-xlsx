@@ -60,24 +60,52 @@ source = { editable = "." }
 dependencies = [
     { name = "click", version = "8.1.8", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "click", version = "8.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "dworshak-config" },
+    { name = "dworshak-env" },
     { name = "openpyxl" },
     { name = "pyhabitat" },
     { name = "rich" },
     { name = "typer", version = "0.23.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
     { name = "typer", version = "0.26.8", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "typer-helptree" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "click", specifier = ">=8.1.8" },
+    { name = "dworshak-config", specifier = ">=0.2.8" },
+    { name = "dworshak-env", specifier = ">=0.1.8" },
     { name = "openpyxl", specifier = ">=3.1.5" },
     { name = "pyhabitat", specifier = ">=1.2.6" },
     { name = "rich", specifier = ">=14.2.0" },
     { name = "typer", specifier = ">=0.20.0" },
+    { name = "typer-helptree", specifier = ">=0.2.10.5" },
 ]
 
 [package.metadata.requires-dev]
 dev = []
+
+[[package]]
+name = "dworshak-config"
+version = "0.2.8"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "json-repair", version = "0.44.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "json-repair", version = "0.61.0", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/30/32/cea4d714abd0aaa2696283f907778b73a7a70626a2b6168dde77b92b3d12/dworshak_config-0.2.8.tar.gz", hash = "sha256:dadce1a05124595066a82f5a1766394ff7c7d7a76ccee9dbb6e45a517d1f54a4", size = 10669, upload-time = "2026-06-05T20:11:14.453Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/ed/8b/cab8bc50432e7f612e41635b3778ab833960a6fe73402b33b0485f4605af/dworshak_config-0.2.8-py3-none-any.whl", hash = "sha256:7e956d9bf6087931dfefb4a53aaa5d5a1edcc3c9d8f0ba92b16293be1c4265d6", size = 10174, upload-time = "2026-06-05T20:11:13.433Z" },
+]
+
+[[package]]
+name = "dworshak-env"
+version = "0.1.8"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/3c/73/dd6c90aeae360769c2cc6ee4212caa667c76790e63d01663f88daefabd9a/dworshak_env-0.1.8.tar.gz", hash = "sha256:617947c0436b9e1abc03eaca305656abd4e5563668a967aab1a5aa51e294c53d", size = 11556, upload-time = "2026-06-05T20:07:24.08Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6c/7f/e045125bef93ed51ff1338479c16d5a52d804f7b17a63a42f660ad0c014e/dworshak_env-0.1.8-py3-none-any.whl", hash = "sha256:10842812dd926b9909fc2b7b568f8c035bc204291cb3b3013ba16820b88dd026", size = 10161, upload-time = "2026-06-05T20:07:22.883Z" },
+]
 
 [[package]]
 name = "et-xmlfile"
@@ -86,6 +114,30 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/d3/38/af70d7ab1ae9d4da450eeec1fa3918940a5fafb9055e934af8d6eb0c2313/et_xmlfile-2.0.0.tar.gz", hash = "sha256:dab3f4764309081ce75662649be815c4c9081e88f0837825f90fd28317d4da54", size = 17234, upload-time = "2024-10-25T17:25:40.039Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/c1/8b/5fe2cc11fee489817272089c4203e679c63b570a5aaeb18d852ae3cbba6a/et_xmlfile-2.0.0-py3-none-any.whl", hash = "sha256:7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa", size = 18059, upload-time = "2024-10-25T17:25:39.051Z" },
+]
+
+[[package]]
+name = "json-repair"
+version = "0.44.1"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version < '3.10'",
+]
+sdist = { url = "https://files.pythonhosted.org/packages/a8/6b/ed6e92efc5acfbc9c35ccae1676b70e4adb1552421e64f838c2a3f097d9a/json_repair-0.44.1.tar.gz", hash = "sha256:1130eb9733b868dac1340b43cb2effebb519ae6d52dd2d0728c6cca517f1e0b4", size = 32886, upload-time = "2025-04-30T16:09:38.54Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/82/b4/3cbd27a3240b2962c3b87bbb1c20eb6c56e5b26cde61f141f86ca98e2f68/json_repair-0.44.1-py3-none-any.whl", hash = "sha256:51d82532c3b8263782a301eb7904c75dce5fee8c0d1aba490287fc0ab779ac50", size = 22478, upload-time = "2025-04-30T16:09:37.303Z" },
+]
+
+[[package]]
+name = "json-repair"
+version = "0.61.0"
+source = { registry = "https://pypi.org/simple" }
+resolution-markers = [
+    "python_full_version >= '3.10'",
+]
+sdist = { url = "https://files.pythonhosted.org/packages/59/c0/1cb689126eacd166fd5a78370f095c7d3a250808dabeda129300e5280110/json_repair-0.61.0.tar.gz", hash = "sha256:48759cc6c3052814c797d1d56787d9e1d451603a8760a55d619e97d2f49353d6", size = 50055, upload-time = "2026-06-16T12:18:33.32Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/e2/b9/e996902245d5e12e55b0b2e667d3e83a4636dec3692e405e5b8ea0868263/json_repair-0.61.0-py3-none-any.whl", hash = "sha256:ee9fe5f95fcb2713d72d4495b67b794b62ff2cd24d6dba3bfb3173d9f7ab0f7d", size = 48490, upload-time = "2026-06-16T12:18:31.883Z" },
 ]
 
 [[package]]
@@ -214,4 +266,21 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/7c/f7/68adc395201b20b872d68e975386832e8005ffeacedd43a1d837a32815be/typer-0.26.8.tar.gz", hash = "sha256:c244a6bd558886fe3f8780efb6bdd28bb9aff005a94eedebaa5cb32926fe2f7e", size = 202097, upload-time = "2026-06-26T09:22:45.705Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/80/87/b9fd69c92c6102a066e1b86a35243f53e70bd4c709f2a26d9f4fee4f4dc0/typer-0.26.8-py3-none-any.whl", hash = "sha256:3512ca79ac5c11113414b36e80281b872884477722440691c89d1112e321a49c", size = 122564, upload-time = "2026-06-26T09:22:44.72Z" },
+]
+
+[[package]]
+name = "typer-helptree"
+version = "0.2.10.5"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click", version = "8.1.8", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "click", version = "8.4.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+    { name = "pyhabitat" },
+    { name = "rich" },
+    { name = "typer", version = "0.23.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.10'" },
+    { name = "typer", version = "0.26.8", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.10'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e6/12/2a168ded0802073616f9de16a5afbcc5e39fd55f0a4fff1f6f6e9c82b982/typer_helptree-0.2.10.5.tar.gz", hash = "sha256:fa311a2c20cd2d38de53d38823c637972adedca18553e74f9c66743f2a842256", size = 12498, upload-time = "2026-06-16T20:46:12.947Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/17/cc/74646e9c23285d3f894eb735df2d2e6ffc4752d518e8e7ada3c1f2c69f94/typer_helptree-0.2.10.5-py3-none-any.whl", hash = "sha256:2b41f7006a4fac6e1c7b490c635b4d8f7f558597743611de3afe2b10f89e7ba0", size = 14413, upload-time = "2026-06-16T20:46:11.744Z" },
 ]

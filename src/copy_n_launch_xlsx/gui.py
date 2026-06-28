@@ -1,17 +1,7 @@
-
 #!/usr/bin/env python3
 # # src/copy_n_launch_xlsx/gui.py
 from __future__ import annotations
 import pyhabitat
-import logging
-
-from .paths import APP_NAME
-logger=logging.getLogger(__name__)
-
-#!/usr/bin/env python3
-# SPDX-License-Identifier: MIT
-# src/pdflinkcheck/gui.py
-from __future__ import annotations
 import tkinter as tk
 from tkinter import filedialog, ttk, messagebox, PhotoImage
 import sys
@@ -23,15 +13,15 @@ import pyhabitat
 import ctypes
 import threading
 import logging
-logger = logging.getLogger(__name__)
 # --- Core Imports ---
+
 from ._version import get_version
-from .io import get_friendly_path
-from .environment import (
-    is_in_dev_environment
-)
+from .environment import is_in_dev_environment
 from .tk_utils import center_window_on_primary
-from .helpers import get_export_path
+from .helpers import get_friendly_path
+from .paths import APP_NAME, get_target_copy_dir
+
+logger=logging.getLogger(__name__)
 
 class RedirectText:
     """A class to redirect sys.stdout messages to a Tkinter Text widget."""
@@ -313,7 +303,7 @@ class GuiApp:
         the exported reports, with GUI error handling.
         """
         try:
-            target_dir = get_export_path()
+            target_dir = get_target_copy_dir()
             pyhabitat.show_system_explorer(path = target_dir)
         except Exception as e:
             # The GUI catches the error to show a user-friendly popup

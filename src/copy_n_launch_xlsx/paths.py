@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from dworshak_config import DworshakConfig
 from dworshak_env import DworshakEnv
+import logging
 
 APP_NAME = "copy-n-lauch-xlsx"
 
@@ -13,6 +14,24 @@ DEFAULT_FILLED_SHEETS_DIR = APP_DIR / "filled_daily"
 
 config_mngr = DworshakConfig(path= APP_DIR / "config.json")
 env_mngr = DworshakEnv()
+
+logger = logging.getLogger(__name__)
+
+# --- Configuration ---
+
+# Define the base directory for pdflinkcheck data (~/.pdflinkcheck)
+try:
+    # Use the home directory and append the tool's name
+    APP_DIR = Path.home() / f".{APP_NAME}"
+except Exception as e:
+    logger.debug(f"Falling back to tmp dir: {e}")
+    # Fallback if Path.home() fails in certain environments (e.g., some CI runners)
+    APP_DIR = Path(f"/tmp/.{APP_NAME}_temp")
+
+# Ensure the directory exists
+APP_DIR.mkdir(parents=True, exist_ok=True)
+# Define the log file path
+LOG_FILE_PATH = APP_DIR / f"{APP_NAME}_errors.log"
 
 # can i use a string to effectively define the dir where i want the copied and renamed sheet to land?
 # it can be in
@@ -49,5 +68,6 @@ def get_target_copy_dir():
     filled_sheets_dir = pull_in_env_path_or_use_default()
     ensure_filled_sheet_dir(filled_sheets_dir)
     return filled_sheets_dir
+
 
 
