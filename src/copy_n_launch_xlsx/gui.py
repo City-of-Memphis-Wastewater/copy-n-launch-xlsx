@@ -19,7 +19,12 @@ from ._version import get_version
 from .environment import is_in_dev_environment
 from .tk_utils import center_window_on_primary
 from .helpers import get_friendly_path
-from .paths import APP_NAME, get_target_copy_dir
+from .paths import (
+            APP_NAME, 
+            get_target_copy_dir, 
+            LOGO_FILENAME_PNG,
+            LOGO_FILENAME_ICO
+            )
 
 logger=logging.getLogger(__name__)
 
@@ -102,14 +107,14 @@ class GuiApp:
     def _set_icon(self):
         icon_dir = files(".data.icons")
         try:
-            png_path = icon_dir.joinpath("Logo-150x150.png")
+            png_path = icon_dir.joinpath(LOGO_FILENAME_PNG)
             if png_path.exists():
                 self.icon_img = PhotoImage(file=str(png_path))
                 self.root.iconphoto(True, self.icon_img)
         except Exception:
             pass
         try:
-            icon_path = icon_dir.joinpath("red_pdf_512px.ico")
+            icon_path = icon_dir.joinpath(LOGO_FILENAME_ICO)
             if icon_path.exists():
                 self.root.iconbitmap(str(icon_path))
         except Exception:

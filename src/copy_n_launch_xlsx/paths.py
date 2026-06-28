@@ -6,10 +6,10 @@ from dworshak_env import DworshakEnv
 import logging
 
 APP_NAME = "copy-n-lauch-xlsx"
-
 APP_DIR = Path.home() / f".{APP_NAME}"
+LOGO_FILENAME_PNG = "max-blue_1024x1024.png"
+LOGO_FILENAME_ICO = "max-blue_256x256.ico"
 BLANK_DAILY_XLSX = Path.cwd() / "assets" / "xlsx" / "daily_blank.xlsx"
-
 DEFAULT_FILLED_SHEETS_DIR = APP_DIR / "filled_daily"
 
 config_mngr = DworshakConfig(path= APP_DIR / "config.json")
