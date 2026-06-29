@@ -331,8 +331,8 @@ class WebHandler(BaseHTTPRequestHandler):
             return
 
         try:
-
-            destination = copy_then_rename_and_move_then_try_launch()
+            result = copy_then_rename_and_move_then_try_launch()
+            destination = result.destination
 
             self.send_html(success_page(destination))
 

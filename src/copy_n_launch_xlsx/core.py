@@ -4,11 +4,13 @@ from __future__ import annotations
 from datetime import date
 from pathlib import Path
 import shutil
-import subprocess
-import sys
 import openpyxl
 import logging
+from typing import Optional
+from dataclasses import dataclass
 import pyhabitat
+from datetime import date
+from openpyxl.workbook.defined_name import DefinedName
 
 logger = logging.getLogger(__name__)
 
@@ -16,12 +18,29 @@ from .paths import BLANK_DAILY_XLSX, get_target_copy_dir
 
 FILENAME_FORMAT = "daily_%Y-%m-%d.xlsx"
 
+@dataclass
+class CopyResult:
+    destination: Optional[str] = None
+    is_new: Optional[bool] = False
+
+    @property
+    def status_message(self) -> str:
+        """Statuses."""
+        return {
+            True: "File copied.",
+            False: "File exists.",
+            None: "Exited."
+        }.get(self.is_new, "Error.")
+
+    def __bool__(self):
+        return self.destination is not None
+    
+
 def build_filename(day: date | None = None) -> str:
     if day is None:
         day = date.today()
     filename = day.strftime(FILENAME_FORMAT)
     return filename
-
 
 
 def copy_then_rename_and_move_then_try_launch() -> Path:
@@ -34,7 +53,8 @@ def copy_then_rename_and_move_then_try_launch() -> Path:
     if destination.exists():
         logger.info(f"Daily file already exists at {destination}. Skipping copy. Launching existing file.")
         pyhabitat.launch_file(destination)
-        return destination
+        #return destination
+        return CopyResult(destination=destination,is_new=True)
     
     shutil.copy2(BLANK_DAILY_XLSX, destination)
     
@@ -49,45 +69,11 @@ def copy_then_rename_and_move_then_try_launch() -> Path:
 
     pyhabitat.launch_file(destination)
 
-    return destination
-
-
-def set_date_in_spreadsheet_defunct(wb):
-    from datetime import date
-    from openpyxl.workbook.defined_name import DefinedName
-
-    # --- Adjust the Data: Update Named Range "date" ---
-    today_str = date.today().strftime("%m/%d/%Y")
-
-    logger.debug(f"{wb.defined_names=}")
-    if "date" in wb.defined_names:
-        defn = wb.defined_names["date"]
-        
-        # Scenario A: The name maps to a cell reference, e.g., Sheet1!$A$1
-        # we parse out the sheet and coordinate to write directly to the cell
-        if "!" in defn.value:
-            sheet_name, cell_coord = defn.value.split("!")
-            sheet_name = sheet_name.strip("'")      # Strip potential quote wrapping
-            cell_coord = cell_coord.replace("$", "") # Strip absolute reference anchoring
-            
-            if sheet_name in wb.sheetnames:
-                wb[sheet_name][cell_coord] = today_str
-                logger.debug(f"Updated cell {defn.value} assigned to named range 'date' to {today_str}.")
-        
-        # Scenario B: The name is a direct global formula/string variable expression, e.g., ="06/29/2026"
-        else:
-            defn.value = f'="{today_str}"'
-            logger.debug(f"Updated global value expression for named range 'date' to {today_str}.")
-    else:
-        # Fallback: Create it as a global value string expression if it doesn't exist yet
-        new_name = DefinedName("date", attr_text=f'="{today_str}"')
-        wb.defined_names.add(new_name)
-        logger.debug(f"Named range 'date' not found. Created global expression variable set to {today_str}.")
+    #return destination
+    return CopyResult(destination=destination,is_new=False)
 
 
 def set_date_in_spreadsheet(wb):
-    from datetime import date
-    from openpyxl.workbook.defined_name import DefinedName
 
     today_str = date.today().strftime("%m/%d/%Y")
 

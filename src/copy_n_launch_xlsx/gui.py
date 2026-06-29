@@ -143,13 +143,27 @@ class GuiApp:
 
     def _launch_sheet(self):
         try:
-            destination = copy_then_rename_and_move_then_try_launch()
+            result = copy_then_rename_and_move_then_try_launch()
+            destination = result.destination
 
-            logger.debug(f"Created\n{destination}\n")
-            messagebox.showinfo(
-                "Success",
-                f"Created\n\n{destination}"
-            )
+            if result.is_new:
+                logger.debug(f"Created\n{destination}\n")
+                messagebox.showinfo(
+                    "Success",
+                    f"File exists\n\n{destination}"
+                )
+            elif not result.is_new:
+                logger.debug(f"File exists\n{destination}\n")
+                messagebox.showinfo(
+                    "File exists",
+                    f"File exists\n\n{destination}"
+                )
+            else:
+                logger.debug(f"Edge case\n{destination}\n")
+                messagebox.showinfo(
+                    "Edge case",
+                    f"Edge case\n\n{destination}"
+                )
         except FileExistsError as e:
             messagebox.showwarning(
                 "Already Exists",

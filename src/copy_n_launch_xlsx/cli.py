@@ -69,7 +69,13 @@ def copyrenamelaunch(
     """
     Run the core function.
     """
-    copy_then_rename_and_move_then_try_launch()
+    result = copy_then_rename_and_move_then_try_launch()
+    destination = result.destination
+
+    if result.is_new:
+        logger.debug(f"Created\n{destination}\n")
+    elif not result.is_new:
+        logger.debug(f"File exists\n{destination}\n")
 
 @app.command(name="webapp")
 def webapp(
