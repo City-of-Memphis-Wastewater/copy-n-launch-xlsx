@@ -14,7 +14,7 @@ from pathlib import Path
 import argparse
 import pyhabitat
 
-from copy_n_launch_xlsx.datacopy import ensure_data_files_for_build
+##from copy_n_launch_xlsx.datacopy import ensure_data_files_for_build
 from copy_n_launch_xlsx._version import get_version
 
 # --- Configuration ---
@@ -217,7 +217,7 @@ if __name__ == "__main__":
             sys.exit(1)
         
         # 0. Ensure data files are available to build package
-        ensure_data_files_for_build()
+        ##ensure_data_files_for_build()
 
         # 1. Ensure PyInstaller is installed (if you haven't done it manually)
         # uv run python -m pip install pyinstaller 

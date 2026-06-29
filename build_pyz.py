@@ -20,7 +20,7 @@ import tempfile
 import shutil 
 
 from build_executable import form_dynamic_name
-from copy_n_launch_xlsx.datacopy import ensure_data_files_for_build
+##from copy_n_launch_xlsx.datacopy import ensure_data_files_for_build
 from copy_n_launch_xlsx._version import get_version
 
 # Get the one site-packages path where packages are installed in the venv
@@ -127,7 +127,8 @@ def ensure_dependencies_and_shiv():
     except subprocess.CalledProcessError:
         print("Installing 'shiv' ...")
         #run_command(["uv", "pip", "install", "shiv"])
-        run_command([sys.executable, "-m", "pip", "install", "shiv"])
+        run_command(["uv", "add", "shiv"])
+        #run_command([sys.executable, "-m", "pip", "install", "shiv"])
         #run_command([sys.executable, "-m", "pip", "install", "--upgrade", "shiv>=2.0.0"]) # pin shiv 1.0.8 in pyproject.toml for Termux
     print("Dependencies and shiv ready.")
 
@@ -168,7 +169,7 @@ def build_shiv_pyz():
     ]
 
     # this determines which extra go inside of the PYZ
-    whl_call = f"{str(wheel_path)}[pdfium]"  # include any extras
+    whl_call = f"{str(wheel_path)}"  # include any extras
 
     cmd.append(whl_call)    
     
@@ -221,7 +222,7 @@ python "%~dp0{pyz_filename}" gui
 if __name__ == "__main__":
     try:
         # Ensure data files are available to build package
-        ensure_data_files_for_build()
+        ##ensure_data_files_for_build()
         # NOTE: This script is intended to be run via: uv run python build_pyz.py
         path = build_shiv_pyz()
     except subprocess.CalledProcessError as e: 

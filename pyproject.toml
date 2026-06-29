@@ -63,9 +63,9 @@ cnlx = "copy_n_launch_xlsx.__main__:app"
 # add with `uv sync --group dev`
 [dependency-groups]
 dev = [
-    #"build>=1.3.0",
-    #"pyinstaller>=6.17.0 ; platform_system == 'Linux' and platform_machine != 'aarch64'", # to avoid on termux
-    #"shiv>=1.0.8",
+    "build>=1.3.0",
+    "pyinstaller>=6.21.0", 
+    "shiv>=1.0.8",
     #"ruff>=0.7.0 ; platform_system == 'Linux' and platform_machine != 'aarch64'", # to avoid on termux
     #"pytest>=8.0.0",
     #"pytest-cov>=4.1.0",
