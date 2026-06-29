@@ -30,17 +30,18 @@ def copy_then_rename_and_move_then_try_launch() -> Path:
 
     destination = target_dir / build_filename()
     logger.debug(f"{destination=}")
+    # Check if the file is already there
     if destination.exists():
-        raise FileExistsError(destination)
-    shutil.copy2(BLANK_DAILY_XLSX, destination)
-
+        logger.info(f"Daily file already exists at {destination}. Skipping copy. Launching existing file.")
+        pyhabitat.launch_file(destination)
+        return destination
     # Open/save if you later want to update named ranges,
     # dates, workbook properties, etc.
     wb = openpyxl.load_workbook(destination)
 
     #
     # future edits go here
-    #
+    # Adjust the data
 
     wb.save(destination)
 

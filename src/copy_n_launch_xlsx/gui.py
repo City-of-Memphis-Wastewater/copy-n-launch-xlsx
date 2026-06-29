@@ -133,7 +133,7 @@ class GuiApp:
 
 
         # === Row 3: Action Buttons ===
-        run_analysis_btn = ttk.Button(control_frame, text="▶ Copy Daily XLSX and Launch", command=self._launch_sheet, style='Accent.TButton', width=16)
+        run_analysis_btn = ttk.Button(control_frame, text="▶ Launch Daily XLSX", command=self._launch_sheet, style='Accent.TButton', width=16)
         run_analysis_btn.grid(row=1, column=0, columnspan=2, pady=6, sticky='ew', padx=(0, 3))
 
         # Grid configuration
