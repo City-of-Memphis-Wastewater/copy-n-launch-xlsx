@@ -67,8 +67,8 @@ dev = [
     "pyinstaller>=6.21.0", 
     "shiv>=1.0.8",
     #"ruff>=0.7.0 ; platform_system == 'Linux' and platform_machine != 'aarch64'", # to avoid on termux
-    #"pytest>=8.0.0",
-    #"pytest-cov>=4.1.0",
+    "pytest>=8.0.0",
+    "pytest-cov>=4.1.0",
 ]
 
 

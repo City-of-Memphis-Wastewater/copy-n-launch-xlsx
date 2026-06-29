@@ -25,6 +25,6 @@ jobs:
 
       - name: Run tests
         run: |
-          cd "copy-n-lauch-xlsx"
-          uv sync
+          cd "copy-n-launch-xlsx"
+          uv sync --group dev
           uv run pytest -v
