@@ -10,15 +10,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v6
         with:
-          path: copy-n-launch-xlsx
-
-      # Step 2: Check out the assets repository exactly where the test suite expects it
-      - name: Checkout Public Documents Assets
-        uses: actions/checkout@v6
-        with:
-          repository: City-of-Memphis-Wastewater/public-documents
-          ref: dev # or main, depending on your target stability branch
-          path: public-documents
+          path: "copy-n-launch-xlsx"
 
       # Step 3: Set up Python and environment
       - name: Set up Python
@@ -33,6 +25,6 @@ jobs:
 
       - name: Run tests
         run: |
-          cd copy-n-lauch-xlsx
+          cd "copy-n-lauch-xlsx"
           uv sync
           uv run pytest -v

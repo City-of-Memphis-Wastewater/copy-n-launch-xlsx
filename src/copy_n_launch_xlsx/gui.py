@@ -79,7 +79,7 @@ class GuiApp:
 
     def _set_icon(self):
         try:
-             png_path = get_icon_path(LOGO_FILENAME_PNG)
+            png_path = get_icon_path(LOGO_FILENAME_PNG)
             if png_path.exists():
                 self.icon_img = PhotoImage(file=str(png_path))
                 self.root.iconphoto(True, self.icon_img)
