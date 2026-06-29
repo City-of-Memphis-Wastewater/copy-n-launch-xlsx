@@ -8,6 +8,7 @@ import subprocess
 import sys
 import openpyxl
 import logging
+import pyhabitat
 
 logger = logging.getLogger(__name__)
 
@@ -21,17 +22,6 @@ def build_filename(day: date | None = None) -> str:
     filename = day.strftime(FILENAME_FORMAT)
     return filename
 
-
-def launch_file(path: Path) -> None:
-    if sys.platform.startswith("win"):
-        import os
-        os.startfile(path)
-
-    elif sys.platform == "darwin":
-        subprocess.run(["open", str(path)], check=False)
-
-    else:
-        subprocess.run(["xdg-open", str(path)], check=False)
 
 
 def copy_then_rename_and_move_then_try_launch() -> Path:
@@ -54,7 +44,7 @@ def copy_then_rename_and_move_then_try_launch() -> Path:
 
     wb.save(destination)
 
-    launch_file(destination)
+    pyhabitat.launch_file(destination)
 
     return destination
 
