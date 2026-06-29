@@ -145,12 +145,11 @@ def run_pyinstaller(
         f'--additional-hooks-dir={HOOKS_DIR_ABS}', # 
 
         # Crucial for Typer/Click based apps
-        "--hidden-import", "pkg_resources.py2_warn", 
-        "--hidden-import", "typer.models",
-        "--hidden-import", "typer.main", 
-        "--hidden-import", "typer",  
-        "--hidden-import", "click",  
-        "--hidden-import", "rich",
+        #"--hidden-import", "typer.models",
+        #"--hidden-import", "typer.main", 
+        #"--hidden-import", "typer",  
+        #"--hidden-import", "click",  
+        #"--hidden-import", "rich",
 
         #'--log-level=DEBUG',
 
