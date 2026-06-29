@@ -22,12 +22,12 @@ import shutil
 from build_executable import form_dynamic_name
 ##from copy_n_launch_xlsx.datacopy import ensure_data_files_for_build
 from copy_n_launch_xlsx._version import get_version
+from copy_n_launch_xlsx.paths import SRC_FOLDER_NAME
 
 # Get the one site-packages path where packages are installed in the venv
 SITE_PACKAGES_PATH = site.getsitepackages()[0]
 
-# --- Configuration for pdflinkcheck ---
-PROJECT_NAME = "copy_n_launch_xlsx"
+# --- Configuration ---
 ENTRY_POINT = "copy_n_launch_xlsx.cli:app"
 DIST_DIR = Path("dist") / "zipapp" 
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -73,7 +73,7 @@ def run_command(cmd, check=True, env=None):
 def find_latest_wheel(dist_dir: Path, version: str) -> Path:
     """Finds the most recently built wheel file for the given version."""
     wheels = sorted(
-        dist_dir.glob(f"{PROJECT_NAME}-{version}*.whl"), 
+        dist_dir.glob(f"{SRC_FOLDER_NAME}-{version}*.whl"), 
         key=lambda f: f.stat().st_mtime,
         reverse=True
     )
@@ -149,7 +149,7 @@ def build_shiv_pyz():
 
     # 3. Find the resulting wheel file
     wheel_path = find_latest_wheel(DIST_DIR, version)
-    dynamic_name = form_dynamic_name(PROJECT_NAME, version)
+    dynamic_name = form_dynamic_name(SRC_FOLDER_NAME, version)
     pyz_filename = f"{dynamic_name}-shiv.pyz" 
     interpreter = "python" if os.name == 'nt' else "/usr/bin/env python3"
     output_path = DIST_DIR / pyz_filename

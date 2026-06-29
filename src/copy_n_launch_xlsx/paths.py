@@ -7,6 +7,7 @@ from dworshak_env import DworshakEnv
 import logging
 
 APP_NAME = "copy-n-launch-xlsx"
+SRC_FOLDER_NAME = "copy_n_launch_xlsx" 
 APP_DIR = Path.home() / f".{APP_NAME}"
 LOGO_FILENAME_PNG = "max-blue_1024x1024.png"
 LOGO_FILENAME_ICO = "max-blue_256x256.ico"
@@ -27,7 +28,6 @@ logger = logging.getLogger(__name__)
 
 # --- Configuration ---
 
-# Define the base directory for pdflinkcheck data (~/.pdflinkcheck)
 try:
     # Use the home directory and append the tool's name
     APP_DIR = Path.home() / f".{APP_NAME}"

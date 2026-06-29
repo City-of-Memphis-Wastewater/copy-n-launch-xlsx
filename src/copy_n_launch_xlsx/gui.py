@@ -9,9 +9,11 @@ from typing import Optional
 from importlib.resources import files
 import pyhabitat
 import ctypes
+import sys
 import logging
 # --- Core Imports ---
 
+from copy_n_launch_xlsx.paths import SRC_FOLDER_NAME
 from ._version import get_version
 from .tk_utils import center_window_on_primary
 from .core import copy_then_rename_and_move_then_try_launch
@@ -24,6 +26,9 @@ from .paths import (
             )
 
 logger=logging.getLogger(__name__)
+
+APP_W = 700
+APP_H = 500
 
 # RedirectText
 class GuiApp:
@@ -51,7 +56,7 @@ class GuiApp:
         style.theme_use("forest-dark")
 
         self.root.title(f"{APP_NAME} v{get_version()}")  # Short title
-        self.root.geometry("700x500")  # Smaller starting size
+        self.root.geometry(f"{APP_W}x{APP_H}")  # Smaller starting size
         self.root.minsize(600, 400)    # Prevent too-small window
 
         self._set_icon()
@@ -66,7 +71,7 @@ class GuiApp:
 
     # --- Theme & Visual Initialization ---
     def _initialize_forest_theme(self):
-        theme_dir = files("pdflinkcheck.data.themes.forest")
+        theme_dir = files(f"{SRC_FOLDER_NAME}.data.themes.forest")
         self.root.tk.call("source", str(theme_dir / "forest-light.tcl"))
         self.root.tk.call("source", str(theme_dir / "forest-dark.tcl"))
 
@@ -87,8 +92,8 @@ class GuiApp:
             pass
         try:
             ico_path = get_icon_path(LOGO_FILENAME_ICO)
-            if icon_path.exists():
-                self.root.iconbitmap(str(icon_path))
+            if ico_path.exists():
+                self.root.iconbitmap(str(ico_path))
         except Exception:
             pass
 
@@ -105,6 +110,10 @@ class GuiApp:
 
         tools_menu.add_separator()
         tools_menu.add_command(label="Readme", command=self._show_readme)
+
+    def _show_readme(self):
+        """Placeholder for the missing readme method."""
+        messagebox.showinfo("Readme", "Copy 'n Launch XLSX utility.")
 
     # --- UI Component Building ---
 
@@ -177,6 +186,7 @@ def start_gui(time_auto_close: int = 0):
     try:
         app = GuiApp(root=root)
     except Exception as e:
+        print(f"Critical Startup Error: {e}",file=sys.stderr)
         logging.debug(f"Startup Error: {e}")
         root.destroy()
         return
@@ -199,10 +209,9 @@ def start_gui(time_auto_close: int = 0):
         root.overrideredirect(False)
 
         # Re-center the app window before showing it
-        app_w, app_h = 480, 240 # 
         # Center and then reveal
         # 2. CONFIG: Set title and geometry while hidden
-        center_window_on_primary(root, app_w, app_h)
+        center_window_on_primary(root, APP_W, APP_H)
 
 
         root.config(cursor="arrow")

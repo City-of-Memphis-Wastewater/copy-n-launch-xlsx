@@ -6,14 +6,16 @@ import sys
 from pathlib import Path
 import importlib.resources as resources
 
+from copy_n_launch_xlsx.paths import SRC_FOLDER_NAME
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-PROJECT_NAME = "copy_n_launch_xlsx"
+
 
 # --- COPY PYPROJECT FILE TO PACKAGE DATA ---
 def _ensure_package_pyproject(source_root_path: Path, package_data_path: Path):
     """Copies the root puyproject.toml file into the expected package data path."""
     source = source_root_path / "pyproject.toml"
-    destination = package_data_path / "src" / PROJECT_NAME / "data" / "pyproject.toml"
+    destination = package_data_path / "src" / SRC_FOLDER_NAME / "data" / "pyproject.toml"
 
     if not source.exists():
         print(f"FATAL: Root pyproject.toml file not found at {source}!", file=sys.stderr)
@@ -28,7 +30,7 @@ def _ensure_package_pyproject(source_root_path: Path, package_data_path: Path):
 def ensure_package_license(source_root_path: Path, package_data_path: Path):
     """Copies the root LICENSE file into the expected package data path."""
     source = source_root_path / "LICENSE"
-    destination = package_data_path / "src" / PROJECT_NAME / "data" / "LICENSE"
+    destination = package_data_path / "src" / SRC_FOLDER_NAME / "data" / "LICENSE"
 
     if not source.exists():
         print(f"FATAL: Root license file not found at {source}!", file=sys.stderr)
@@ -42,7 +44,7 @@ def ensure_package_license(source_root_path: Path, package_data_path: Path):
 def ensure_package_readme(source_root_path: Path, package_data_path: Path):
     """Copies the root README.md file into the expected package data path."""
     source = source_root_path / "README.md"
-    destination = package_data_path / "src" / PROJECT_NAME / "data" / "README.md"
+    destination = package_data_path / "src" / SRC_FOLDER_NAME / "data" / "README.md"
 
     if not source.exists():
         print(f"FATAL: Root README file not found at {source}!", file=sys.stderr)
@@ -61,12 +63,12 @@ def ensure_data_files_for_build():
 
 def get_data_root() -> Path:
     """
-    Returns the path to the 'data' directory bundled with pdflinkcheck.
+    Returns the path to the 'data' bundled directory.
     Works for both source code and installed package.
     """
     try:
         # Python ≥3.9: use importlib.resources.files
-        return resources.files("pdflinkcheck") / "data"
+        return resources.files(SRC_FOLDER_NAME) / "data"
     except Exception:
         # Fallback: assume running from source
         return Path(__file__).resolve().parent / "data"

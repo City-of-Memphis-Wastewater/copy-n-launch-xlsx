@@ -16,10 +16,10 @@ import pyhabitat
 
 ##from copy_n_launch_xlsx.datacopy import ensure_data_files_for_build
 from copy_n_launch_xlsx._version import get_version
+from copy_n_launch_xlsx.paths import SRC_FOLDER_NAME
 
 # --- Configuration ---
-PROJECT_NAME = "copy_n_launch_xlsx"
-CLI_MAIN_FILE = Path.cwd() / 'src' / PROJECT_NAME / "__main__.py"
+CLI_MAIN_FILE = Path.cwd() / 'src' / SRC_FOLDER_NAME / "__main__.py"
 DIST_DIR = Path("dist")
 DIST_DIR_ONEFILE = DIST_DIR / "onefile" 
 DIST_DIR_ONEDIR = DIST_DIR / "onedir" 
@@ -105,7 +105,7 @@ def run_pyinstaller(
     Run PyInstaller to build the executable.
     """
     
-    print(f"--- {PROJECT_NAME} Executable Builder ---")
+    print(f"--- {SRC_FOLDER_NAME} Executable Builder ---")
 
     
     ext = '.exe' if IS_WINDOWS_BUILD else ''
@@ -225,7 +225,7 @@ if __name__ == "__main__":
         generate_rc_file(package_version)
 
         # 3. Determine the executable name (without the extension)
-        executable_descriptor = form_dynamic_name(PROJECT_NAME, package_version)
+        executable_descriptor = form_dynamic_name(SRC_FOLDER_NAME, package_version)
         if args.mode == "onefile":
             executable_descriptor += "-onefile"
 
