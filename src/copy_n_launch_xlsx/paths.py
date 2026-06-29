@@ -1,16 +1,24 @@
 # src/copy-n-launch-xlsx/paths.py
 from __future__ import annotations
 from pathlib import Path
+from importlib.resources import files
 from dworshak_config import DworshakConfig
 from dworshak_env import DworshakEnv
 import logging
 
-APP_NAME = "copy-n-lauch-xlsx"
+APP_NAME = "copy-n-launch-xlsx"
 APP_DIR = Path.home() / f".{APP_NAME}"
 LOGO_FILENAME_PNG = "max-blue_1024x1024.png"
 LOGO_FILENAME_ICO = "max-blue_256x256.ico"
-BLANK_DAILY_XLSX = Path.cwd() / "assets" / "xlsx" / "daily_blank.xlsx"
 DEFAULT_FILLED_SHEETS_DIR = APP_DIR / "filled_daily"
+
+
+BLANK_DAILY_XLSX = (
+    files("copy_n_launch_xlsx")
+    / "data"
+    / "xlsx"
+    / "daily_blank.xlsx"
+)
 
 config_mngr = DworshakConfig(path= APP_DIR / "config.json")
 env_mngr = DworshakEnv()
