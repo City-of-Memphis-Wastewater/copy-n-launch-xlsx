@@ -14,8 +14,8 @@ from pathlib import Path
 import argparse
 import pyhabitat
 
-from copy-n-launch-xlsx.datacopy import ensure_data_files_for_build
-from copy-n-launch-xlsx._version import get_version
+from copy_n_launch_xlsx.datacopy import ensure_data_files_for_build
+from copy_n_launch_xlsx._version import get_version
 
 # --- Configuration ---
 PROJECT_NAME = "copy_n_launch_xlsx"
