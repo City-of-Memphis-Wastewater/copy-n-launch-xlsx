@@ -28,7 +28,7 @@ from .paths import (
 logger=logging.getLogger(__name__)
 
 APP_W = 700
-APP_H = 500
+APP_H = 70
 
 # RedirectText
 class GuiApp:
@@ -57,7 +57,7 @@ class GuiApp:
 
         self.root.title(f"{APP_NAME} v{get_version()}")  # Short title
         self.root.geometry(f"{APP_W}x{APP_H}")  # Smaller starting size
-        self.root.minsize(600, 400)    # Prevent too-small window
+        self.root.minsize(600, 50)    # Prevent too-small window
 
         self._set_icon()
 
@@ -124,15 +124,17 @@ class GuiApp:
         control_frame = ttk.Frame(self.root, padding=(4, 2, 4, 2))
         control_frame.pack(fill='x', pady=(2, 2))
 
-        self.export_actions_frame = ttk.LabelFrame(control_frame, text="Filled Files:")
-        self.export_actions_frame.grid(row=1, column=2, padx=3, pady=3, sticky='nsew')
-        self.btn_open_browser_to_files = ttk.Button(self.export_actions_frame, text="Open Folder", command=lambda: self._show_system_explorer_gui(), width=20)
-        self.btn_open_browser_to_files.pack(side=tk.LEFT, padx=3, pady=1)
+        #self.export_actions_frame = ttk.LabelFrame(control_frame, text="Filled Files:")
+        #self.export_actions_frame.grid(row=1, column=2, padx=3, pady=3, sticky='nsew')
+        #self.btn_open_browser_to_files = ttk.Button(self.export_actions_frame, text="Open Folder", command=lambda: self._show_system_explorer_gui(), width=20)
+        #self.btn_open_browser_to_files.pack(side=tk.LEFT, padx=3, pady=1)
+        self.btn_open_browser_to_files = ttk.Button(control_frame, text="Open Folder", command=lambda: self._show_system_explorer_gui(), width=12)
+        self.btn_open_browser_to_files.grid(row=1, column=2, columnspan=2, pady=6, sticky='ew', padx=(0, 3))
 
 
         # === Row 3: Action Buttons ===
         run_analysis_btn = ttk.Button(control_frame, text="▶ Copy Daily XLSX and Launch", command=self._launch_sheet, style='Accent.TButton', width=16)
-        run_analysis_btn.grid(row=3, column=0, columnspan=2, pady=6, sticky='ew', padx=(0, 3))
+        run_analysis_btn.grid(row=1, column=0, columnspan=2, pady=6, sticky='ew', padx=(0, 3))
 
         # Grid configuration
         control_frame.grid_columnconfigure(0, weight=1)
