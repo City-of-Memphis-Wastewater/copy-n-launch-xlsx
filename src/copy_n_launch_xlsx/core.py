@@ -6,8 +6,10 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-
 import openpyxl
+import logging
+
+logger = logging.getLogger(__name__)
 
 from .paths import BLANK_DAILY_XLSX, get_target_copy_dir
 
@@ -37,6 +39,7 @@ def copy_then_rename_and_move_then_try_launch() -> Path:
     target_dir.mkdir(parents=True, exist_ok=True)
 
     destination = target_dir / build_filename()
+    logger.debug(f"{destination=}")
     if destination.exists():
         raise FileExistsError(destination)
     shutil.copy2(BLANK_DAILY_XLSX, destination)
