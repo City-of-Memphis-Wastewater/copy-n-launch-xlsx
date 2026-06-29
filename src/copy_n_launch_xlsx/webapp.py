@@ -27,10 +27,16 @@ import time
 import webbrowser
 import socket
 import socketserver
+import base64
 import pyhabitat
 
 from .core import copy_then_rename_and_move_then_try_launch
-from .paths import APP_NAME, get_target_copy_dir
+from .paths import (
+            APP_NAME, 
+            get_target_copy_dir,
+            get_icon_path, 
+            LOGO_FILENAME_PNG
+            )
 
 
 HOST = "127.0.0.1"
@@ -297,6 +303,19 @@ class WebHandler(BaseHTTPRequestHandler):
             self.send_header("Location", "/")
             self.end_headers()
 
+            return
+
+        if path == "/favicon.ico":
+            try:
+                ico = get_icon_path(LOGO_FILENAME_ICO)
+                data = ico.read_bytes()
+                self.send_response(200)
+                self.send_header("Content-Type", "image/x-icon")
+                self.send_header("Content-Length", str(len(data)))
+                self.end_headers()
+                self.wfile.write(data)
+            except Exception:
+                self.send_error(404)
             return
 
         self.send_error(404)
