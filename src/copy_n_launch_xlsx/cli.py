@@ -90,6 +90,12 @@ def gui_command(
 
     from .gui import start_gui
     start_gui(time_auto_close = assured_auto_close_value)
+
+def _gui_failure_msg():
+    console.print("[bold red]GUI failed to launch[/bold red]")
+    console.print("Use cli or webapp instead.")
+    console.print(f"pyhabitat.tkinter_is_available() = {pyhabitat.tkinter_is_available()}")
+    console.print(f"pyhabitat.on_termux() = {pyhabitat.on_termux()}")
     
 if __name__ == "__main__":
     app()
