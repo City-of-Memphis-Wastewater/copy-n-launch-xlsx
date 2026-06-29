@@ -19,6 +19,7 @@ from .paths import APP_NAME
 from .context import DESCRIPTION_STR
 from .logging_setup import configure_logging_for_application
 from ._version import __version__
+from .core import copy_then_rename_and_move_then_try_launch
 
 console = Console(stderr=True)
 
@@ -60,6 +61,23 @@ def main(
         gui_command()
 
 add_typer_helptree(app = app, console = console, version = __version__, hidden = False)
+
+@app.command(name="copylaunch")
+def copyrenamelaunch(
+    )->None:
+    """
+    Run the core function.
+    """
+    copy_then_rename_and_move_then_try_launch()
+
+@app.command(name="webapp")
+def webapp(
+    )->None:
+    """
+    Serve the web interface to localhost.
+    """
+    pass
+    logger.debug(f"In progress")
 
 
 @app.command(name="gui")
