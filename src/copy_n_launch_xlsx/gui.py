@@ -3,22 +3,17 @@
 from __future__ import annotations
 import pyhabitat
 import tkinter as tk
-from tkinter import filedialog, ttk, messagebox, PhotoImage
-import sys
+from tkinter import ttk, messagebox, PhotoImage
 from pathlib import Path
 from typing import Optional
-import unicodedata
 from importlib.resources import files
 import pyhabitat
 import ctypes
-import threading
 import logging
 # --- Core Imports ---
 
 from ._version import get_version
-from .environment import is_in_dev_environment
 from .tk_utils import center_window_on_primary
-from .helpers import get_friendly_path
 from .core import copy_then_rename_and_move_then_try_launch
 from .paths import (
             APP_NAME, 
@@ -65,20 +60,8 @@ class GuiApp:
         self._initialize_menubar()
 
     def _initialize_vars(self):
-        """Logic that takes time but doesn't need a UI yet."""
-
-        # --- 1. Variable State Management ---
-        self.pdf_path = tk.StringVar(value="")
-        self.do_export_report_json_var = tk.BooleanVar(value=True)
-        self.do_export_report_txt_var = tk.BooleanVar(value=True)
-        self.do_export_report_xlsx_var = tk.BooleanVar(value=True)
-        self.do_check_external_links = tk.BooleanVar(value=False)
-
-        self.current_report_text = None
-        self.current_report_data = None
-
-        # Engine detection
-        self.example_string_var = tk.StringVar(value="null")
+        """Build necessary tk variables."""
+        pass
 
     # --- Theme & Visual Initialization ---
     def _initialize_forest_theme(self):
@@ -132,9 +115,9 @@ class GuiApp:
         control_frame = ttk.Frame(self.root, padding=(4, 2, 4, 2))
         control_frame.pack(fill='x', pady=(2, 2))
 
-        self.export_actions_frame = ttk.LabelFrame(control_frame, text="Open Filled Files:")
+        self.export_actions_frame = ttk.LabelFrame(control_frame, text="Filled Files:")
         self.export_actions_frame.grid(row=1, column=2, padx=3, pady=3, sticky='nsew')
-        self.btn_open_browser_to_files = ttk.Button(self.export_actions_frame, text="Show System Explorer", command=lambda: self._show_system_explorer_gui(), width=20)
+        self.btn_open_browser_to_files = ttk.Button(self.export_actions_frame, text="Open Folder", command=lambda: self._show_system_explorer_gui(), width=20)
         self.btn_open_browser_to_files.pack(side=tk.LEFT, padx=3, pady=1)
 
 
@@ -151,8 +134,11 @@ class GuiApp:
         try:
             destination = copy_then_rename_and_move_then_try_launch()
 
-            self.append_output(f"Created\n{destination}\n")
-
+            logger.debug(f"Created\n{destination}\n")
+            messagebox.showinfo(
+                "Success",
+                f"Created\n\n{destination}"
+            )
         except FileExistsError as e:
             messagebox.showwarning(
                 "Already Exists",
@@ -165,22 +151,10 @@ class GuiApp:
                 str(e),
             )
 
-    def _run_gui(self):  
-        
-        print("Copy XLSX, Rename, and Launch ...")
-
-        
-        try:
-            report_results = run_report_request(request)
-            self.last_xlsx_path = report_results.get("export_files", {}).get("export_path_xlsx")
-
-        except Exception as e:
-            messagebox.showinfo(f"Error encountered: {e}")
-    
     def _show_system_explorer_gui(self) -> None:
         """
         Opens the system file explorer to the directory containing
-        the exported reports, with GUI error handling.
+        the exported files, with GUI error handling.
         """
         try:
             target_dir = get_target_copy_dir()
@@ -224,9 +198,8 @@ def start_gui(time_auto_close: int = 0):
         # Restore window borders/decorations
         root.overrideredirect(False)
 
-        # Re-center the MAIN app window before showing it
-        app_w, app_h = 700, 500 # known distrubuted size
-        app_w, app_h = 800, 500 # stop gap until buttons are reorganized
+        # Re-center the app window before showing it
+        app_w, app_h = 480, 240 # 
         # Center and then reveal
         # 2. CONFIG: Set title and geometry while hidden
         center_window_on_primary(root, app_w, app_h)
