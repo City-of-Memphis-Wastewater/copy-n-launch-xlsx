@@ -36,27 +36,30 @@ def copy_then_rename_and_move_then_try_launch() -> Path:
         pyhabitat.launch_file(destination)
         return destination
     
+    shutil.copy2(BLANK_DAILY_XLSX, destination)
+    
     # Open/save if you later want to update named ranges,
     # dates, workbook properties, etc.
     wb = openpyxl.load_workbook(destination)
 
     # future edits go here
     set_date_in_spreadsheet(wb)
-
     wb.save(destination)
+    
 
     pyhabitat.launch_file(destination)
 
     return destination
 
 
-def set_date_in_spreadsheet(wb):
+def set_date_in_spreadsheet_defunct(wb):
     from datetime import date
-    from openpyxl.workbook.defined_names import DefinedName
+    from openpyxl.workbook.defined_name import DefinedName
 
     # --- Adjust the Data: Update Named Range "date" ---
     today_str = date.today().strftime("%m/%d/%Y")
 
+    logger.debug(f"{wb.defined_names=}")
     if "date" in wb.defined_names:
         defn = wb.defined_names["date"]
         
@@ -81,4 +84,32 @@ def set_date_in_spreadsheet(wb):
         wb.defined_names.add(new_name)
         logger.debug(f"Named range 'date' not found. Created global expression variable set to {today_str}.")
 
-    # --------------------------------------------------
+
+def set_date_in_spreadsheet(wb):
+    from datetime import date
+    from openpyxl.workbook.defined_name import DefinedName
+
+    today_str = date.today().strftime("%m/%d/%Y")
+
+    if "date" in wb.defined_names:
+        defn = wb.defined_names["date"]
+        
+        # Use whichever field contains the reference string
+        raw_value = defn.value if defn.value else defn.attr_text
+        
+        if raw_value and "!" in raw_value:
+            sheet_name, cell_coord = raw_value.split("!")
+            sheet_name = sheet_name.strip("'")      # Strip potential quote wrapping
+            cell_coord = cell_coord.replace("$", "") # Strip absolute reference anchoring
+            
+            if sheet_name in wb.sheetnames:
+                ws = wb[sheet_name]
+                ws[cell_coord] = today_str
+                logger.debug(f"Successfully updated cell {cell_coord} on sheet '{sheet_name}' to {today_str}.")
+        else:
+            defn.value = f'="{today_str}"'
+            logger.debug(f"Updated global value expression for named range 'date' to {today_str}.")
+    else:
+        new_name = DefinedName("date", attr_text=f'="{today_str}"')
+        wb.defined_names.add(new_name)
+        logger.debug(f"Named range 'date' not found. Created global expression variable set to {today_str}.")
