@@ -19,7 +19,8 @@ from .paths import (
             APP_NAME, 
             get_target_copy_dir, 
             LOGO_FILENAME_PNG,
-            LOGO_FILENAME_ICO
+            LOGO_FILENAME_ICO,
+            get_icon_path,
             )
 
 logger=logging.getLogger(__name__)
@@ -77,16 +78,15 @@ class GuiApp:
             style.theme_use("forest-light")
 
     def _set_icon(self):
-        icon_dir = files(".data.icons")
         try:
-            png_path = icon_dir.joinpath(LOGO_FILENAME_PNG)
+             png_path = get_icon_path(LOGO_FILENAME_PNG)
             if png_path.exists():
                 self.icon_img = PhotoImage(file=str(png_path))
                 self.root.iconphoto(True, self.icon_img)
         except Exception:
             pass
         try:
-            icon_path = icon_dir.joinpath(LOGO_FILENAME_ICO)
+            ico_path = get_icon_path(LOGO_FILENAME_ICO)
             if icon_path.exists():
                 self.root.iconbitmap(str(icon_path))
         except Exception:

@@ -41,6 +41,9 @@ APP_DIR.mkdir(parents=True, exist_ok=True)
 # Define the log file path
 LOG_FILE_PATH = APP_DIR / f"{APP_NAME}_errors.log"
 
+def get_icon_path(filename: str) -> Path:
+    return files("copy_n_launch_xlsx.data.icons").joinpath(filename)
+
 # can i use a string to effectively define the dir where i want the copied and renamed sheet to land?
 # it can be in
 def pull_in_configured_path_or_use_default():
