@@ -147,7 +147,7 @@ class GuiApp:
                 logger.debug(f"Created\n{destination}\n")
                 messagebox.showinfo(
                     "Success",
-                    f"File exists\n\n{destination}"
+                    f"New file created\n\n{destination}"
                 )
             elif not result.is_new:
                 logger.debug(f"File exists\n{destination}\n")

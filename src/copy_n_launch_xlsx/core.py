@@ -54,7 +54,7 @@ def copy_then_rename_and_move_then_try_launch() -> Path:
         logger.info(f"Daily file already exists at {destination}. Skipping copy. Launching existing file.")
         pyhabitat.launch_file(destination)
         #return destination
-        return CopyResult(destination=destination,is_new=True)
+        return CopyResult(destination=destination,is_new=False)
     
     shutil.copy2(BLANK_DAILY_XLSX, destination)
     
@@ -70,7 +70,7 @@ def copy_then_rename_and_move_then_try_launch() -> Path:
     pyhabitat.launch_file(destination)
 
     #return destination
-    return CopyResult(destination=destination,is_new=False)
+    return CopyResult(destination=destination,is_new=True)
 
 
 def set_date_in_spreadsheet(wb):

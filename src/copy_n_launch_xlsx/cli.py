@@ -73,9 +73,9 @@ def copyrenamelaunch(
     destination = result.destination
 
     if result.is_new:
-        logger.debug(f"Created\n{destination}\n")
+        logger.debug(f"File created:\n{destination}\n")
     elif not result.is_new:
-        logger.debug(f"File exists\n{destination}\n")
+        logger.debug(f"File exists:\n{destination}\n")
 
 @app.command(name="webapp")
 def webapp(
