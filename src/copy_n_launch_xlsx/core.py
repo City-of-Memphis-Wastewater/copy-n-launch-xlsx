@@ -11,12 +11,13 @@ import openpyxl
 
 from .paths import BLANK_DAILY_XLSX, get_target_copy_dir
 
+FILENAME_FORMAT = "daily_%Y-%m-%d.xlsx"
 
 def build_filename(day: date | None = None) -> str:
     if day is None:
         day = date.today()
-
-    return f"daily_{day:%Y-%m-%d}.xlsx"
+    filename = day.strftime(FILENAME_FORMAT)
+    return filename
 
 
 def launch_file(path: Path) -> None:
@@ -36,7 +37,8 @@ def copy_then_rename_and_move_then_try_launch() -> Path:
     target_dir.mkdir(parents=True, exist_ok=True)
 
     destination = target_dir / build_filename()
-
+    if destination.exists():
+        raise FileExistsError(destination)
     shutil.copy2(BLANK_DAILY_XLSX, destination)
 
     # Open/save if you later want to update named ranges,
