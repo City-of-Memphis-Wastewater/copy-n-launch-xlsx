@@ -6,6 +6,16 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.1.3] - 2026-06-29
+### Added:
+- Use pyhabitat v1.3.2, with more stable cross platform file launching.
+- Trim blank spreadsheet.
+- Implement aut-dating.
+- Simplify GUI.
+- Test on WSL.
+
+---
+
 ## [0.1.1] - 2026-06-29
 ### Added:
 - Initial release.
