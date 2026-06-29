@@ -135,6 +135,9 @@ def run_pyinstaller(
 
         # --- Crucial for resolving package structure and relative imports ---
         f'--paths={PROJECT_ROOT / "src"}',
+
+        # --- Include your non-py data folders into the built bundle layout ---
+        f'--add-data={PROJECT_ROOT / "src" / SRC_FOLDER_NAME / "data"}{os.path.pathsep}{SRC_FOLDER_NAME}/data',
         
         # Output paths
         f'--distpath={mode_dist_path}', # <--
