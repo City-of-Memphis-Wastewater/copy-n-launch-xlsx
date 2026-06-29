@@ -27,8 +27,8 @@ from .paths import (
 
 logger=logging.getLogger(__name__)
 
-APP_W = 700
-APP_H = 70
+APP_W = 100
+APP_H = 50
 
 # RedirectText
 class GuiApp:
@@ -63,7 +63,7 @@ class GuiApp:
 
         # --- 2. Widget Construction ---
         self._create_widgets()
-        self._initialize_menubar()
+        #self._initialize_menubar()
 
     def _initialize_vars(self):
         """Build necessary tk variables."""
@@ -106,10 +106,10 @@ class GuiApp:
         tools_menu = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Tools", menu=tools_menu)
 
-        tools_menu.add_command(label="Toggle Theme", command=self._toggle_theme)
+        #tools_menu.add_command(label="Toggle Theme", command=self._toggle_theme)
 
-        tools_menu.add_separator()
-        tools_menu.add_command(label="Readme", command=self._show_readme)
+        #tools_menu.add_separator()
+        #tools_menu.add_command(label="Readme", command=self._show_readme)
 
     def _show_readme(self):
         """Placeholder for the missing readme method."""
@@ -117,6 +117,8 @@ class GuiApp:
 
     # --- UI Component Building ---
 
+    def _magic_button(self):
+        return None# self._show_system_explorer_gui()
     def _create_widgets(self):
         """Compact layout with reduced padding."""
 
@@ -124,16 +126,11 @@ class GuiApp:
         control_frame = ttk.Frame(self.root, padding=(4, 2, 4, 2))
         control_frame.pack(fill='x', pady=(2, 2))
 
-        #self.export_actions_frame = ttk.LabelFrame(control_frame, text="Filled Files:")
-        #self.export_actions_frame.grid(row=1, column=2, padx=3, pady=3, sticky='nsew')
-        #self.btn_open_browser_to_files = ttk.Button(self.export_actions_frame, text="Open Folder", command=lambda: self._show_system_explorer_gui(), width=20)
-        #self.btn_open_browser_to_files.pack(side=tk.LEFT, padx=3, pady=1)
-        self.btn_open_browser_to_files = ttk.Button(control_frame, text="Open Folder", command=lambda: self._show_system_explorer_gui(), width=12)
+        self.btn_open_browser_to_files = ttk.Button(control_frame, text="Magic Button", command=lambda: self._magic_button(), width=12)
         self.btn_open_browser_to_files.grid(row=1, column=2, columnspan=2, pady=6, sticky='ew', padx=(0, 3))
 
-
         # === Row 3: Action Buttons ===
-        run_analysis_btn = ttk.Button(control_frame, text="▶ Launch Daily XLSX", command=self._launch_sheet, style='Accent.TButton', width=16)
+        run_analysis_btn = ttk.Button(control_frame, text="▶ Launch Daily Spreadsheet", command=self._launch_sheet, style='Accent.TButton', width=16) #
         run_analysis_btn.grid(row=1, column=0, columnspan=2, pady=6, sticky='ew', padx=(0, 3))
 
         # Grid configuration
