@@ -78,3 +78,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.dynamic]
 version = {file = "src/copy_n_launch_xlsx/VERSION"}
+
+# --- Add this section to include your asset directories ---
+[tool.setuptools.package-data]
+copy_n_launch_xlsx = ["data/**/*"]
