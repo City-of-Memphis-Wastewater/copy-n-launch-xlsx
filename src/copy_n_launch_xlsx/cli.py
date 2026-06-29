@@ -20,6 +20,7 @@ from .context import DESCRIPTION_STR
 from .logging_setup import configure_logging_for_application
 from ._version import __version__
 from .core import copy_then_rename_and_move_then_try_launch
+from .webapp import run_webapp
 
 console = Console(stderr=True)
 
@@ -76,8 +77,7 @@ def webapp(
     """
     Serve the web interface to localhost.
     """
-    pass
-    logger.debug(f"In progress")
+    run_webapp()
 
 
 @app.command(name="gui")
