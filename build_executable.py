@@ -2,8 +2,8 @@
 # SPDX-License-Identifier: MIT
 # ./build_executable.py
 """
-build_executable.py for pdflinkcheck
-Builds the pdflinkcheck standalone binary (EXE/ELF) using PyInstaller.
+build_executable.py
+Builds the standalone binary (EXE/ELF) using PyInstaller.
 """
 from __future__ import annotations
 import shutil
@@ -14,14 +14,11 @@ from pathlib import Path
 import argparse
 import pyhabitat
 
-from pdflinkcheck.datacopy import ensure_data_files_for_build
-from pdflinkcheck._version import get_version
-from pdflinkcheck.environment import pymupdf_is_available, pdfium_is_available
+from copy-n-launch-xlsx.datacopy import ensure_data_files_for_build
+from copy-n-launch-xlsx._version import get_version
 
 # --- Configuration ---
-PROJECT_NAME = "pdflinkcheck"
-#CLI_MAIN_FILE = Path(f'src/{PROJECT_NAME}/cli.py')
-#CLI_MAIN_FILE = Path.cwd() / 'src' / PROJECT_NAME / "cli.py"
+PROJECT_NAME = "copy_n_launch_xlsx"
 CLI_MAIN_FILE = Path.cwd() / 'src' / PROJECT_NAME / "__main__.py"
 DIST_DIR = Path("dist")
 DIST_DIR_ONEFILE = DIST_DIR / "onefile" 
@@ -157,7 +154,6 @@ def run_pyinstaller(
 
         #'--log-level=DEBUG',
 
-        #"--add-data", "pyproject.toml:pdflinkcheck/data",
     ]
 
 
@@ -185,24 +181,6 @@ def run_pyinstaller(
         #base_command.append(f'--version-file={RC_FILE.name}')
         base_command.append(f'--version-file={RC_FILE.resolve()}')
 
-    # PyMuPDF is a native library, ensure its dependencies are included if necessary
-    # PyInstaller often handles this automatically, but if it fails, 'collect-all' is needed.
-    if pymupdf_is_available():
-        base_command.append("--collect-all")
-        base_command.append("fitz")
-        base_command.append("--collect-all")
-        base_command.append("pymupdf") # careful. if this line runs, your binary is subject to the AGPL3+
-    
-    if pdfium_is_available():
-        base_command.append("--collect-all")
-        base_command.append("pypdfium2")
-        
-    if pyhabitat.on_macos():
-        base_command.append("--osx-bundle-identifier")
-        base_command.append("com.georgeclaytonbennett.pdflinkcheck")
-        #base_command.append("--icon=icon.icns")
-        
-     # Add the main script LAST
     base_command.append(str(main_script_path.resolve()))
 
     # Determine execution path (Run PyInstaller directly, assuming it's in PATH/venv)
