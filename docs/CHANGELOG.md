@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.1.4] - 2026-06-29
+### Added:
+- Use pyinstaller hooks and setuptools.package to ensure /data/ artifacts are included in PyInstaller and shiv builds.
+
+---
+
 ## [0.1.3] - 2026-06-29
 ### Added:
 - Use pyhabitat v1.3.2, with more stable cross platform file launching.
