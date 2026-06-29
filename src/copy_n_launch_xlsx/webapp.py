@@ -23,7 +23,10 @@ import signal
 import sys
 import threading
 import urllib.parse
-
+import time
+import webbrowser
+import socket
+import socketserver
 import pyhabitat
 
 from .core import copy_then_rename_and_move_then_try_launch
@@ -328,12 +331,68 @@ class WebHandler(BaseHTTPRequestHandler):
                 status=500,
             )
 
+def find_open_port(start: int = 8000) -> int:
+    port = start
+    while True:
+        try:
+            with socket.socket() as s:
+                s.bind(("127.0.0.1", port))
+            return port
+        except OSError:
+            port += 1
+
+
+def launch_browser(url: str) -> None:
+    """
+    Open the user's default browser.
+
+    Using a tiny delay avoids a race where the browser opens before
+    serve_forever() is actually listening.
+    """
+    threading.Timer(
+        0.4,
+        lambda: webbrowser.open(url),
+    ).start()
 
 # ----------------------------------------------------------------------
 # Entrypoint
 # ----------------------------------------------------------------------
 
-def run_webapp(
+def run_webapp():
+
+    global PORT
+
+    PORT = find_open_port(PORT)
+
+    with ThreadingHTTPServer((HOST, PORT), WebHandler) as httpd:
+
+        def handle_exit():
+            if not SHUTDOWN_EVENT.is_set():
+                SHUTDOWN_EVENT.set()
+                threading.Thread(
+                    target=httpd.shutdown,
+                    daemon=True,
+                ).start()
+
+        signal.signal(signal.SIGINT, lambda *_: handle_exit())
+        signal.signal(signal.SIGTERM, lambda *_: handle_exit())
+
+        url = f"http://{HOST}:{PORT}/"
+
+        print(f"Serving {url}")
+
+        launch_browser(url)
+
+        try:
+            httpd.serve_forever()
+
+        except KeyboardInterrupt:
+            handle_exit()
+
+        finally:
+            httpd.server_close()
+
+def run_webapp_defunct(
     host: str = HOST,
     port: int = PORT,
 ):
