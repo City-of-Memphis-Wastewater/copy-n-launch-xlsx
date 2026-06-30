@@ -161,9 +161,9 @@ def run_pyinstaller(
         onedir_or_onefile_flag = '--onefile'
         base_command.append(onedir_or_onefile_flag)
     else: # default
-        if not pyhabitat.on_macos()
-        onedir_or_onefile_flag = '--onedir'
-        base_command.append(onedir_or_onefile_flag)
+        if not pyhabitat.on_macos():
+            onedir_or_onefile_flag = '--onedir'
+            base_command.append(onedir_or_onefile_flag)
     
     # Prepare for MSIX
     if (IS_WINDOWS_BUILD or pyhabitat.on_macos()) and (mode == "onedir") and pyhabitat.tkinter_is_available(): 
