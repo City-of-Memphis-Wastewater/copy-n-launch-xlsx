@@ -166,11 +166,9 @@ def run_pyinstaller(
             base_command.append(onedir_or_onefile_flag)
     
     # Prepare for MSIX
-    if (IS_WINDOWS_BUILD or pyhabitat.on_macos()) and (mode == "onedir") and pyhabitat.tkinter_is_available(): 
-        # only use windows mode for scenario that targets MSIX
+    is_windowed_build = (IS_WINDOWS_BUILD or pyhabitat.on_macos()) and (args.mode == "onedir")
+    if is_windowed_build:
         flag = '--windowed'
-        # flag = '--noconsole'
-        print(f"Building with the {flag} flag, to favor GUI usage for the artifact, because GUI is avaialble.")
         base_command.append(flag)
     else:
         print("Building without the --noconsole or --windowed flag, to favor CLI usage for the artifact, because GUI is not available.")
