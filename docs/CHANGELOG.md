@@ -6,6 +6,13 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.1] - 2026-06-20
+### Changed:
+- Icon changed to green.
+- About button.
+
+---
+
 ## [0.1.7] - 2026-06-29
 ### Changed:
 - Change config file from .env to stable config.json in expected place. 
