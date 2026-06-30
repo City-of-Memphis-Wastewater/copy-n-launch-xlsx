@@ -10,6 +10,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 ### Changed:
 - Icon changed to green.
 - About button.
+- build.yml and build_executable.py improved for macOS .app stability, and for build attachment even when other runners are incomplete.
 
 ---
 
