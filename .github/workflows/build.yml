@@ -62,7 +62,8 @@ jobs:
         if: True # runner.os == 'Windows'
         run: |
           uv run python build_pyz.py
-
+          uv run python -c "from pathlib import Path; print('===== DIST ====='); [print(p) for p in sorted(Path('dist').rglob('*'))]"
+          
       - name: Build executable (PyInstaller)
         run: |
           uv run python build_executable.py --mode onedir
@@ -123,7 +124,12 @@ jobs:
           New-Item -Path dist/upload -ItemType Directory -Force
           
           # Grab all dynamic entries within onedir and onefile sub-directories directly
-          $items = Get-ChildItem "dist/onedir/*", "dist/onefile/*" -Exclude "upload"
+          # ouch $items = Get-ChildItem "dist/onedir/*", "dist/onefile/*" -Exclude "upload"
+          $items = @(
+              Get-ChildItem "dist/onedir" -Directory
+              Get-ChildItem "dist/onefile" -File
+          )
+          $items | Select-Object FullName, PSIsContainer | Format-Table
           
           foreach ($item in $items) {
               $destination = "dist/upload/$($item.Name).zip"
