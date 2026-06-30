@@ -196,11 +196,12 @@ def run_pyinstaller(
         raise SystemExit(e.returncode)
 
     print("\n--- PyInstaller Build Complete ---")
-    move_macos_app(macos_app)
+    if pyhabitat.on_macos():
+        move_macos_app(macos_app)
     return final_path.resolve()
 
 
-def move_macos_app(macos_app):
+def move_macos_app(macos_app:str)->None:
     from pathlib import Path
     import shutil
 
