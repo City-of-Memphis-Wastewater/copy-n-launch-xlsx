@@ -6,6 +6,13 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.1.7] - 2026-06-29
+### Changed:
+- Change config file from .env to stable config.json in expected place. 
+- Try to package .app for macOS in build_executable.py.
+
+---
+
 ## [0.1.4] - 2026-06-29
 ### Added:
 - Use pyinstaller hooks and setuptools.package to ensure /data/ artifacts are included in PyInstaller and shiv builds.
