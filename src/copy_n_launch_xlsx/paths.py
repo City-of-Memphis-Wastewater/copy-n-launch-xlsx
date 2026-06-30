@@ -75,8 +75,8 @@ def ensure_filled_sheet_dir(filled_sheets_path):
     filled_sheet_canary_file.parent.mkdir(parents=True, exist_ok=True)
 
 def get_target_copy_dir():
-    #filled_sheets_dir = pull_in_configured_path_or_use_default()
-    filled_sheets_dir = pull_in_env_path_or_use_default()
+    filled_sheets_dir = pull_in_configured_path_or_use_default()
+    #filled_sheets_dir = pull_in_env_path_or_use_default()
     ensure_filled_sheet_dir(filled_sheets_dir)
     return filled_sheets_dir
 

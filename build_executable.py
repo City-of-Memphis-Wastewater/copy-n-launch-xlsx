@@ -114,7 +114,11 @@ def run_pyinstaller(
         final_path = DIST_DIR_ONEFILE/ f"{dynamic_exe_name}{ext}"
     elif mode  == "onedir":
         mode_dist_path = DIST_DIR_ONEDIR
-        final_path = DIST_DIR_ONEDIR / dynamic_exe_name / f"{dynamic_exe_name}{ext}"
+        if pyhabitat.on_macos():
+            final_path = Path("dist") / f"{dynamic_exe_name}.app"
+            mode_dist_path = Path("dist")
+        else:
+            final_path = DIST_DIR_ONEDIR / dynamic_exe_name / f"{dynamic_exe_name}{ext}"
 
     mode_dist_path.mkdir(parents=True, exist_ok=True)
 
@@ -147,13 +151,6 @@ def run_pyinstaller(
         # --- Add the Hooks Directory ---
         f'--additional-hooks-dir={HOOKS_DIR_ABS}', # 
 
-        # Crucial for Typer/Click based apps
-        #"--hidden-import", "typer.models",
-        #"--hidden-import", "typer.main", 
-        #"--hidden-import", "typer",  
-        #"--hidden-import", "click",  
-        #"--hidden-import", "rich",
-
         #'--log-level=DEBUG',
 
     ]
@@ -174,7 +171,8 @@ def run_pyinstaller(
         # flag = '--noconsole'
         print(f"Building with the {flag} flag, to favor GUI usage for the artifact, because GUI is avaialble.")
         base_command.append(flag)
-        
+    if pyhabitat.on_macos():
+        base_command.append("--windowed")
     else:
         print("Building without the --noconsole or --windowed flag, to favor CLI usage for the artifact, because GUI is not available.")
 
