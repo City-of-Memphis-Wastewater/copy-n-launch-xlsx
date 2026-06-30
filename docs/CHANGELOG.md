@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.2] - 2026-06-20
+### Changed:
+- Taskbar icon permanence, using gui.apply_windows_taskbar_icon()
+
+---
+
 ## [0.2.1] - 2026-06-20
 ### Changed:
 - Icon changed to green.
