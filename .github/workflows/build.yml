@@ -19,6 +19,15 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest, macos-14]
+        mode: [onedir, onefile]
+        # Exclude options that are redundant or invalid for specific environments
+        exclude:
+          - os: ubuntu-latest
+            mode: onefile
+          - os: macos-latest
+            mode: onefile
+          - os: macos-14
+            mode: onefile
 
     steps:
       - name: Clean Build Directories (Unix/macOS)
@@ -36,16 +45,6 @@ jobs:
           # Use Remove-Item with -Recurse and -Force (PowerShell native)
           Remove-Item -Path dist/, build/, *.egg-info -Recurse -Force -ErrorAction SilentlyContinue
           echo "Clean complete."
-          
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-          # This ensures the created venv is activated implicitly
-          cache: pip
 
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
@@ -75,12 +74,7 @@ jobs:
           
       - name: Build executable (PyInstaller)
         run: |
-          uv run python build_executable.py --mode onedir
-
-      - name: Build onefile executable for Windows (PyInstaller)
-        if: runner.os == 'Windows'
-        run: |
-          uv run python build_executable.py --mode onefile
+          uv run python build_executable.py --mode ${{ matrix.mode }}
       
       - name: Post-Build Cleanup (Windows)
         if: runner.os == 'Windows'
@@ -134,32 +128,32 @@ jobs:
           Write-Host "Contains onedir contents: $has_onedir"
           Write-Host "Contains onefile contents: $has_onefile"
 
+      # --- WINDOWS COLLECTOR ---
       - name: Collect Windows artifacts
         if: runner.os == 'Windows'
         shell: pwsh
         run: |
           New-Item -Path dist/upload -ItemType Directory -Force
           
-          # Grab all dynamic entries within onedir and onefile sub-directories directly
-          # ouch $items = Get-ChildItem "dist/onedir/*", "dist/onefile/*" -Exclude "upload"
-          $items = @(
-              Get-ChildItem "dist/onedir" -Directory
-              Get-ChildItem "dist/onefile" -File
-          )
-          $items | Select-Object FullName, PSIsContainer | Format-Table
-          
-          foreach ($item in $items) {
-              $destination = "dist/upload/$($item.Name).zip"
-              Write-Host "Archiving $($item.FullName) to $destination"
-              
-              if ($item.PSIsContainer) {
-                  Compress-Archive -Path "$($item.FullName)\*" -DestinationPath $destination -Force
-              } else {
-                  Compress-Archive -Path $item.FullName -DestinationPath $destination -Force
+          # Safely look for whatever this specific matrix runner actually generated
+          if (Test-Path "dist/onedir") {
+              Get-ChildItem "dist/onedir" -Directory | ForEach-Object {
+                  $destination = "dist/upload/$($_.Name).zip"
+                  Write-Host "Archiving directory $($_.FullName) to $destination"
+                  Compress-Archive -Path "$($_.FullName)\*" -DestinationPath $destination -Force
+              }
+          }
+          if (Test-Path "dist/onefile") {
+              Get-ChildItem "dist/onefile" -File | ForEach-Object {
+                  # Strip the .exe out of the archive base name so you don't get .exe.zip
+                  $baseName = $_.BaseName
+                  $destination = "dist/upload/$baseName.zip"
+                  Write-Host "Archiving binary $($_.FullName) to $destination"
+                  Compress-Archive -Path $_.FullName -DestinationPath $destination -Force
               }
           }
 
-      # --- STRUCTURAL FIX: ROBUST UNIX ARTIFACT ZIPPER ---
+      # --- UNIX COLLECTOR ---
       - name: Collect Unix artifacts
         if: runner.os != 'Windows'
         run: |
@@ -170,12 +164,9 @@ jobs:
             cp dist/*.whl dist/upload/ 2>/dev/null || true
           fi
 
-          echo "Collecting platform-specific outputs..."
-          # Match files or directories inside mode folders generically
+          # Purely loop over whatever mode directory matches this runner environment
           for item in dist/onedir/* dist/onefile/* dist/zipapp/*; do
             [ -e "$item" ] || continue
-
-            # Skip tracking recursive uploads or build configuration artifacts
             case "$item" in
               *upload*|*.tar.gz|*.whl) continue ;;
             esac
@@ -190,43 +181,12 @@ jobs:
             fi
           done
 
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v7
-        with:
-          name: copy-n-launch-xlsx-${{ matrix.os }}
-          path: dist/upload/
-
-  attach-to-release:
-    name: Attach artifacts to GitHub Release
-    needs: build
-    runs-on: ubuntu-latest
-
-    permissions:
-      contents: write
-    
-    steps:
-      - name: Download all artifacts (from all three OS runners)
-        uses: actions/download-artifact@v8
-        with:
-          path: artifacts
-
-      - name: Diagnostic - List Downloaded Artifacts
-        shell: bash
-        run: |
-          echo "=== Global Artifacts Directory Structure ==="
-          # This shows exactly which files were pulled from which runner
-          find artifacts -maxdepth 3 -not -path '*/.*'
-          
-          echo "=== Checking for Filename Collisions ==="
-          # This counts how many times each filename appears across all runner folders
-          find artifacts -type f -not -path '*/.*' -printf "%f\n" | sort | uniq -c | sort -nr
-
-      - name: Attach artifacts to GitHub Release
+      - name: Attach artifacts to GitHub Release Immediately
         uses: softprops/action-gh-release@v3
         with:
-          files: artifacts/**/*
-          #overwrite: true
-          overwrite_files: true # depends on version
-          fail_on_unmatched_files: true # fails if empty
+          files: dist/upload/*
+          overwrite_files: true
+          fail_on_unmatched_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+

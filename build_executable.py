@@ -195,6 +195,13 @@ def run_pyinstaller(
     print("\n--- PyInstaller Build Complete ---")
     if pyhabitat.on_macos():
         move_macos_app(macos_app)
+
+        # --- PURGE THE DUPLICATE RAW UNIX FOLDER STRUCTURE ---
+        duplicate_cli_dir = Path("dist") / dynamic_exe_name
+        if duplicate_cli_dir.exists() and duplicate_cli_dir.is_dir():
+            print(f"Cleaning up duplicate raw Unix folder: {duplicate_cli_dir.resolve()}")
+            shutil.rmtree(duplicate_cli_dir)
+            
         final_path = DIST_DIR_ONEDIR / macos_app
     return final_path.resolve()
 
