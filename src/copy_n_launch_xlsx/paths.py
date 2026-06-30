@@ -9,9 +9,10 @@ import logging
 APP_NAME = "copy-n-launch-xlsx"
 SRC_FOLDER_NAME = "copy_n_launch_xlsx" 
 APP_DIR = Path.home() / f".{APP_NAME}"
-LOGO_FILENAME_PNG = "max-blue_1024x1024.png"
-LOGO_FILENAME_ICO = "max-blue_256x256.ico"
+LOGO_FILENAME_PNG = "max-green_1024x1024.png"
+LOGO_FILENAME_ICO = "max-green_256x256.ico"
 DEFAULT_FILLED_SHEETS_DIR = APP_DIR / "filled_daily"
+REPO_URL = "https://github.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx"
 
 
 BLANK_DAILY_XLSX = (

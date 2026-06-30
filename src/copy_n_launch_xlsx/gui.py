@@ -23,6 +23,7 @@ from .paths import (
             LOGO_FILENAME_PNG,
             LOGO_FILENAME_ICO,
             get_icon_path,
+            REPO_URL
             )
 
 logger=logging.getLogger(__name__)
@@ -119,6 +120,12 @@ class GuiApp:
 
     def _magic_button(self):
         return None# self._show_system_explorer_gui()
+    
+    def _about_button(self):
+        messagebox.showinfo(
+            "About",
+            f"URL: \n\n{REPO_URL} \n\nFor help, please see Clayton Bennett or Keith Presson."
+        )
     def _create_widgets(self):
         """Compact layout with reduced padding."""
 
@@ -126,7 +133,7 @@ class GuiApp:
         control_frame = ttk.Frame(self.root, padding=(4, 2, 4, 2))
         control_frame.pack(fill='x', pady=(2, 2))
 
-        self.btn_open_browser_to_files = ttk.Button(control_frame, text="Magic Button", command=lambda: self._magic_button(), width=12)
+        self.btn_open_browser_to_files = ttk.Button(control_frame, text="About", command=lambda: self._about_button(), width=12) # Magic Button
         self.btn_open_browser_to_files.grid(row=1, column=2, columnspan=2, pady=6, sticky='ew', padx=(0, 3))
 
         # === Row 3: Action Buttons ===
