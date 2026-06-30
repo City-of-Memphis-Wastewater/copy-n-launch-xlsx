@@ -196,7 +196,9 @@ def run_pyinstaller(
         raise SystemExit(e.returncode)
 
     print("\n--- PyInstaller Build Complete ---")
-    move_macos_app(macos_app)
+    if pyhabitat.on_macos():
+        move_macos_app(macos_app)
+        final_path = DIST_DIR_ONEDIR / macos_app
     return final_path.resolve()
 
 
@@ -254,7 +256,7 @@ if __name__ == "__main__":
         is_ci = os.environ.get('GITHUB_ACTIONS') == 'true'
 
         # Only run text-based --help check if we aren't a hidden-window GUI binary
-        is_windowed_build = IS_WINDOWS_BUILD and (args.mode == "onedir") and pyhabitat.tkinter_is_available()
+        is_windowed_build = (IS_WINDOWS_BUILD or pyhabitat.on_macos()) and (args.mode == "onedir") and pyhabitat.tkinter_is_available()
 
         #if is_ci:
         #    print("[CI DETECTED] Skipping CLI help text check to prevent headless stream hangs.")
