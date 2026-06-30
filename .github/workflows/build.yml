@@ -46,6 +46,9 @@ jobs:
           Remove-Item -Path dist/, build/, *.egg-info -Recurse -Force -ErrorAction SilentlyContinue
           echo "Clean complete."
 
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
         with:
