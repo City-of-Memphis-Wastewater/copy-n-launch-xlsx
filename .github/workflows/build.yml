@@ -100,7 +100,15 @@ jobs:
           Write-Host "========================================="
           if (Test-Path dist) {
               # Recursive file search to reveal exactly what PyInstaller named the outputs
-              Get-ChildItem dist -Recurse | Select-Object FullName, Length, PSIsContainer | Format-Table -AutoSize
+              # Get-ChildItem dist -Recurse | Select-Object FullName, Length, PSIsContainer | Format-Table -AutoSize
+              Get-ChildItem dist -Recurse |
+                  Select-Object @{
+                      Name='Path'
+                      Expression = {
+                          (Resolve-Path -Relative $_.FullName) -replace '^[\\/]*dist[\\/]?', ''
+                      }
+                  }, Length, PSIsContainer |
+                  Format-Table -AutoSize
           } else {
               Write-Error "CRITICAL: The dist/ folder doesn't even exist!"
           }
