@@ -14,7 +14,7 @@ import logging
 # --- Core Imports ---
 
 from copy_n_launch_xlsx.paths import SRC_FOLDER_NAME
-from ._version import get_version
+from ._version import get_version, __version__
 from .tk_utils import center_window_on_primary
 from .core import copy_then_rename_and_move_then_try_launch
 from .paths import (
@@ -30,6 +30,18 @@ logger=logging.getLogger(__name__)
 
 APP_W = 100
 APP_H = 50
+
+
+def apply_windows_taskbar_icon():
+    """Forces Windows to explicitly cluster this process under its unique ID signature."""
+    if pyhabitat.on_windows():
+        try:
+            # Format standard: 'CompanyName.ProductName.SubProduct.Version'
+            myappid = f"CityOfMemphisWastewater.CopyNLaunch.Xlsx.{__version__}"
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+            print(f"Successfully bound AppUserModelID: {myappid}")
+        except Exception as e:
+            print(sys.stderr, f"Failed to bind Windows AppUserModelID signature: {e}")
 
 # RedirectText
 class GuiApp:
@@ -193,6 +205,9 @@ class GuiApp:
             messagebox.showerror("Error", f"Could not open system explorer: {e}")
 
 def start_gui(time_auto_close: int = 0):
+
+    apply_windows_taskbar_icon()
+
     # 1. Initialize Root and Splash instantly
     root = tk.Tk()
     root.withdraw() # Hide the ugly default window for a split second

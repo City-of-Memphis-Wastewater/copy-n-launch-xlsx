@@ -48,36 +48,28 @@ def get_icon_path(filename: str) -> Path:
 # can i use a string to effectively define the dir where i want the copied and renamed sheet to land?
 # it can be in
 def pull_in_configured_path_or_use_default():
-    filled_sheets_dir_configured = config_mngr.set(service="copy-n-launch",item="filled-sheet-dir",value="",overwrite=False) # creates file and defauly value if it doesn't exist
-    filled_sheets_dir_configured = config_mngr.get(service="copy-n-launch",item="filled-sheet-dir") # allows retrieval of edited value
+    config_mngr.set(service="copy-n-launch",item="filled-sheet-dir",value="",overwrite=False) # creates file and defauly value if it doesn't exist
+    configured_str = config_mngr.get(service="copy-n-launch",item="filled-sheet-dir") # allows retrieval of edited value
 
-    filled_sheets_dir = DEFAULT_FILLED_SHEETS_DIR 
-    if not filled_sheets_dir_configured == "":  
-        filled_sheets_path_hypothetical = Path(filled_sheets_dir_configured).expanduser().resolve()
-        if filled_sheets_path_hypothetical.is_absolute(): # is in the form of a a full local path:
-            filled_sheets_dir = filled_sheets_path_hypothetical
+    # If the user left it blank, or it's purely whitespace, use the default path
+    if not configured_str or not str(configured_str).strip():
+        return DEFAULT_FILLED_SHEETS_DIR
 
-    return filled_sheets_dir
+    # Expand variables like ~ and resolve to absolute clean paths safely
+    resolved_path = Path(str(configured_str).strip()).expanduser().resolve()
+    
+    # Validation fallback if they typed a relative path or junk string
+    if not resolved_path.is_absolute():
+        logger.warning(f"Configured path '{configured_str}' is invalid or relative. Using default.")
+        return DEFAULT_FILLED_SHEETS_DIR
 
-def pull_in_env_path_or_use_default():
-    filled_sheets_dir_configured = env_mngr.set("TARGETCOPYDIR",value="",overwrite=False) # creates file and defauly value if it doesn't exist
-    filled_sheets_dir_configured = env_mngr.get("TARGETCOPYDIR") # allows retrieval of edited value
-
-    filled_sheets_dir = DEFAULT_FILLED_SHEETS_DIR 
-    if not filled_sheets_dir_configured == "":  
-        filled_sheets_path_hypothetical = Path(filled_sheets_dir_configured).expanduser().resolve()
-        if filled_sheets_path_hypothetical.is_absolute(): # is in the form of a a full local path:
-            filled_sheets_dir = filled_sheets_path_hypothetical
-
-    return filled_sheets_dir
-
+    return resolved_path
 def ensure_filled_sheet_dir(filled_sheets_path):
     filled_sheet_canary_file = filled_sheets_path / ".canary"
     filled_sheet_canary_file.parent.mkdir(parents=True, exist_ok=True)
 
 def get_target_copy_dir():
     filled_sheets_dir = pull_in_configured_path_or_use_default()
-    #filled_sheets_dir = pull_in_env_path_or_use_default()
     ensure_filled_sheet_dir(filled_sheets_dir)
     return filled_sheets_dir
 
