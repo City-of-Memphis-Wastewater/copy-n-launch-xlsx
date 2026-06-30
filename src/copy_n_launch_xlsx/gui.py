@@ -41,7 +41,7 @@ def apply_windows_taskbar_icon():
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
             print(f"Successfully bound AppUserModelID: {myappid}")
         except Exception as e:
-            print(sys.stderr, f"Failed to bind Windows AppUserModelID signature: {e}")
+            print(f"Failed to bind Windows AppUserModelID signature: {e}", file=sys.stderr)
 
 # RedirectText
 class GuiApp:
