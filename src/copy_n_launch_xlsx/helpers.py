@@ -2,6 +2,7 @@
 from __future__ import annotations
 from pathlib import Path
 import pyhabitat
+import os
 
 def get_friendly_path(full_path: str) -> str:
     """

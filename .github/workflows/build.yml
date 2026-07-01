@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest, macos-14]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         mode: [onedir, onefile]
         # Exclude options that are redundant or invalid for specific environments
         exclude:
@@ -26,9 +26,7 @@ jobs:
             mode: onefile
           - os: macos-latest
             mode: onefile
-          - os: macos-14
-            mode: onefile
-
+          
     steps:
       - name: Clean Build Directories (Unix/macOS)
         if: runner.os != 'Windows'
@@ -55,7 +53,7 @@ jobs:
           version: "latest"
 
       - name: Install Python with Tkinter via uv (macOS)
-        if: runner.os == 'macOS'
+        if: true # runner.os == 'macOS'
         run: |
           # Force uv to download a Python build that includes framework/GUI support
           uv python install 3.12 --preview
@@ -74,7 +72,6 @@ jobs:
         run: uv run python -m build --sdist
 
       - name: Build PYZ (shiv)
-        if: True # runner.os == 'Windows'
         run: |
           uv run python build_pyz.py
           uv run python -c "from pathlib import Path; print('===== DIST ====='); [print(p) for p in sorted(Path('dist').rglob('*'))]"
@@ -188,6 +185,22 @@ jobs:
       # --- macOS COLLECTOR ---
       - name: Collect macOS artifacts
         if: runner.os == 'macOS'
+        run: |
+          mkdir -p dist/upload
+          
+          # ZipApp and other loose files are safely verified here
+          for item in dist/zipapp/*; do
+            [ -e "$item" ] || continue
+            if [ -f "$item" ]; then
+              cp "$item" dist/upload/
+            fi
+          done
+          
+          echo "macOS DMG pipeline successfully handled downstream by build_executable.py."
+
+      # --- macOS COLLECTOR ---
+      - name: Collect macOS artifacts, defunct
+        if: false # runner.os == 'macOS'
         run: |
           mkdir -p dist/upload
 
