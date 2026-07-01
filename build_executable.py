@@ -145,8 +145,8 @@ def construct_pyinstaller_command(dynamic_exe_name, dist_path,mode, main_script_
     if mode == PyinsMode.ONEFILE: 
         onedir_or_onefile_flag = f'--{PyinsMode.ONEFILE.value}'
     elif mode == PyinsMode.ONEDIR: # default
-        if not pyhabitat.on_macos():
-            onedir_or_onefile_flag = f'--{PyinsMode.ONEDIR.value}'
+        #if not pyhabitat.on_macos():
+        onedir_or_onefile_flag = f'--{PyinsMode.ONEDIR.value}'
 
     if onedir_or_onefile_flag:
         base_command.append(onedir_or_onefile_flag)
@@ -197,7 +197,7 @@ def run_pyinstaller(
     """
     
     print(f"--- {SRC_FOLDER_NAME} Executable Builder ---")
-    app_filename, dist_path, app_path, ext = determine_app_path_and_dist_path_and_app_filename(dynamic_exe_name, mode)
+    app_filename, dist_path, app_path, ext = determine_app_path_and_dist_path_and_app_filename(dynamic_exe_name, mode, is_windowed_build)
 
     # Clean and Setup
     clean_artifacts(exe_name=dynamic_exe_name, mode=mode, file_extension=ext)

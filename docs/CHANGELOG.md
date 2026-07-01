@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.5] - 2026-06-21
+### Changed:
+- Mess with build_executable.py, hope for a miracle.
+
+---
+
 ## [0.2.4] - 2026-06-21
 ### Changed:
 - .dmg support for mac_os.
