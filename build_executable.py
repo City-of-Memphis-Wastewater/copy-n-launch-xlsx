@@ -184,7 +184,7 @@ def run_pyinstaller(
             f"--icon={get_ico_icon().resolve()}"
         )
 
-    if pyhabitat.on_macos():
+    if False and pyhabitat.on_macos():
         base_command.append(
             f"--icon={get_icns_icon().resolve()}"
         )
