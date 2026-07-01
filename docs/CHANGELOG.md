@@ -6,6 +6,13 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.3] - 2026-06-21
+### Changed:
+- .dmg support for mac_os.
+- buid_executable.py modularity improved.
+
+---
+
 ## [0.2.2] - 2026-06-20
 ### Changed:
 - Taskbar icon permanence, using gui.apply_windows_taskbar_icon()
