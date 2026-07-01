@@ -190,7 +190,6 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           mkdir -p dist/upload
-          brew install create-dmg
 
           for item in dist/onedir/* dist/onefile/* dist/zipapp/*; do
             [ -e "$item" ] || continue
