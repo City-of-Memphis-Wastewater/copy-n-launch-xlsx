@@ -37,13 +37,16 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 HOOKS_DIR_ABS = PROJECT_ROOT / "pyinstaller_hooks"
 
 # --- Dynamic Naming Placeholder (Simplified version for this context) ---
-def form_dynamic_name(pkg_name: str, version: str) -> str:
+def form_dynamic_name(pkg_name: str, version: str, mode: str) -> str:
     """Creates a standardized binary name descriptor."""
 
     os_tag = pyhabitat.SystemInfo().get_os_tag()
     arch = pyhabitat.SystemInfo().get_arch()
     py_ver = f"py{sys.version_info.major}{sys.version_info.minor}"
-    return f"{pkg_name}-{version}-{py_ver}-{os_tag}-{arch}"
+    dynamic_exe_name = f"{pkg_name}-{version}-{py_ver}-{os_tag}-{arch}"
+    if mode == "onefile":
+        dynamic_exe_name += "-onefile"
+    return dynamic_exe_name
 
 # --- Windows Resource File (version.rc) ---
 def generate_rc_file(package_version: str):
@@ -107,35 +110,38 @@ def clean_artifacts(exe_name: str, mode: str):
     if IS_WINDOWS_BUILD and RC_FILE.exists():
         RC_FILE.unlink()
 
+def determine_app_path_and_dist_path_and_app_filename(dynamic_exe_name:str, mode: str):
+        ext = determine_file_extension()
+        app_filename = f"{dynamic_exe_name}{ext}"
+        if mode == "onefile":
+            dist_path = DIST_DIR_ONEFILE 
+            app_path = DIST_DIR_ONEFILE/ app_filename
+        elif mode  == "onedir":
+            if pyhabitat.on_macos():
+                dist_path = STANDARD_MACOS_APP_DIST_DIR
+                app_path = STANDARD_MACOS_APP_DIST_DIR / app_filename # true before move
+            else:
+                dist_path = DIST_DIR_ONEDIR
+                app_path = DIST_DIR_ONEDIR / dynamic_exe_name / app_filename
+        dist_path.mkdir(parents=True, exist_ok=True)
+        print(f"Executable will be located at: {app_path.resolve()}", file=sys.stderr) 
+        return app_filename, dist_path,app_path
+    
+
 # --- Main PyInstaller Execution ---
 
 def run_pyinstaller(
         dynamic_exe_name: str, 
         main_script_path: Path,
         mode: str = "onedir",
+        is_windowed_build: bool = True,
         ):
     """
     Run PyInstaller to build the executable.
     """
     
     print(f"--- {SRC_FOLDER_NAME} Executable Builder ---")
-
-    #ext = '.exe' if IS_WINDOWS_BUILD else ''
-    ext = determine_file_extension()
-    app_filename = f"{dynamic_exe_name}{ext}"
-    if mode == "onefile":
-        mode_dist_path = DIST_DIR_ONEFILE 
-        app_path = DIST_DIR_ONEFILE/ app_filename
-    elif mode  == "onedir":
-        if pyhabitat.on_macos():
-            app_path = STANDARD_MACOS_APP_DIST_DIR / app_filename # true before move
-        else:
-            mode_dist_path = DIST_DIR_ONEDIR
-            app_path = DIST_DIR_ONEDIR / dynamic_exe_name / app_filename
-
-    mode_dist_path.mkdir(parents=True, exist_ok=True)
-
-    print(f"Executable is located at: {app_path.resolve()}") 
+    app_filename, dist_path, app_path = determine_app_path_and_dist_path_and_app_filename(dynamic_exe_name, mode)
 
     # Clean and Setup
     clean_artifacts(exe_name=dynamic_exe_name, mode=mode)
@@ -157,6 +163,7 @@ def run_pyinstaller(
         f'--add-data={PROJECT_ROOT / "src" / SRC_FOLDER_NAME / "data"}{os.path.pathsep}{SRC_FOLDER_NAME}/data',
         
         # Output paths
+        f'--distpath={dist_path}',
         f'--workpath={BUILD_DIR / "work"}',
         f'--specpath={BUILD_DIR}',
 
@@ -166,12 +173,6 @@ def run_pyinstaller(
         #'--log-level=DEBUG',
 
     ]
-    if pyhabitat.on_macos():
-        flag = f'--distpath={STANDARD_MACOS_APP_DIST_DIR}'
-    else:
-        flag = f'--distpath={mode_dist_path}'
-    base_command.append(flag)
-
 
     # msix.yml and build.yml have been adjusted to expect either onefile or onedir
     if mode == "onefile": 
@@ -183,7 +184,7 @@ def run_pyinstaller(
             base_command.append(onedir_or_onefile_flag)
     
     # Prepare for MSIX
-    is_windowed_build = (IS_WINDOWS_BUILD or pyhabitat.on_macos()) and (mode == "onedir")
+    
     if is_windowed_build:
         flag = '--windowed'
         base_command.append(flag)
@@ -298,31 +299,26 @@ def run_build_executable():
         help = "PyInstaller build mode.",
         )
     args = parser.parse_args()
+    is_windowed_build = (IS_WINDOWS_BUILD) and (args.mode == "onedir") and pyhabitat.tkinter_is_available()
+
     try:
         package_version = get_version()
         if package_version == "0.0.0":
             print("FATAL: Cannot find package version in pyproject.toml.", file=sys.stderr)
             sys.exit(1)
         
-        # 0. Ensure data files are available to build package
-        ##ensure_data_files_for_build()
-
-        # 1. Ensure PyInstaller is installed (if you haven't done it manually)
-        # uv run python -m pip install pyinstaller 
-        
-        # 2. Generate RC file (conditionally)
+        # Generate RC file (conditionally)
         generate_rc_file(package_version)
 
         # 3. Determine the executable name (without the extension)
-        executable_descriptor = form_dynamic_name(SRC_FOLDER_NAME, package_version)
-        if args.mode == "onefile":
-            executable_descriptor += "-onefile"
+        executable_descriptor = form_dynamic_name(SRC_FOLDER_NAME, package_version, args.mode)
 
         # 4. Run the installer
         app_path, app_filename = run_pyinstaller(
             executable_descriptor, 
             CLI_MAIN_FILE, 
             mode = args.mode,
+            is_windowed_build= is_windowed_build,
             )
 
         # Only test GUI if we aren't in a headless CI environment
@@ -330,10 +326,6 @@ def run_build_executable():
         is_ci = os.environ.get('GITHUB_ACTIONS') == 'true'
 
         # Only run text-based --help check if we aren't a hidden-window GUI binary
-        is_windowed_build = (IS_WINDOWS_BUILD) and (args.mode == "onedir") and pyhabitat.tkinter_is_available()
-
-        #if is_ci:
-        #    print("[CI DETECTED] Skipping CLI help text check to prevent headless stream hangs.")
         if is_windowed_build:
             print("Skipping CLI help text check because artifact was built with --windowed.")
         elif not pyhabitat.on_macos():
