@@ -114,18 +114,18 @@ def run_pyinstaller(
     ext = '.exe' if IS_WINDOWS_BUILD else ''
     if mode == "onefile":
         mode_dist_path = DIST_DIR_ONEFILE 
-        final_path = DIST_DIR_ONEFILE/ f"{dynamic_exe_name}{ext}"
+        app_path = DIST_DIR_ONEFILE/ f"{dynamic_exe_name}{ext}"
     elif mode  == "onedir":
         mode_dist_path = DIST_DIR_ONEDIR
         if pyhabitat.on_macos():
-            final_path = Path("dist") / macos_app
+            app_path = Path("dist") / macos_app
             mode_dist_path = Path("dist")
         else:
-            final_path = DIST_DIR_ONEDIR / dynamic_exe_name / f"{dynamic_exe_name}{ext}"
+            app_path = DIST_DIR_ONEDIR / dynamic_exe_name / f"{dynamic_exe_name}{ext}"
 
     mode_dist_path.mkdir(parents=True, exist_ok=True)
 
-    print(f"Executable is located at: {final_path.resolve()}") 
+    print(f"Executable is located at: {app_path.resolve()}") 
 
     # Clean and Setup
     clean_artifacts(exe_name=dynamic_exe_name, mode=mode)
@@ -204,7 +204,7 @@ def run_pyinstaller(
 
     print("\n--- PyInstaller Build Complete ---")
     if pyhabitat.on_macos():
-        move_macos_app(macos_app)
+        #move_macos_app(macos_app)
 
         # --- PURGE THE DUPLICATE RAW UNIX FOLDER STRUCTURE ---
         duplicate_cli_dir = Path("dist") / dynamic_exe_name
@@ -212,8 +212,8 @@ def run_pyinstaller(
             print(f"Cleaning up duplicate raw Unix folder: {duplicate_cli_dir.resolve()}")
             shutil.rmtree(duplicate_cli_dir)
             
-        final_path = DIST_DIR_ONEDIR / macos_app
-    return final_path.resolve()
+        app_path = DIST_DIR_ONEDIR / macos_app
+    return app_path.resolve()
 
 
 def move_macos_app(macos_app):
@@ -229,7 +229,8 @@ def move_macos_app(macos_app):
         if dst.exists():
             shutil.rmtree(dst)
         shutil.move(str(src), str(dst))
-
+        return dst
+    return None
 
 
 def build_dmg(app: Path) -> Path:
@@ -340,7 +341,9 @@ if __name__ == "__main__":
 
 
         if pyhabitat.on_macos():
-            build_dmg(path)
+            app = move_macos_app(app)
+            dmg = build_dmg(app)
+            #build_dmg(path)
 
     except SystemExit as e:
         sys.exit(e.code)
