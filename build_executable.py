@@ -35,14 +35,13 @@ STANDARD_MACOS_APP_DIST_DIR = DIST_DIR
 BUILD_DIR = Path("build/pyinstaller_work")
 RC_TEMPLATE = Path('build_assets') / 'version.rc.template' # Assume this template exists for Windows
 RC_FILE = Path('build_assets') / 'version.rc'
-IS_WINDOWS_BUILD = pyhabitat.on_windows()
 PROJECT_ROOT = Path(__file__).resolve().parent
 HOOKS_DIR_ABS = PROJECT_ROOT / "pyinstaller_hooks"
 
 # --- Windows Resource File (version.rc) ---
 def generate_rc_file(package_version: str):
     """Generates the .rc file using the provided version string, only on Windows."""
-    if not IS_WINDOWS_BUILD: return
+    if not pyhabitat.on_windows(): return
 
     if not RC_TEMPLATE.exists():
         print(f"WARNING: RC template not found at {RC_TEMPLATE}. Skipping version info embedding.", file=sys.stderr)
@@ -63,14 +62,14 @@ def setup_dirs():
     DIST_DIR_ONEFILE.mkdir(parents=True, exist_ok=True)
     DIST_DIR_ONEDIR.mkdir(parents=True, exist_ok=True)
 
-def determine_file_extension():
-    if IS_WINDOWS_BUILD:
+def determine_file_extension(is_windowed_build:bool):
+    if pyhabitat.on_windows():
         return '.exe'
-    elif pyhabitat.on_macos():
+    elif pyhabitat.on_macos() and is_windowed_build:
         return '.app'
     return ''
 
-def clean_artifacts(exe_name: str, mode: PyinsMode):
+def clean_artifacts(exe_name: str, mode: PyinsMode, file_extension: str):
     """Clean specific output and build folders based on mode."""
     
     
@@ -82,9 +81,7 @@ def clean_artifacts(exe_name: str, mode: PyinsMode):
     else:
         # In onefile, it's just the .exe (or ELF) file
         mode_dir = DIST_DIR_ONEFILE
-        #ext = '.exe' if IS_WINDOWS_BUILD else ''
-        ext = determine_file_extension()
-        target = mode_dir / f"{exe_name}{ext}"
+        target = mode_dir / f"{exe_name}{file_extension}"
 
     if target.exists():
         print(f"Removing old build artifact: {target.resolve()}")
@@ -98,11 +95,11 @@ def clean_artifacts(exe_name: str, mode: PyinsMode):
         print(f"Removing build/pyinstaller_work folder: {BUILD_DIR.resolve()}")
         shutil.rmtree(BUILD_DIR)
 
-    if IS_WINDOWS_BUILD and RC_FILE.exists():
+    if pyhabitat.on_windows() and RC_FILE.exists():
         RC_FILE.unlink()
 
-def determine_app_path_and_dist_path_and_app_filename(dynamic_exe_name:str, mode: PyinsMode):
-        ext = determine_file_extension()
+def determine_app_path_and_dist_path_and_app_filename(dynamic_exe_name:str, mode: PyinsMode, is_windowed_build:bool):
+        ext = determine_file_extension(is_windowed_build)
         app_filename = f"{dynamic_exe_name}{ext}"
         if mode == PyinsMode.ONEFILE:
             dist_path = DIST_DIR_ONEFILE 
@@ -116,7 +113,7 @@ def determine_app_path_and_dist_path_and_app_filename(dynamic_exe_name:str, mode
                 app_path = DIST_DIR_ONEDIR / dynamic_exe_name / app_filename
         dist_path.mkdir(parents=True, exist_ok=True)
         print(f"Executable will be located at: {app_path.resolve()}", file=sys.stderr) 
-        return app_filename, dist_path,app_path
+        return app_filename, dist_path,app_path, ext
 
 def construct_pyinstaller_command(dynamic_exe_name, dist_path,mode, main_script_path, is_windowed_build):    
     # PyInstaller Command Construction
@@ -163,7 +160,7 @@ def construct_pyinstaller_command(dynamic_exe_name, dist_path,mode, main_script_
         print("Building without the --noconsole or --windowed flag, to favor CLI usage for the artifact, because GUI is not available.")
 
     # Add Windows resource file if applicable
-    if IS_WINDOWS_BUILD and RC_FILE.exists():
+    if pyhabitat.on_windows() and RC_FILE.exists():
         #base_command.append(f'--version-file={RC_FILE.name}')
         base_command.append(f'--version-file={RC_FILE.resolve()}')
         base_command.append(
@@ -200,10 +197,10 @@ def run_pyinstaller(
     """
     
     print(f"--- {SRC_FOLDER_NAME} Executable Builder ---")
-    app_filename, dist_path, app_path = determine_app_path_and_dist_path_and_app_filename(dynamic_exe_name, mode)
+    app_filename, dist_path, app_path, ext = determine_app_path_and_dist_path_and_app_filename(dynamic_exe_name, mode)
 
     # Clean and Setup
-    clean_artifacts(exe_name=dynamic_exe_name, mode=mode)
+    clean_artifacts(exe_name=dynamic_exe_name, mode=mode, file_extension=ext)
     setup_dirs()
 
 
@@ -211,20 +208,20 @@ def run_pyinstaller(
     full_command = construct_pyinstaller_command(dynamic_exe_name, dist_path,mode, main_script_path, is_windowed_build)
     call_full_pyinstaller_command(full_command)
     
-    purge_raw_unix_structure_from_macos_build(dynamic_exe_name)
+    purge_raw_unix_structure_from_macos_build(dynamic_exe_name, mode)
 
     print("\n--- PyInstaller Build Complete ---")
     return app_path.resolve(), app_filename
 
-def purge_raw_unix_structure_from_macos_build(dynamic_exe_name):
-    if pyhabitat.on_macos():
+def purge_raw_unix_structure_from_macos_build(dynamic_exe_name:str, mode:PyinsMode):
+    if pyhabitat.on_macos() and mode == PyinsMode.ONEDIR:
         # --- PURGE THE DUPLICATE RAW UNIX FOLDER STRUCTURE ---
         duplicate_cli_dir = Path("dist") / dynamic_exe_name
         if duplicate_cli_dir.exists() and duplicate_cli_dir.is_dir():
             print(f"Cleaning up duplicate raw Unix folder: {duplicate_cli_dir.resolve()}")
             shutil.rmtree(duplicate_cli_dir)
 
-def move_macos_app(macos_app_filename):
+def move_macos_app(macos_app_filename, app_path):
     from pathlib import Path
     import shutil
 
@@ -237,9 +234,11 @@ def move_macos_app(macos_app_filename):
             shutil.rmtree(dst)
         shutil.move(str(src), str(dst))
         return dst
-    return None
+    return app_path
 
 def build_macos_dmg(app: Path) -> Path:
+    print("build_macos_dmg()")
+    print(f"{app=}")
     if app.suffix != ".app":
         raise ValueError(f"Expected a .app bundle, got {app}")
 
@@ -281,13 +280,15 @@ def build_macos_dmg(app: Path) -> Path:
     return dmg_path
 
 def executable_for_testing(path: Path) -> Path:
+    print("executable_for_testing()")
+    print(f"{path=}")
     if pyhabitat.on_macos() and path.suffix == ".app":
         return path / "Contents" / "MacOS" / path.stem
     return path
 
-def post_process_masos_build(app_filename, app_path):
-    if pyhabitat.on_macos():
-        app_path = move_macos_app(app_filename) 
+def post_process_macos_build(app_filename, app_path, mode: PyinsMode):
+    if pyhabitat.on_macos() and mode == PyinsMode.ONEDIR:
+        app_path = move_macos_app(app_filename, app_path) 
         dmg_path = build_macos_dmg(app_path)
         return app_path, dmg_path
     return app_path, None
@@ -320,7 +321,7 @@ def run_build_executable():
     
     mode = args.mode
     
-    is_windowed_build = (IS_WINDOWS_BUILD) and (args.mode == "onedir") and pyhabitat.tkinter_is_available()
+    is_windowed_build = (pyhabitat.on_windows() or pyhabitat.on_macos()) and (mode == PyinsMode.ONEDIR) and pyhabitat.tkinter_is_available()
 
     try:
         package_version = get_version()
@@ -342,7 +343,7 @@ def run_build_executable():
             is_windowed_build= is_windowed_build,
             )
         
-        app_path, dmg_path = post_process_masos_build(app_filename, app_path)
+        app_path, dmg_path = post_process_macos_build(app_filename, app_path, mode)
         test_build_artifacts(app_path)
 
 
