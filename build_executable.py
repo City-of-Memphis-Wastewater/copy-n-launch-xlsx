@@ -28,6 +28,7 @@ CLI_MAIN_FILE = Path.cwd() / 'src' / SRC_FOLDER_NAME / "__main__.py"
 DIST_DIR = Path("dist")
 DIST_DIR_ONEFILE = DIST_DIR / "onefile" 
 DIST_DIR_ONEDIR = DIST_DIR / "onedir" 
+STANDARD_MACOS_APP_DIST_DIR = DIST_DIR
 BUILD_DIR = Path("build/pyinstaller_work")
 RC_TEMPLATE = Path('build_assets') / 'version.rc.template' # Assume this template exists for Windows
 RC_FILE = Path('build_assets') / 'version.rc'
@@ -126,13 +127,10 @@ def run_pyinstaller(
         mode_dist_path = DIST_DIR_ONEFILE 
         app_path = DIST_DIR_ONEFILE/ app_filename
     elif mode  == "onedir":
-        mode_dist_path = DIST_DIR_ONEDIR
         if pyhabitat.on_macos():
-            standard_macos_app_dist_path = Path("dist")
-            app_path = standard_macos_app_dist_path / app_filename # true after move. refers to Mach-o ?
-            app_path = DIST_DIR_ONEDIR / app_filename # true before move. refers to .app file
-            
+            app_path = STANDARD_MACOS_APP_DIST_DIR / app_filename # true before move
         else:
+            mode_dist_path = DIST_DIR_ONEDIR
             app_path = DIST_DIR_ONEDIR / dynamic_exe_name / app_filename
 
     mode_dist_path.mkdir(parents=True, exist_ok=True)
@@ -169,7 +167,7 @@ def run_pyinstaller(
 
     ]
     if pyhabitat.on_macos():
-        flag = f'--distpath={standard_macos_app_dist_path}'
+        flag = f'--distpath={STANDARD_MACOS_APP_DIST_DIR}'
     else:
         flag = f'--distpath={mode_dist_path}'
     base_command.append(flag)
@@ -229,13 +227,12 @@ def purge_raw_unix_structure_from_macos_build(dynamic_exe_name):
             print(f"Cleaning up duplicate raw Unix folder: {duplicate_cli_dir.resolve()}")
             shutil.rmtree(duplicate_cli_dir)
 
-def move_macos_app(macos_app):
+def move_macos_app(macos_app_filename):
     from pathlib import Path
     import shutil
 
-    src = Path(f"dist/{macos_app}")
-    dst = Path(f"dist/onedir/{macos_app}")
-
+    src = STANDARD_MACOS_APP_DIST_DIR / macos_app_filename
+    dst = DIST_DIR_ONEDIR  / macos_app_filename
     dst.parent.mkdir(parents=True, exist_ok=True)
 
     if src.exists():
