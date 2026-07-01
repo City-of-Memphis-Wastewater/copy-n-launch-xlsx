@@ -15,6 +15,8 @@ import argparse
 import pyhabitat
 import tempfile
 
+from pyhabitat.environment import on_macos
+
 ##from copy_n_launch_xlsx.datacopy import ensure_data_files_for_build
 from copy_n_launch_xlsx._version import get_version, __version__
 from copy_n_launch_xlsx.paths import (
@@ -66,6 +68,12 @@ def setup_dirs():
     DIST_DIR_ONEFILE.mkdir(parents=True, exist_ok=True)
     DIST_DIR_ONEDIR.mkdir(parents=True, exist_ok=True)
 
+def determine_file_extension():
+    if IS_WINDOWS_BUILD:
+        return '.exe'
+    elif pyhabitat.on_macos():
+        return '.app'
+    return ''
 
 def clean_artifacts(exe_name: str, mode: str):
     """Clean specific output and build folders based on mode."""
@@ -79,7 +87,8 @@ def clean_artifacts(exe_name: str, mode: str):
     else:
         # In onefile, it's just the .exe (or ELF) file
         mode_dir = DIST_DIR_ONEFILE
-        ext = '.exe' if IS_WINDOWS_BUILD else ''
+        #ext = '.exe' if IS_WINDOWS_BUILD else ''
+        ext = determine_file_extension()
         target = mode_dir / f"{exe_name}{ext}"
 
     if target.exists():
@@ -110,18 +119,21 @@ def run_pyinstaller(
     
     print(f"--- {SRC_FOLDER_NAME} Executable Builder ---")
 
-    macos_app = f"{dynamic_exe_name}.app"
-    ext = '.exe' if IS_WINDOWS_BUILD else ''
+    #ext = '.exe' if IS_WINDOWS_BUILD else ''
+    ext = determine_file_extension()
+    app_filename = f"{dynamic_exe_name}{ext}"
     if mode == "onefile":
         mode_dist_path = DIST_DIR_ONEFILE 
-        app_path = DIST_DIR_ONEFILE/ f"{dynamic_exe_name}{ext}"
+        app_path = DIST_DIR_ONEFILE/ app_filename
     elif mode  == "onedir":
         mode_dist_path = DIST_DIR_ONEDIR
         if pyhabitat.on_macos():
-            app_path = Path("dist") / macos_app
-            mode_dist_path = Path("dist")
+            standard_macos_app_dist_path = Path("dist")
+            app_path = standard_macos_app_dist_path / app_filename # true after move. refers to Mach-o ?
+            app_path = DIST_DIR_ONEDIR / app_filename # true before move. refers to .app file
+            
         else:
-            app_path = DIST_DIR_ONEDIR / dynamic_exe_name / f"{dynamic_exe_name}{ext}"
+            app_path = DIST_DIR_ONEDIR / dynamic_exe_name / app_filename
 
     mode_dist_path.mkdir(parents=True, exist_ok=True)
 
@@ -147,7 +159,6 @@ def run_pyinstaller(
         f'--add-data={PROJECT_ROOT / "src" / SRC_FOLDER_NAME / "data"}{os.path.pathsep}{SRC_FOLDER_NAME}/data',
         
         # Output paths
-        f'--distpath={mode_dist_path}', # <--
         f'--workpath={BUILD_DIR / "work"}',
         f'--specpath={BUILD_DIR}',
 
@@ -157,7 +168,12 @@ def run_pyinstaller(
         #'--log-level=DEBUG',
 
     ]
-    
+    if pyhabitat.on_macos():
+        flag = f'--distpath={standard_macos_app_dist_path}'
+    else:
+        flag = f'--distpath={mode_dist_path}'
+    base_command.append(flag)
+
 
     # msix.yml and build.yml have been adjusted to expect either onefile or onedir
     if mode == "onefile": 
@@ -201,20 +217,17 @@ def run_pyinstaller(
     except subprocess.CalledProcessError as e:
         print(f"PyInstaller failed with exit code {e.returncode}!", file=sys.stderr)
         raise SystemExit(e.returncode)
-
+    purge_raw_unix_structure_from_macos_build(dynamic_exe_name)
     print("\n--- PyInstaller Build Complete ---")
-    if pyhabitat.on_macos():
-        #move_macos_app(macos_app)
+    return app_path.resolve(), app_filename
 
+def purge_raw_unix_structure_from_macos_build(dynamic_exe_name):
+    if pyhabitat.on_macos():
         # --- PURGE THE DUPLICATE RAW UNIX FOLDER STRUCTURE ---
         duplicate_cli_dir = Path("dist") / dynamic_exe_name
         if duplicate_cli_dir.exists() and duplicate_cli_dir.is_dir():
             print(f"Cleaning up duplicate raw Unix folder: {duplicate_cli_dir.resolve()}")
             shutil.rmtree(duplicate_cli_dir)
-            
-        app_path = DIST_DIR_ONEDIR / macos_app
-    return app_path.resolve()
-
 
 def move_macos_app(macos_app):
     from pathlib import Path
@@ -232,8 +245,7 @@ def move_macos_app(macos_app):
         return dst
     return None
 
-
-def build_dmg(app: Path) -> Path:
+def build_macos_dmg(app: Path) -> Path:
     if app.suffix != ".app":
         raise ValueError(f"Expected a .app bundle, got {app}")
 
@@ -280,8 +292,7 @@ def executable_for_testing(path: Path) -> Path:
         return path / "Contents" / "MacOS" / path.stem
     return path
 
-if __name__ == "__main__":
-
+def run_build_executable():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--mode",
@@ -311,7 +322,7 @@ if __name__ == "__main__":
             executable_descriptor += "-onefile"
 
         # 4. Run the installer
-        app_path = run_pyinstaller(
+        app_path, app_filename = run_pyinstaller(
             executable_descriptor, 
             CLI_MAIN_FILE, 
             mode = args.mode,
@@ -330,20 +341,21 @@ if __name__ == "__main__":
             print("Skipping CLI help text check because artifact was built with --windowed.")
         elif not pyhabitat.on_macos():
             print("Testing the PyInstaller artifact...")
-            subprocess.run([str(path), "--help"], check=True)
+            subprocess.run([str(app_path), "--help"], check=True)
 
         print(f"pyhabitat.tkinter_is_available() = {pyhabitat.tkinter_is_available()}")
         if pyhabitat.tkinter_is_available() and not is_ci:
-            print(f"Testing GUI for {str(path)}...")
-            exe = executable_for_testing(path)
+            print(f"Testing GUI for {str(app_path)}...")
+            exe = executable_for_testing(app_path)
             subprocess.run([str(exe), "gui", "--auto-close", "1000"], check=True)
         print("Testing complete.")
 
 
         if pyhabitat.on_macos():
-            app = move_macos_app(app_path) or app_path
-            dmg = build_dmg(app)
-            #build_dmg(path)
+            #app = move_macos_app(app_path) or app_path
+            app = move_macos_app(app_filename) or app_path 
+            dmg = build_macos_dmg(app)
+            #build_macos_dmg(path)
 
     except SystemExit as e:
         sys.exit(e.code)
@@ -351,3 +363,5 @@ if __name__ == "__main__":
         print(f"An unhandled error occurred: {e}", file=sys.stderr)
         sys.exit(1)
     
+if __name__ == "__main__":
+    run_build_executable()
