@@ -149,7 +149,7 @@ def build_shiv_pyz():
 
     # 3. Find the resulting wheel file
     wheel_path = find_latest_wheel(DIST_DIR, version)
-    dynamic_name = form_dynamic_name(SRC_FOLDER_NAME, version)
+    dynamic_name = form_dynamic_name(SRC_FOLDER_NAME, version, None)
     pyz_filename = f"{dynamic_name}-shiv.pyz" 
     interpreter = "python" if os.name == 'nt' else "/usr/bin/env python3"
     output_path = DIST_DIR / pyz_filename

@@ -14,7 +14,7 @@ from pathlib import Path
 import argparse
 import pyhabitat
 import tempfile
-from enum import Enum
+
 
 from pyhabitat.environment import on_macos
 
@@ -24,10 +24,7 @@ from copy_n_launch_xlsx.paths import (
         SRC_FOLDER_NAME, APP_NAME, get_ico_icon, get_icns_icon
         )
 
-class PyinsMode(str, Enum):
-    """onedir vs onefile"""
-    ONEDIR = "onedir"
-    ONEFILE = "onefile"
+from build_utils.build_utils import PyinsMode, form_dynamic_name
     
 # --- Configuration ---
 CLI_MAIN_FILE = Path.cwd() / 'src' / SRC_FOLDER_NAME / "__main__.py"
@@ -41,21 +38,6 @@ RC_FILE = Path('build_assets') / 'version.rc'
 IS_WINDOWS_BUILD = pyhabitat.on_windows()
 PROJECT_ROOT = Path(__file__).resolve().parent
 HOOKS_DIR_ABS = PROJECT_ROOT / "pyinstaller_hooks"
-
-
-
-
-# --- Dynamic Naming Placeholder (Simplified version for this context) ---
-def form_dynamic_name(pkg_name: str, version: str, mode: PyinsMode) -> str:
-    """Creates a standardized binary name descriptor."""
-
-    os_tag = pyhabitat.SystemInfo().get_os_tag()
-    arch = pyhabitat.SystemInfo().get_arch()
-    py_ver = f"py{sys.version_info.major}{sys.version_info.minor}"
-    dynamic_exe_name = f"{pkg_name}-{version}-{py_ver}-{os_tag}-{arch}"
-    if mode == PyinsMode.ONEFILE:
-        dynamic_exe_name += f"-{PyinsMode.ONEFILE.value}"
-    return dynamic_exe_name
 
 # --- Windows Resource File (version.rc) ---
 def generate_rc_file(package_version: str):
