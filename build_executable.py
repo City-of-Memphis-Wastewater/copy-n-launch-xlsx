@@ -21,7 +21,7 @@ from pyhabitat.environment import on_macos
 ##from copy_n_launch_xlsx.datacopy import ensure_data_files_for_build
 from copy_n_launch_xlsx._version import get_version, __version__
 from copy_n_launch_xlsx.paths import (
-        SRC_FOLDER_NAME, APP_NAME, get_ico_icon, get_icns_icon
+        SRC_FOLDER_NAME, APP_NAME, APP_NAME_PRETTY, get_ico_icon, get_icns_icon
         )
 
 from build_utils.build_utils import PyinsMode, form_dynamic_name
@@ -259,7 +259,7 @@ def build_macos_dmg(app: Path) -> Path:
             [
                 "create-dmg",
                 "--volname",
-                f"{APP_NAME} {__version__}",
+                f"{APP_NAME_PRETTY} {__version__}",
                 "--window-size",
                 "500",
                 "300",

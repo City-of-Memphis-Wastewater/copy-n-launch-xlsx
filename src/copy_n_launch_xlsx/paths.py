@@ -7,6 +7,7 @@ from dworshak_env import DworshakEnv
 import logging
 
 APP_NAME = "copy-n-launch-xlsx"
+APP_NAME_PRETTY = "Copy n' Launch XLSX"
 SRC_FOLDER_NAME = "copy_n_launch_xlsx" 
 APP_DIR = Path.home() / f".{APP_NAME}"
 LOGO_FILENAME_PNG = "max-green_1024x1024.png"
