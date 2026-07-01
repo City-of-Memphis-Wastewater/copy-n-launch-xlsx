@@ -10,6 +10,7 @@ APP_NAME = "copy-n-launch-xlsx"
 SRC_FOLDER_NAME = "copy_n_launch_xlsx" 
 APP_DIR = Path.home() / f".{APP_NAME}"
 LOGO_FILENAME_PNG = "max-green_1024x1024.png"
+LOGO_FILENAME_ICNS = "max-green.icns"
 LOGO_FILENAME_ICO = "max-green_256x256.ico"
 DEFAULT_FILLED_SHEETS_DIR = APP_DIR / "filled_daily"
 REPO_URL = "https://github.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx"
@@ -44,6 +45,16 @@ LOG_FILE_PATH = APP_DIR / f"{APP_NAME}_errors.log"
 
 def get_icon_path(filename: str) -> Path:
     return files("copy_n_launch_xlsx.data.icons").joinpath(filename)
+
+
+def get_png_icon() -> Path:
+    return Path(get_icon_path(LOGO_FILENAME_PNG))
+
+def get_ico_icon() -> Path:
+    return Path(get_icon_path(LOGO_FILENAME_ICO))
+
+def get_icns_icon() -> Path:
+    return Path(get_icon_path(LOGO_FILENAME_ICNS))
 
 # can i use a string to effectively define the dir where i want the copied and renamed sheet to land?
 # it can be in
