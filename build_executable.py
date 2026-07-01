@@ -14,6 +14,7 @@ from pathlib import Path
 import argparse
 import pyhabitat
 import tempfile
+from enum import Enum
 
 from pyhabitat.environment import on_macos
 
@@ -23,11 +24,16 @@ from copy_n_launch_xlsx.paths import (
         SRC_FOLDER_NAME, APP_NAME, get_ico_icon, get_icns_icon
         )
 
+class PyinsMode(str, Enum):
+    """onedir vs onefile"""
+    ONEDIR = "onedir"
+    ONEFILE = "onefile"
+    
 # --- Configuration ---
 CLI_MAIN_FILE = Path.cwd() / 'src' / SRC_FOLDER_NAME / "__main__.py"
 DIST_DIR = Path("dist")
-DIST_DIR_ONEFILE = DIST_DIR / "onefile" 
-DIST_DIR_ONEDIR = DIST_DIR / "onedir" 
+DIST_DIR_ONEFILE = DIST_DIR / PyinsMode.ONEFILE 
+DIST_DIR_ONEDIR = DIST_DIR / PyinsMode.ONEDIR 
 STANDARD_MACOS_APP_DIST_DIR = DIST_DIR
 BUILD_DIR = Path("build/pyinstaller_work")
 RC_TEMPLATE = Path('build_assets') / 'version.rc.template' # Assume this template exists for Windows
@@ -36,16 +42,19 @@ IS_WINDOWS_BUILD = pyhabitat.on_windows()
 PROJECT_ROOT = Path(__file__).resolve().parent
 HOOKS_DIR_ABS = PROJECT_ROOT / "pyinstaller_hooks"
 
+
+
+
 # --- Dynamic Naming Placeholder (Simplified version for this context) ---
-def form_dynamic_name(pkg_name: str, version: str, mode: str) -> str:
+def form_dynamic_name(pkg_name: str, version: str, mode: PyinsMode) -> str:
     """Creates a standardized binary name descriptor."""
 
     os_tag = pyhabitat.SystemInfo().get_os_tag()
     arch = pyhabitat.SystemInfo().get_arch()
     py_ver = f"py{sys.version_info.major}{sys.version_info.minor}"
     dynamic_exe_name = f"{pkg_name}-{version}-{py_ver}-{os_tag}-{arch}"
-    if mode == "onefile":
-        dynamic_exe_name += "-onefile"
+    if mode == PyinsMode.ONEFILE:
+        dynamic_exe_name += f"-{PyinsMode.ONEFILE}"
     return dynamic_exe_name
 
 # --- Windows Resource File (version.rc) ---
@@ -79,12 +88,12 @@ def determine_file_extension():
         return '.app'
     return ''
 
-def clean_artifacts(exe_name: str, mode: str):
+def clean_artifacts(exe_name: str, mode: PyinsMode):
     """Clean specific output and build folders based on mode."""
     
     
     # Define what we are cleaning based on mode
-    if mode == "onedir":
+    if mode == PyinsMode.ONEDIR:
         # In onedir, PyInstaller creates a directory with the exe_name
         mode_dir = DIST_DIR_ONEDIR
         target = mode_dir / exe_name
@@ -110,13 +119,13 @@ def clean_artifacts(exe_name: str, mode: str):
     if IS_WINDOWS_BUILD and RC_FILE.exists():
         RC_FILE.unlink()
 
-def determine_app_path_and_dist_path_and_app_filename(dynamic_exe_name:str, mode: str):
+def determine_app_path_and_dist_path_and_app_filename(dynamic_exe_name:str, mode: PyinsMode):
         ext = determine_file_extension()
         app_filename = f"{dynamic_exe_name}{ext}"
-        if mode == "onefile":
+        if mode == PyinsMode.ONEFILE:
             dist_path = DIST_DIR_ONEFILE 
             app_path = DIST_DIR_ONEFILE/ app_filename
-        elif mode  == "onedir":
+        elif mode  == PyinsMode.ONEDIR:
             if pyhabitat.on_macos():
                 dist_path = STANDARD_MACOS_APP_DIST_DIR
                 app_path = STANDARD_MACOS_APP_DIST_DIR / app_filename # true before move
@@ -126,28 +135,8 @@ def determine_app_path_and_dist_path_and_app_filename(dynamic_exe_name:str, mode
         dist_path.mkdir(parents=True, exist_ok=True)
         print(f"Executable will be located at: {app_path.resolve()}", file=sys.stderr) 
         return app_filename, dist_path,app_path
-    
 
-# --- Main PyInstaller Execution ---
-
-def run_pyinstaller(
-        dynamic_exe_name: str, 
-        main_script_path: Path,
-        mode: str = "onedir",
-        is_windowed_build: bool = True,
-        ):
-    """
-    Run PyInstaller to build the executable.
-    """
-    
-    print(f"--- {SRC_FOLDER_NAME} Executable Builder ---")
-    app_filename, dist_path, app_path = determine_app_path_and_dist_path_and_app_filename(dynamic_exe_name, mode)
-
-    # Clean and Setup
-    clean_artifacts(exe_name=dynamic_exe_name, mode=mode)
-    setup_dirs()
-
-    
+def construct_pyinstaller_command(dynamic_exe_name, dist_path,mode, main_script_path, is_windowed_build):    
     # PyInstaller Command Construction
     base_command = [
         #'pyinstaller',
@@ -175,13 +164,14 @@ def run_pyinstaller(
     ]
 
     # msix.yml and build.yml have been adjusted to expect either onefile or onedir
-    if mode == "onefile": 
-        onedir_or_onefile_flag = '--onefile'
-        base_command.append(onedir_or_onefile_flag)
-    else: # default
+    if mode == PyinsMode.ONEFILE: 
+        onedir_or_onefile_flag = f'--{PyinsMode.ONEFILE}'
+    elif mode == PyinsMode.ONEDIR: # default
         if not pyhabitat.on_macos():
-            onedir_or_onefile_flag = '--onedir'
-            base_command.append(onedir_or_onefile_flag)
+            onedir_or_onefile_flag = f'--{PyinsMode.ONEDIR}'
+        elif pyhabitat.on_macos():
+            onedir_or_onefile_flag = ''
+    base_command.append(onedir_or_onefile_flag)
     
     # Prepare for MSIX
     
@@ -204,19 +194,44 @@ def run_pyinstaller(
             f"--icon={get_icns_icon().resolve()}"
         )
     base_command.append(str(main_script_path.resolve()))
+    return base_command
+
+def call_full_pyinstaller_command(full_command):
+        print(f"Executing PyInstaller: {' '.join(full_command)}")
+        # 6. Execute
+        try:
+            # Pass environment variables to ensure venv dependencies are found
+            subprocess.run(full_command, check=True, env=os.environ.copy()) 
+        except subprocess.CalledProcessError as e:
+            print(f"PyInstaller failed with exit code {e.returncode}!", file=sys.stderr)
+            raise SystemExit(e.returncode)
+
+# --- Main PyInstaller Execution ---
+
+def run_pyinstaller(
+        dynamic_exe_name: str, 
+        main_script_path: Path,
+        mode: PyinsMode = PyinsMode.ONEDIR,
+        is_windowed_build: bool = True,
+        ):
+    """
+    Run PyInstaller to build the executable.
+    """
+    
+    print(f"--- {SRC_FOLDER_NAME} Executable Builder ---")
+    app_filename, dist_path, app_path = determine_app_path_and_dist_path_and_app_filename(dynamic_exe_name, mode)
+
+    # Clean and Setup
+    clean_artifacts(exe_name=dynamic_exe_name, mode=mode)
+    setup_dirs()
+
 
     # Determine execution path (Run PyInstaller directly, assuming it's in PATH/venv)
-    full_command = base_command
-    print(f"Executing PyInstaller: {' '.join(full_command)}")
-
-    # 6. Execute
-    try:
-        # Pass environment variables to ensure venv dependencies are found
-        subprocess.run(full_command, check=True, env=os.environ.copy()) 
-    except subprocess.CalledProcessError as e:
-        print(f"PyInstaller failed with exit code {e.returncode}!", file=sys.stderr)
-        raise SystemExit(e.returncode)
+    full_command = construct_pyinstaller_command(dynamic_exe_name, dist_path,mode, main_script_path, is_windowed_build)
+    call_full_pyinstaller_command(full_command)
+    
     purge_raw_unix_structure_from_macos_build(dynamic_exe_name)
+
     print("\n--- PyInstaller Build Complete ---")
     return app_path.resolve(), app_filename
 
@@ -253,7 +268,7 @@ def build_macos_dmg(app: Path) -> Path:
     upload_dir = Path("dist/upload")
     upload_dir.mkdir(parents=True, exist_ok=True)
 
-    dmg = upload_dir / f"{app.stem}.dmg"
+    dmg_path = upload_dir / f"{app.stem}.dmg"
 
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
@@ -277,28 +292,54 @@ def build_macos_dmg(app: Path) -> Path:
                 "--app-drop-link",
                 "450",
                 "180",
-                str(dmg.resolve()),
+                str(dmg_path.resolve()),
                 str(tmp),
             ],
             check=True,
         )
 
-    return dmg
+    return dmg_path
 
 def executable_for_testing(path: Path) -> Path:
     if pyhabitat.on_macos() and path.suffix == ".app":
         return path / "Contents" / "MacOS" / path.stem
     return path
 
+def post_process_masos_build(app_filename, app_path):
+    if pyhabitat.on_macos():
+        app_path = move_macos_app(app_filename) 
+        dmg_path = build_macos_dmg(app_path)
+        return app_path, dmg_path
+    return app_path, None
+    
+            
+def test_build_artifacts(app_path):
+    # Only test GUI if we aren't in a headless CI environment
+    # GitHub Actions sets the GITHUB_ACTIONS environment variable to 'true'
+    is_ci = os.environ.get('GITHUB_ACTIONS') == 'true'
+    print(f"pyhabitat.tkinter_is_available() = {pyhabitat.tkinter_is_available()}")
+    if pyhabitat.tkinter_is_available() and not is_ci:
+        exe_path = executable_for_testing(app_path)
+        print(f"Testing the GUI: {str(exe_path)}...")
+        subprocess.run([str(exe_path), "gui", "--auto-close", "1000"], check=True)
+    elif not pyhabitat.on_macos(): # CLI builds
+        print(f"Testing the CLI artifact: {str(app_path)}...")
+        subprocess.run([str(app_path), "--help"], check=True)
+    print("Testing complete.")
+
 def run_build_executable():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--mode",
-        choices = ("onedir","onefile"),
-        default = "onedir",
+        type=PyinsMode,                  # Map incoming string automatically to Enum item
+        choices=list(PyinsMode),         # Directly pulls values: ['onedir', 'onefile']
+        default=PyinsMode.ONEDIR,        # Standard type-safe default
         help = "PyInstaller build mode.",
         )
     args = parser.parse_args()
+    
+    mode = args.mode
+    
     is_windowed_build = (IS_WINDOWS_BUILD) and (args.mode == "onedir") and pyhabitat.tkinter_is_available()
 
     try:
@@ -311,40 +352,19 @@ def run_build_executable():
         generate_rc_file(package_version)
 
         # 3. Determine the executable name (without the extension)
-        executable_descriptor = form_dynamic_name(SRC_FOLDER_NAME, package_version, args.mode)
+        executable_descriptor = form_dynamic_name(SRC_FOLDER_NAME, package_version, mode)
 
         # 4. Run the installer
         app_path, app_filename = run_pyinstaller(
             executable_descriptor, 
             CLI_MAIN_FILE, 
-            mode = args.mode,
+            mode = mode,
             is_windowed_build= is_windowed_build,
             )
+        
+        app_path, dmg_path = post_process_masos_build(app_filename, app_path)
+        test_build_artifacts(app_path)
 
-        # Only test GUI if we aren't in a headless CI environment
-        # GitHub Actions sets the GITHUB_ACTIONS environment variable to 'true'
-        is_ci = os.environ.get('GITHUB_ACTIONS') == 'true'
-
-        # Only run text-based --help check if we aren't a hidden-window GUI binary
-        if is_windowed_build:
-            print("Skipping CLI help text check because artifact was built with --windowed.")
-        elif not pyhabitat.on_macos():
-            print("Testing the PyInstaller artifact...")
-            subprocess.run([str(app_path), "--help"], check=True)
-
-        print(f"pyhabitat.tkinter_is_available() = {pyhabitat.tkinter_is_available()}")
-        if pyhabitat.tkinter_is_available() and not is_ci:
-            print(f"Testing GUI for {str(app_path)}...")
-            exe = executable_for_testing(app_path)
-            subprocess.run([str(exe), "gui", "--auto-close", "1000"], check=True)
-        print("Testing complete.")
-
-
-        if pyhabitat.on_macos():
-            #app = move_macos_app(app_path) or app_path
-            app = move_macos_app(app_filename) or app_path 
-            dmg = build_macos_dmg(app)
-            #build_macos_dmg(path)
 
     except SystemExit as e:
         sys.exit(e.code)
