@@ -17,7 +17,9 @@ import tempfile
 
 ##from copy_n_launch_xlsx.datacopy import ensure_data_files_for_build
 from copy_n_launch_xlsx._version import get_version, __version__
-from copy_n_launch_xlsx.paths import SRC_FOLDER_NAME, APP_NAME, get_ico_icon
+from copy_n_launch_xlsx.paths import (
+        SRC_FOLDER_NAME, APP_NAME, get_ico_icon, get_icns_icon
+        )
 
 # --- Configuration ---
 CLI_MAIN_FILE = Path.cwd() / 'src' / SRC_FOLDER_NAME / "__main__.py"
@@ -180,6 +182,11 @@ def run_pyinstaller(
         base_command.append(f'--version-file={RC_FILE.resolve()}')
         base_command.append(
             f"--icon={get_ico_icon().resolve()}"
+        )
+
+    if pyhabitat.on_macos():
+        base_command.append(
+            f"--icon={get_icns_icon().resolve()}"
         )
     base_command.append(str(main_script_path.resolve()))
 
