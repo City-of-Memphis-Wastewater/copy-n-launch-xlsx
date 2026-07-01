@@ -16,7 +16,7 @@ import pyhabitat
 import tempfile
 
 ##from copy_n_launch_xlsx.datacopy import ensure_data_files_for_build
-from copy_n_launch_xlsx._version import get_version
+from copy_n_launch_xlsx._version import get_version, __version__
 from copy_n_launch_xlsx.paths import SRC_FOLDER_NAME, APP_NAME
 
 # --- Configuration ---
