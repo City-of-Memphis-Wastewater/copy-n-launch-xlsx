@@ -167,7 +167,7 @@ def run_pyinstaller(
             base_command.append(onedir_or_onefile_flag)
     
     # Prepare for MSIX
-    is_windowed_build = (IS_WINDOWS_BUILD or pyhabitat.on_macos()) and (args.mode == "onedir")
+    is_windowed_build = (IS_WINDOWS_BUILD or pyhabitat.on_macos()) and (mode == "onedir")
     if is_windowed_build:
         flag = '--windowed'
         base_command.append(flag)
@@ -217,6 +217,8 @@ def move_macos_app(macos_app):
     dst.parent.mkdir(parents=True, exist_ok=True)
 
     if src.exists():
+        if dst.exists():
+            shutil.rmtree(dst)
         shutil.move(str(src), str(dst))
 
 
