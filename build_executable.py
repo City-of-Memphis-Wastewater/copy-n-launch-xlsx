@@ -144,12 +144,13 @@ def construct_pyinstaller_command(dynamic_exe_name, dist_path,mode, main_script_
     ]
 
     # msix.yml and build.yml have been adjusted to expect either onefile or onedir
+    onedir_or_onefile_flag = None
     if mode == PyinsMode.ONEFILE: 
         onedir_or_onefile_flag = f'--{PyinsMode.ONEFILE.value}'
     elif mode == PyinsMode.ONEDIR: # default
         if not pyhabitat.on_macos():
             onedir_or_onefile_flag = f'--{PyinsMode.ONEDIR.value}'
-            
+
     if onedir_or_onefile_flag:
         base_command.append(onedir_or_onefile_flag)
     
