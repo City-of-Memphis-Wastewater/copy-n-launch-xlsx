@@ -140,9 +140,7 @@ def construct_pyinstaller_command(dynamic_exe_name, dist_path,mode, main_script_
 
         # --- Add the Hooks Directory ---
         f'--additional-hooks-dir={HOOKS_DIR_ABS}', # 
-
         #'--log-level=DEBUG',
-
     ]
 
     # msix.yml and build.yml have been adjusted to expect either onefile or onedir
@@ -151,9 +149,9 @@ def construct_pyinstaller_command(dynamic_exe_name, dist_path,mode, main_script_
     elif mode == PyinsMode.ONEDIR: # default
         if not pyhabitat.on_macos():
             onedir_or_onefile_flag = f'--{PyinsMode.ONEDIR.value}'
-        elif pyhabitat.on_macos():
-            onedir_or_onefile_flag = ''
-    base_command.append(onedir_or_onefile_flag)
+            
+    if onedir_or_onefile_flag:
+        base_command.append(onedir_or_onefile_flag)
     
     # Prepare for MSIX
     
@@ -279,7 +277,6 @@ def build_macos_dmg(app: Path) -> Path:
             ],
             check=True,
         )
-
     return dmg_path
 
 def executable_for_testing(path: Path) -> Path:
