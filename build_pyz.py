@@ -29,11 +29,11 @@ SITE_PACKAGES_PATH = site.getsitepackages()[0]
 
 # --- Configuration ---
 ENTRY_POINT = "copy_n_launch_xlsx.cli:app"
-DIST_DIR = Path("dist") / "zipapp" 
+DIST_DIR_ZIPAPP = Path("dist") / "zipapp" 
 PROJECT_ROOT = Path(__file__).resolve().parent
 
 # Ensure the output directory exists immediately
-DIST_DIR.mkdir(parents=True, exist_ok=True)
+DIST_DIR_ZIPAPP.mkdir(parents=True, exist_ok=True)
 
 # --- Build in Temp File to avoid issues namely on Windows ---
 # Inside build_shiv_pyz()
@@ -99,7 +99,7 @@ def build_wheel():
 
     run_command(["uv", "build", 
         "--wheel", 
-        "--out-dir", str(DIST_DIR)
+        "--out-dir", str(DIST_DIR_ZIPAPP)
     ], env=custom_env)
 
     print("Wheel build complete.")
@@ -148,11 +148,11 @@ def build_shiv_pyz():
     
 
     # 3. Find the resulting wheel file
-    wheel_path = find_latest_wheel(DIST_DIR, version)
+    wheel_path = find_latest_wheel(DIST_DIR_ZIPAPP, version)
     dynamic_name = form_dynamic_name(SRC_FOLDER_NAME, version, None)
     pyz_filename = f"{dynamic_name}-shiv.pyz" 
     interpreter = "python" if os.name == 'nt' else "/usr/bin/env python3"
-    output_path = DIST_DIR / pyz_filename
+    output_path = DIST_DIR_ZIPAPP / pyz_filename
     if output_path.exists():
         output_path.unlink()
 
@@ -189,7 +189,7 @@ def build_shiv_pyz():
     print(f"\nBuild successful! Portable PYZ: {output_path.resolve()}")
 
     # 4. CREATE THE WINDOWS LAUNCHER (New Step)
-    create_windows_bat_launcher(pyz_filename, DIST_DIR)
+    create_windows_bat_launcher(pyz_filename, DIST_DIR_ZIPAPP)
 
     return output_path
 
