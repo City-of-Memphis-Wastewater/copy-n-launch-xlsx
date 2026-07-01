@@ -4,7 +4,7 @@
 
 # Repository: https://github.com/rdbende/Forest-ttk-theme/
 
-package require Tk 8.6
+# package require Tk 8.6
 
 namespace eval ttk::theme::forest-dark {
 

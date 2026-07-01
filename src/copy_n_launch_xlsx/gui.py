@@ -54,7 +54,12 @@ class GuiApp:
         # Do NOT load theme yet.
         # Run the "heavy" initialization first
         self._initialize_vars()
-
+        
+        # --- Debug ---
+        logger.debug(f'patchlevel: {root.tk.call("info", "patchlevel")}')
+        logger.debug(f'package,Tcl: {root.tk.call("package", "present", "Tcl")}')
+        logger.debug(f'package,Tk: {root.tk.call("package", "present", "Tk")}')
+        logger.debug(f'tcl_library: {root.tk.call("set", "tcl_library")}')
         # NOW load the theme (this takes ~100-300ms)
         self._initialize_forest_theme()
 
