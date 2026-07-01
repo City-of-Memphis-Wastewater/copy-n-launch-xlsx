@@ -32,8 +32,8 @@ class PyinsMode(str, Enum):
 # --- Configuration ---
 CLI_MAIN_FILE = Path.cwd() / 'src' / SRC_FOLDER_NAME / "__main__.py"
 DIST_DIR = Path("dist")
-DIST_DIR_ONEFILE = DIST_DIR / PyinsMode.ONEFILE 
-DIST_DIR_ONEDIR = DIST_DIR / PyinsMode.ONEDIR 
+DIST_DIR_ONEFILE = DIST_DIR / PyinsMode.ONEFILE.value 
+DIST_DIR_ONEDIR = DIST_DIR / PyinsMode.ONEDIR.value
 STANDARD_MACOS_APP_DIST_DIR = DIST_DIR
 BUILD_DIR = Path("build/pyinstaller_work")
 RC_TEMPLATE = Path('build_assets') / 'version.rc.template' # Assume this template exists for Windows
@@ -54,7 +54,7 @@ def form_dynamic_name(pkg_name: str, version: str, mode: PyinsMode) -> str:
     py_ver = f"py{sys.version_info.major}{sys.version_info.minor}"
     dynamic_exe_name = f"{pkg_name}-{version}-{py_ver}-{os_tag}-{arch}"
     if mode == PyinsMode.ONEFILE:
-        dynamic_exe_name += f"-{PyinsMode.ONEFILE}"
+        dynamic_exe_name += f"-{PyinsMode.ONEFILE.value}"
     return dynamic_exe_name
 
 # --- Windows Resource File (version.rc) ---
@@ -165,10 +165,10 @@ def construct_pyinstaller_command(dynamic_exe_name, dist_path,mode, main_script_
 
     # msix.yml and build.yml have been adjusted to expect either onefile or onedir
     if mode == PyinsMode.ONEFILE: 
-        onedir_or_onefile_flag = f'--{PyinsMode.ONEFILE}'
+        onedir_or_onefile_flag = f'--{PyinsMode.ONEFILE.value}'
     elif mode == PyinsMode.ONEDIR: # default
         if not pyhabitat.on_macos():
-            onedir_or_onefile_flag = f'--{PyinsMode.ONEDIR}'
+            onedir_or_onefile_flag = f'--{PyinsMode.ONEDIR.value}'
         elif pyhabitat.on_macos():
             onedir_or_onefile_flag = ''
     base_command.append(onedir_or_onefile_flag)
