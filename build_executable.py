@@ -13,10 +13,11 @@ import os
 from pathlib import Path
 import argparse
 import pyhabitat
+import tempfile
 
 ##from copy_n_launch_xlsx.datacopy import ensure_data_files_for_build
 from copy_n_launch_xlsx._version import get_version
-from copy_n_launch_xlsx.paths import SRC_FOLDER_NAME
+from copy_n_launch_xlsx.paths import SRC_FOLDER_NAME, APP_NAME
 
 # --- Configuration ---
 CLI_MAIN_FILE = Path.cwd() / 'src' / SRC_FOLDER_NAME / "__main__.py"
@@ -217,7 +218,56 @@ def move_macos_app(macos_app):
 
     if src.exists():
         shutil.move(str(src), str(dst))
-        
+
+
+
+def build_dmg(app: Path) -> Path:
+    if app.suffix != ".app":
+        raise ValueError(f"Expected a .app bundle, got {app}")
+
+    if shutil.which("create-dmg") is None:
+        raise RuntimeError("create-dmg is not installed. Install with: brew install create-dmg")
+
+    upload_dir = Path("dist/upload")
+    upload_dir.mkdir(parents=True, exist_ok=True)
+
+    dmg = upload_dir / f"{app.stem}.dmg"
+
+    with tempfile.TemporaryDirectory() as tmp:
+        tmp = Path(tmp)
+        staged = tmp / app.name
+        shutil.copytree(app, staged)
+
+        subprocess.run(
+            [
+                "create-dmg",
+                "--volname",
+                f"{APP_NAME} {__version__}",
+                "--window-size",
+                "600",
+                "400",
+                "--icon-size",
+                "100",
+                "--icon",
+                staged.name,
+                "150",
+                "180",
+                "--app-drop-link",
+                "450",
+                "180",
+                str(dmg.resolve()),
+                str(tmp),
+            ],
+            check=True,
+        )
+
+    return dmg
+
+def executable_for_testing(path: Path) -> Path:
+    if pyhabitat.on_macos() and path.suffix == ".app":
+        return path / "Contents" / "MacOS" / path.stem
+    return path
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
@@ -260,22 +310,27 @@ if __name__ == "__main__":
         is_ci = os.environ.get('GITHUB_ACTIONS') == 'true'
 
         # Only run text-based --help check if we aren't a hidden-window GUI binary
-        is_windowed_build = (IS_WINDOWS_BUILD or pyhabitat.on_macos()) and (args.mode == "onedir") and pyhabitat.tkinter_is_available()
+        is_windowed_build = (IS_WINDOWS_BUILD) and (args.mode == "onedir") and pyhabitat.tkinter_is_available()
 
         #if is_ci:
         #    print("[CI DETECTED] Skipping CLI help text check to prevent headless stream hangs.")
         if is_windowed_build:
             print("Skipping CLI help text check because artifact was built with --windowed.")
-        else:
+        elif not pyhabitat.on_macos():
             print("Testing the PyInstaller artifact...")
             subprocess.run([str(path), "--help"], check=True)
 
         print(f"pyhabitat.tkinter_is_available() = {pyhabitat.tkinter_is_available()}")
         if pyhabitat.tkinter_is_available() and not is_ci:
             print(f"Testing GUI for {str(path)}...")
-            subprocess.run([str(path), "gui", "--auto-close", "1000"])
+            exe = executable_for_testing(path)
+            subprocess.run([str(exe), "gui", "--auto-close", "1000"], check=True)
         print("Testing complete.")
-        
+
+
+        if pyhabitat.on_macos():
+            build_dmg(path)
+
     except SystemExit as e:
         sys.exit(e.code)
     except Exception as e:
