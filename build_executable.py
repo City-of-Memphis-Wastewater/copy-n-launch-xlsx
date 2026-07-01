@@ -311,7 +311,7 @@ if __name__ == "__main__":
             executable_descriptor += "-onefile"
 
         # 4. Run the installer
-        path = run_pyinstaller(
+        app_path = run_pyinstaller(
             executable_descriptor, 
             CLI_MAIN_FILE, 
             mode = args.mode,
@@ -341,7 +341,7 @@ if __name__ == "__main__":
 
 
         if pyhabitat.on_macos():
-            app = move_macos_app(app)
+            app = move_macos_app(app_path) or app_path
             dmg = build_dmg(app)
             #build_dmg(path)
 
