@@ -6,39 +6,47 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
-## [0.2.7] - 2026-06-21
+## [0.2.8] - 2026-07-02
+### Added:
+- Remove XLSX data file from git tracking. 
+- Move defacto blank file location to ~/.copy-n-launch-xlsx/blank/daily_blank.xlsx
+- publish.yml
+
+---
+
+## [0.2.7] - 2026-07-01
 ### Added:
 - License: BSD-2-Clause-Patent
 
 ---
 
-## [0.2.6] - 2026-06-21
+## [0.2.6] - 2026-07-01
 ### Added:
 - Stable DWG production on macOS 13 and newer.
 - macoS iconset inclusion, test.
  
 ---
 
-## [0.2.5] - 2026-06-21
+## [0.2.5] - 2026-06-30
 ### Changed:
 - Mess with build_executable.py, hope for a miracle.
 
 ---
 
-## [0.2.4] - 2026-06-21
+## [0.2.4] - 2026-06-30
 ### Changed:
 - .dmg support for mac_os.
 - buid_executable.py modularity improved.
 
 ---
 
-## [0.2.2] - 2026-06-20
+## [0.2.2] - 2026-06-29
 ### Changed:
 - Taskbar icon permanence, using gui.apply_windows_taskbar_icon()
 
 ---
 
-## [0.2.1] - 2026-06-20
+## [0.2.1] - 2026-06-29
 ### Changed:
 - Icon changed to green.
 - About button.
