@@ -22,7 +22,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y flatpak flatpak-builder
           # Register the Flathub remote mirror to resolve SDK dependencies cleanly
-          flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+          flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
           
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
@@ -42,6 +42,7 @@ jobs:
           manifest-path: io.github.city_of_memphis_wastewater.copy_n_launch_xlsx.yaml
           bundle: copy-n-launch-xlsx.flatpak
           run-tests: false
+          branch: master
 
       - name: Attach Flatpak Asset to GitHub Release
         uses: softprops/action-gh-release@v3
