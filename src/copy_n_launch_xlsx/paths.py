@@ -16,11 +16,16 @@ LOGO_FILENAME_ICO = "max-green_256x256.ico"
 DEFAULT_FILLED_SHEETS_DIR = APP_DIR / "filled_daily"
 REPO_URL = "https://github.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx"
 
-
+'''
 BLANK_DAILY_XLSX = (
     files("copy_n_launch_xlsx")
     / "data"
     / "xlsx"
+    / "daily_blank.xlsx"
+)'''
+BLANK_DAILY_XLSX = (
+    APP_DIR
+    / "blank"
     / "daily_blank.xlsx"
 )
 

@@ -59,7 +59,7 @@ def copy_then_rename_and_move_then_try_launch() -> Path:
     if BLANK_DAILY_XLSX.exists():
         shutil.copy2(BLANK_DAILY_XLSX, destination)
     else:
-        print(f"Please put daily_blank.xlsx in the expected place.")
+        print(f"Please put daily_blank.xlsx in the expected place: {BLANK_DAILY_XLSX}")
         sys.exit(0)
     # Open/save if you later want to update named ranges,
     # dates, workbook properties, etc.
