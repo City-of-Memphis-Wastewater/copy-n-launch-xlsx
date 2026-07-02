@@ -93,7 +93,14 @@ cnlx helptree
 
 ## Operator Data Entry Instructions Specific to Maxson Wastewater Treatment Facility
 
-Generally this workflow applies to any context, with the exception of the color meanings, the "Print" page, the XLIMS reference, and any information relating to a specific spreadsheet design.
+Generally this workflow applies to any context, with the exception of: 
+
+- Color meanings
+- "Print" page
+- The XLIMS reference
+
+Or any other information relating to a specific spreadsheet design.
+
 The specific spreadsheet in question is maintained separately in the Maxson SharePoint. 
 
 <p align="center">
