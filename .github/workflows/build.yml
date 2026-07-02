@@ -166,30 +166,20 @@ jobs:
               }
           }
 
-      # --- Ubuntu PYZ COLLECTOR ---
+      # --- Ubuntu PYZ & APPIMAGE COLLECTOR ---
       - name: Collect Linux artifacts
         if: runner.os == 'Linux'
         run: |
           mkdir -p dist/upload
 
           echo "Staging Linux Wheel, PYZ, and AppImage artifacts..."
-          # Copy the core distribution assets safely
           cp dist/*.whl dist/upload/ 2>/dev/null || true
+          cp dist/*.tar.gz dist/upload/ 2>/dev/null || true
           cp dist/*.pyz dist/upload/ 2>/dev/null || true
-          
-          # Copy the compiled AppImage output
+          cp dist/zipapp/*.pyz dist/upload/ 2>/dev/null || true
           find dist -maxdepth 2 -name "*.AppImage" -exec cp {} dist/upload/ \;
           
-          echo "Staging complete."
-
-      # --- COLLECT LINUX APPIMAGE ---
-      - name: Collect Linux artifacts
-        if: runner.os == 'Linux'
-        run: |
-          mkdir -p dist/upload
-          echo "Staging AppImage for upload..."
-          # Grab your compiled AppImage and drop it clean into upload/
-          find dist -maxdepth 2 -name "*.AppImage" -exec cp {} dist/upload/ \;
+          echo "Linux artifact staging complete."
 
       # --- macOS COLLECTOR ---
       - name: Collect macOS artifacts
@@ -206,6 +196,14 @@ jobs:
           done
           
           echo "macOS DMG pipeline successfully handled downstream by build_executable.py."
+
+      # --- STAGE TARGETS INTERNALLY ---
+      - name: Upload Intermediary Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts-${{ matrix.os }}-${{ matrix.mode }}
+          path: dist/upload/*
+          retention-days: 1
 
       # --- Attach all builds to release ---
       - name: Attach artifacts to GitHub Release Immediately
