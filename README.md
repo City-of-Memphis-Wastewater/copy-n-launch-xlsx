@@ -41,7 +41,7 @@ The code is open source (thank you, Memphis taxpayers), and it's been tested on 
 
 ## XLSX Best Practices
 
-Sheets should use Name Manager variable names and possibly tables, for later reference and data aggregation.
+Sheets should use Name Manager variable names and possibly tables, for reference and data aggregation.
 Variable names allow the cell locations to be adjusted and not referenced.
 
 ---
