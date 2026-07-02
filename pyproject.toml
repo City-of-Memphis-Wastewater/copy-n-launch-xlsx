@@ -14,7 +14,8 @@ dependencies = [
     "typer-helptree>=0.2.10.5",
 ]
 
-license = "BSD-2-Clause-Patent"
+#license = "BSD-2-Clause-Patent"
+license = { text = "BSD-2-Clause-Patent" }
 license-files = ["LICENSE"]
 
 classifiers=[
