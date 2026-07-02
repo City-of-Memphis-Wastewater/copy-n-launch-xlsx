@@ -10,6 +10,10 @@ jobs:
   flatpak:
     name: Build Flatpak Application
     runs-on: ubuntu-latest
+    # Run inside the official Flathub builder container environment
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-23.08
+      options: --privileged
     permissions:
       contents: write
 
@@ -17,13 +21,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Install Flatpak Framework & Register Flathub
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y flatpak flatpak-builder
-          # Register the Flathub remote mirror to resolve SDK dependencies cleanly
-          flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-          
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
         with:
@@ -32,17 +29,15 @@ jobs:
       - name: Vendor Python Dependencies for Sandbox Environment
         run: |
           mkdir -p vendor-wheels
-          # Let uv run standard download tools directly against your pyproject.toml package context
           uv run pip download . -d vendor-wheels
-          
-      # This action sets up the flathub remotes, pulls the SDK, and compiles the bundle safely
+
       - name: Build and Package Flatpak Bundle
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
           manifest-path: io.github.city_of_memphis_wastewater.copy_n_launch_xlsx.yaml
           bundle: copy-n-launch-xlsx.flatpak
           run-tests: false
-          branch: master
+          cache-key: flatpak-builder-${{ github.sha }}
 
       - name: Attach Flatpak Asset to GitHub Release
         uses: softprops/action-gh-release@v3
