@@ -23,7 +23,7 @@ jobs:
           version: "latest"
 
       - name: Setup Flatpak Builder
-        uses: flatpak/flatpak-github-actions/flatpak-builder@v1
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
           bundle-name: copy-n-launch-xlsx.flatpak
           manifest-path: io.github.city_of_memphis_wastewater.copy_n_launch_xlsx.yaml
