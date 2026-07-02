@@ -44,7 +44,7 @@ def build_filename(day: date | None = None) -> str:
     return filename
 
 
-def copy_then_rename_and_move_then_try_launch() -> Path:
+def copy_then_rename_and_move_then_try_launch() -> CopyResult:
     target_dir = get_target_copy_dir()
     target_dir.mkdir(parents=True, exist_ok=True)
 
