@@ -17,44 +17,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
-      - name: Install Flatpak Host Toolchains
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y flatpak flatpak-builder
-
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
         with:
           version: "latest"
 
-      - name: Setup Flatpak Builder
-        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
-        with:
-          bundle-name: copy-n-launch-xlsx.flatpak
-          manifest-path: io.github.city_of_memphis_wastewater.copy_n_launch_xlsx.yaml
-          run-tests: false
-          # We use a custom build step below to handle our pip/uv dependency caching strategy
-          build-bundle: false 
-
       - name: Vendor Python Dependencies for Sandbox Environment
         run: |
           mkdir -p vendor-wheels
-          # Download production dependencies cleanly down into our folder cache
           uv pip download -d vendor-wheels .
 
-      - name: Execute Sandboxed Flatpak Build
-        run: |
-          flatpak-builder --force-clean --user --disable-rofiles-fuse build-dir io.github.city_of_memphis_wastewater.copy_n_launch_xlsx.yaml
-
-      - name: Export Portable Flatpak Bundle File
-        run: |
-          mkdir -p dist/upload
-          flatpak build-bundle ~/.local/share/flatpak/repo dist/upload/copy-n-launch-xlsx.flatpak io.github.city_of_memphis_wastewater.copy_n_launch_xlsx --runtime-repo=https://dl.flathub.org/repo/flathub.flatpakrepo
+      # This action sets up the flathub remotes, pulls the SDK, and compiles the bundle safely
+      - name: Build and Package Flatpak Bundle
+        uses: flatpak/flatpak-github-actions/flatpak-builder@v6
+        with:
+          manifest-path: io.github.city_of_memphis_wastewater.copy_n_launch_xlsx.yaml
+          bundle: copy-n-launch-xlsx.flatpak
+          run-tests: false
 
       - name: Attach Flatpak Asset to GitHub Release
         uses: softprops/action-gh-release@v3
         with:
-          files: dist/upload/copy-n-launch-xlsx.flatpak
+          files: copy-n-launch-xlsx.flatpak
           overwrite_files: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
