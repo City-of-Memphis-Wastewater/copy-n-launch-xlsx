@@ -29,8 +29,8 @@ jobs:
       - name: Vendor Python Dependencies for Sandbox Environment
         run: |
           mkdir -p vendor-wheels
-          uv run pip download . -d vendor-wheels
-          # uv run pip download . setuptools>=64 -d vendor-wheels
+          #uv run pip download . -d vendor-wheels
+          uv run pip download . setuptools>=64 -d vendor-wheels
 
       - name: Build and Package Flatpak Bundle
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
