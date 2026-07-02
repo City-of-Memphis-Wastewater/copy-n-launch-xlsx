@@ -107,6 +107,19 @@ The specific spreadsheet in question is maintained separately in the Maxson Shar
   <img src="https://github.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx/blob/dev/assets/copy-n-launch-xlsx_workflow-instructions_v0.2.12.png" width="100%" alt="Instruction PNG">
 </p>
 
+```instructions
+Instructions:
+At midnight, ensure that the file is saved, and then print the "Print" page.
+Only the "Print" page is necessary, for data entry into XLIMS.
+One printed and saved, close the file.
+Do NOT delete any data from the file.
+
+A brand new, dated spreadsheet will be used for the next day.
+At the start of each day, after midnight, hit the green button in the Copy-N-Launch-XLSX interface.
+This will generate the fresh daily sheet, automatically dated and empty, ready for data entry.
+At any time, you can save and close the current spreadsheet.
+Hitting the green Launch Daily Spreadsheet button will reopen it, or generate a new one as necessary.
+```
 
 ---
 
