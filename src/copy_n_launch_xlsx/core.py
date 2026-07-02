@@ -1,7 +1,6 @@
 # src/copy_n_launch_xlsx/core.py
 
 from __future__ import annotations
-from datetime import date
 from pathlib import Path
 import shutil
 import openpyxl
@@ -59,8 +58,11 @@ def copy_then_rename_and_move_then_try_launch() -> CopyResult:
     if BLANK_DAILY_XLSX.exists():
         shutil.copy2(BLANK_DAILY_XLSX, destination)
     else:
-        print(f"Please put daily_blank.xlsx in the expected place: {BLANK_DAILY_XLSX}")
-        sys.exit(0)
+        raise FileNotFoundError(
+            f"Not found: Expected blank spreadsheet at {BLANK_DAILY_XLSX}"
+        )
+        #print(f"Please put daily_blank.xlsx in the expected place: {BLANK_DAILY_XLSX}")
+        #sys.exit(0)
     # Open/save if you later want to update named ranges,
     # dates, workbook properties, etc.
     wb = openpyxl.load_workbook(destination)
