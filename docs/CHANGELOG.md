@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.7] - 2026-06-21
+### Added:
+- License: BSD-2-Clause-Patent
+
+---
+
 ## [0.2.6] - 2026-06-21
 ### Added:
 - Stable DWG production on macOS 13 and newer.
