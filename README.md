@@ -23,7 +23,10 @@ Any embedded spreadhseet is specific to the Maxson Wastewater Treatment Operator
 
 - Place a spreadsheet named daily_blank.xlsx in the filepath: ~/.copy-n-launch-xlsx/blank/
 
+
 ---
+
+## Helptree
 
 See the `copy-n-launch-xlsx` Typer CLI structure.
 
