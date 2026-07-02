@@ -36,15 +36,13 @@ jobs:
         with:
           version: "latest"
 
-      - name: Ensure updated copies of packaged data files
-        run: python src/copy_n_launch_xlsx/datacopy.py
-
       - name: Create isolated environment and install build dependencies
         # Use uv to install `build` and all dependencies specified in `pyproject.toml`
         # NOTE: `uv pip install .` installs the package itself and its dependencies
         run: uv sync --group dev
 
-      # --- PACKAGE BUILD AND TEST ---
+      - name: Ensure updated copies of packaged data files
+        run: uv run python src/copy_n_launch_xlsx/datacopy.py
 
       - name: Build S-Dist and Wheel
         # This command uses the `build` package installed in the VENV to create package files.
