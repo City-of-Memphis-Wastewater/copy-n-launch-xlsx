@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.11] - 2026-07-02
+### Added:
+- GUI screenshot PNG added to assets and referenced and centered in README.md
+
+---
+
 ## [0.2.10] - 2026-07-02
 ### Added:
 - core.py, FileNotFound instead of sys.exit()
