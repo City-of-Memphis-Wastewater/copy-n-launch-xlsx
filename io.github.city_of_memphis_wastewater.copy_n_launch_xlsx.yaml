@@ -1,6 +1,6 @@
 id: io.github.city_of_memphis_wastewater.copy_n_launch_xlsx
 runtime: org.freedesktop.Platform
-runtime-version: '23.08' # Stable Freedesktop baseline
+runtime-version: '24.08' # Stable Freedesktop baseline
 sdk: org.freedesktop.Sdk
 command: copy-n-launch-xlsx
 modules:
