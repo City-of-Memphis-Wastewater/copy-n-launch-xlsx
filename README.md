@@ -13,6 +13,7 @@ cnlx gui
 
 **Download binaries here:** [Releases](https://github.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx/releases/)
 
+[![Socket Badge](https://badge.socket.dev/pypi/package/copy-n-launch-xlsx)](https://socket.dev/pypi/package/copy-n-launch-xlsx)
 
 ---
 
