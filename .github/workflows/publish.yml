@@ -9,7 +9,6 @@ on:
 
 jobs:
   pypi-publish:
-
     if: github.event.release.prerelease == false && !contains(github.ref, '-test')
     runs-on: ubuntu-latest
 
