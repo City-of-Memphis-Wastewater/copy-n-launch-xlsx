@@ -15,7 +15,7 @@ import os
 logger = logging.getLogger(__name__)
 
 from copy_n_launch_xlsx.paths import (
-        APP_NAME_PRETTY, get_ico_icon
+        APP_NAME_PRETTY, get_ico_icon, get_png_icon
         )
 from build_utils.build_utils import PyinsMode
 
@@ -72,9 +72,14 @@ Terminal=true
 
         # 4. Copy the icon file (assuming get_ico_icon can point to or be used as a PNG variant)
         # AppImage prefers PNG or SVG at the root named matching the Icon field in the desktop file
-        icon_src = get_ico_icon()  # Ideally, substitute with a .png path if available
-        icon_dst = staged_appdir / f"{dynamic_exe_name}{icon_src.suffix}"
-        shutil.copy2(icon_src, icon_dst)
+        icon_src = get_png_icon()  
+        icon_dst = staged_appdir / f"{dynamic_exe_name}.png"
+
+        print(f"Staging Linux AppImage icon: {icon_src.name} -> {icon_dst.name}")
+        if icon_src.exists():
+            shutil.copy2(icon_src, icon_dst)
+        else:
+            raise FileNotFoundError(f"Critical asset missing! Could not locate icon at: {icon_src.resolve()}")
 
         # 5. Run appimagetool
         print(f"Compiling AppImage to {appimage_output_path}...")
