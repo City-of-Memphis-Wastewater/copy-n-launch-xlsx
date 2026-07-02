@@ -11,6 +11,7 @@ from dataclasses import dataclass
 import pyhabitat
 from datetime import date
 from openpyxl.workbook.defined_name import DefinedName
+import sys
 
 logger = logging.getLogger(__name__)
 
@@ -55,9 +56,11 @@ def copy_then_rename_and_move_then_try_launch() -> Path:
         pyhabitat.launch_file(destination)
         #return destination
         return CopyResult(destination=destination,is_new=False)
-    
-    shutil.copy2(BLANK_DAILY_XLSX, destination)
-    
+    if BLANK_DAILY_XLSX.exists():
+        shutil.copy2(BLANK_DAILY_XLSX, destination)
+    else:
+        print(f"Please put daily_blank.xlsx in the expected place.")
+        sys.exit(0)
     # Open/save if you later want to update named ranges,
     # dates, workbook properties, etc.
     wb = openpyxl.load_workbook(destination)
