@@ -32,7 +32,7 @@ cnlx helptree
 ```
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/City-of-Memphis-Wastewater/pdflinkcheck/main/assets/copy-n-launch-xlsx_v0.2.9_helptree.svg" width="100%" alt="Screenshot of the CLI helptree">
+  <img src="https://raw.githubusercontent.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx/main/assets/copy-n-launch-xlsx_v0.2.9_helptree.svg" width="100%" alt="Screenshot of the CLI helptree">
 </p>
 `helptree` is a utility function for Typer CLIs, imported from the `typer-helptree` library.
 
