@@ -6,6 +6,13 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.6] - 2026-06-21
+### Added:
+- Stable DWG production on macOS 13 and newer.
+- macoS iconset inclusion, test.
+ 
+---
+
 ## [0.2.5] - 2026-06-21
 ### Changed:
 - Mess with build_executable.py, hope for a miracle.

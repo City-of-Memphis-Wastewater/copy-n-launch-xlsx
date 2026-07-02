@@ -167,7 +167,7 @@ def construct_pyinstaller_command(dynamic_exe_name, dist_path,mode, main_script_
             f"--icon={get_ico_icon().resolve()}"
         )
 
-    if False and pyhabitat.on_macos():
+    if and pyhabitat.on_macos():
         base_command.append(
             f"--icon={get_icns_icon().resolve()}"
         )
