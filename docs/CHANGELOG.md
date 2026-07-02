@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.9] - 2026-07-02
+### Added:
+- helptree SVG asset and reference in README.
+
+---
+
 ## [0.2.8] - 2026-07-02
 ### Added:
 - Remove XLSX data file from git tracking. 
