@@ -11,6 +11,7 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 - Remove XLSX data file from git tracking. 
 - Move defacto blank file location to ~/.copy-n-launch-xlsx/blank/daily_blank.xlsx
 - publish.yml
+- Set pypi environment on github settings, and add a new pending publisher to pypi.
 
 ---
 
