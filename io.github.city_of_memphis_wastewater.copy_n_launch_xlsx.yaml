@@ -1,0 +1,14 @@
+id: io.github.city_of_memphis_wastewater.copy_n_launch_xlsx
+runtime: org.freedesktop.Platform
+runtime-version: '23.08' # Stable Freedesktop baseline
+sdk: org.freedesktop.Sdk
+command: copy-n-launch-xlsx
+modules:
+  - name: copy-n-launch-xlsx
+    buildsystem: simple
+    build-commands:
+      # 1. Force a standard offline/sandboxed pip wheel installation to app environment path
+      - pip3 install --no-index --find-links="file://${PWD}/vendor-wheels" --prefix=/app .
+    sources:
+      - type: dir
+        path: .
