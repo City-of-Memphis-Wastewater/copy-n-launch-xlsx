@@ -1,5 +1,7 @@
 # copy-n-launch-xlsx
 
+![Screenshot of the GUI](https://raw.githubusercontent.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx/main/assets/copy-n-launch-xlsx_gui_v0.2.10.png)
+
 The best way to launch this application is to install the CLI using `pipx`, or to download a release binary.
 
 ```
