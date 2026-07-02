@@ -14,7 +14,7 @@ dependencies = [
     "typer-helptree>=0.2.10.5",
 ]
 
-license-files = ["LICENSE"]
+#license-files = ["LICENSE"]
 
 classifiers=[
     "Programming Language :: Python :: 3",
