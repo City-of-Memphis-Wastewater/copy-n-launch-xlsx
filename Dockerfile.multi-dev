@@ -1,0 +1,22 @@
+# syntax=docker/dockerfile:1.4
+ARG PYTHON_VERSION=3.11-slim  # Change to slim (Debian-based)
+
+FROM python:${PYTHON_VERSION}
+
+WORKDIR /app
+
+# Install essential runtime packages (git/curl/bash are useful for dev)
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends bash curl git \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY . .
+
+RUN pip install --no-cache-dir -e 
+
+EXPOSE 8000
+
+ENTRYPOINT ["/bin/bash"]
+
+LABEL org.opencontainers.image.source=https://github.com/city-of-memphis-wastewater/copy-n-launch-xlsx
+LABEL org.opencontainers.image.description="Stable spreadsheet copy, renaming, and dating, for municipal wastewater operator daily data entry. Comes with a CLI, GUI, a webapp, and a Python library."
