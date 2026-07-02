@@ -54,7 +54,7 @@ jobs:
         run: |
           source .venv/bin/activate
           uv pip uninstall -y copy-n-launch-xlsx || true
-          uv pip install dist/copy-*.whl
+          uv pip install dist/copy*.whl
           # Use project's installed CLI command
           cnlx copylaunch --help
       # Optional: Also test the sdist (extra safety)
