@@ -9,7 +9,9 @@ from ._version import __version__
 __all__ = [
     "__version__",
     "get_target_copy_dir",
-    "__cnlx_gui_easteregg_enabled__", # Re-added for REPL discovery
+    "copy_then_rename_and_move_then_try_launch",
+    "CopyResult",
+    "__gui_easteregg_enabled__", # Re-added for REPL discovery
 ]
 
 def _check_easteregg_env() -> bool:
@@ -23,8 +25,16 @@ def __getattr__(name: str):
         from .paths import get_target_copy_dir
         return get_target_copy_dir
 
+    if name == "copy_then_rename_and_move_then_try_launch":
+        from .core import copy_then_rename_and_move_then_try_launch
+        return copy_then_rename_and_move_then_try_launch
+
+    if name == "CopyResult":
+        from .core import CopyResult
+        return CopyResult
+    
     # Dynamic boolean evaluation for the breadcrumb attribute
-    if name == "__cnlx_gui_easteregg_enabled__":
+    if name == "__gui_easteregg_enabled__":
         return _check_easteregg_env()
 
     # Dynamic lookups for the GUI function invocation
