@@ -6,6 +6,13 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.13] - 2026-07-02
+### Added:
+- Instructions assets/*.png and section in README.md specific to MAaxson use case.
+- build.yml should now allow Ubuntu PYZ and WHL to be attached to release.
+
+---
+
 ## [0.2.12] - 2026-07-02
 ### Added:
 - AppImage build for Linux, included in release.
