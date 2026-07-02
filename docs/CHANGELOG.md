@@ -6,6 +6,13 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.12] - 2026-07-02
+### Added:
+- AppImage build for Linux, included in release.
+- No longer include Linux tar.gz onedir in releases.
+
+---
+
 ## [0.2.11] - 2026-07-02
 ### Added:
 - GUI screenshot PNG added to assets and referenced and centered in README.md
