@@ -91,6 +91,18 @@ cnlx helptree
 
 ---
 
+## Operator Data Entry Instructions Specific to Maxson Wastewater Treatment Facility
+
+Generally this workflow applies to any context, with the exception of the color meanings, the "Print" page, the XLIMS reference, and any information relating to a specific spreadsheet design.
+The specific spreadsheet in question is maintained separately in the Maxson SharePoint. 
+
+<p align="center">
+  <img src="https://github.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx/blob/dev/assets/copy-n-launch-xlsx_workflow-instructions_v0.2.12.png" width="100%" alt="Instruction PNG">
+</p>
+
+
+---
+
 ## Source code
 
 **Source code:** [Repository](https://github.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx/)
