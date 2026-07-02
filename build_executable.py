@@ -25,6 +25,7 @@ from copy_n_launch_xlsx.paths import (
         )
 
 from build_utils.build_utils import PyinsMode, form_dynamic_name
+from build_utils.linux_app_image import post_process_linux_build
     
 # --- Configuration ---
 CLI_MAIN_FILE = Path.cwd() / 'src' / SRC_FOLDER_NAME / "__main__.py"
@@ -344,6 +345,12 @@ def run_build_executable():
             )
         
         app_path, dmg_path = post_process_macos_build(app_filename, app_path, mode)
+
+        # Post-process Linux (Add this)
+        appimage_path = post_process_linux_build(app_path, executable_descriptor, mode)
+        if appimage_path:
+            print(f"AppImage successfully generated at: {appimage_path}")
+
         test_build_artifacts(app_path)
 
 
