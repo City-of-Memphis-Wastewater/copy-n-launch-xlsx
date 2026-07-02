@@ -1,6 +1,5 @@
 
 #!/usr/bin/env python3 
-# SPDX-License-Identifier: MIT
 # ./build_pyz.py 
 """
 Builds a "Lite" portable Python ZipApp (PYZ) using shiv.

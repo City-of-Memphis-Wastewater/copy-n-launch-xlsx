@@ -1,5 +1,4 @@
 #!/usr/bin/env python3 
-# SPDX-License-Identifier: MIT
 # build_utils/build_utils.py
 
 from __future__ import annotations

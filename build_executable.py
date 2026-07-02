@@ -1,5 +1,4 @@
 #!/usr/bin/env python3 
-# SPDX-License-Identifier: MIT
 # ./build_executable.py
 """
 build_executable.py

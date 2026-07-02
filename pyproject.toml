@@ -1,6 +1,5 @@
 [project]
 name = "copy-n-launch-xlsx"
-#version = "0.1.0"
 dynamic = ["version"]
 description = "Stable spreadsheet copy, renaming, and dating, for municipal wastewater operator daily data entry."
 readme = "README.md"
@@ -15,8 +14,8 @@ dependencies = [
     "typer-helptree>=0.2.10.5",
 ]
 
-#license = "MIT"
-#license-files = ["LICENSE"]
+license = "BSD-2-Clause-Patent"
+license-files = ["LICENSE"]
 
 classifiers=[
     "Programming Language :: Python :: 3",
