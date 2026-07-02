@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     # Run inside the official Flathub builder container environment
     container:
-      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-23.08
+      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-24.08
       options: --privileged
     permissions:
       contents: write
