@@ -14,8 +14,8 @@ jobs:
 
     # RECOMMENDED: Use a deployment environment for security hardening.
     environment: pypi
-      # IMPORTANT: Permissions for PyPI Trusted Publishing (OIDC).
-      permissions:
+    # IMPORTANT: Permissions for PyPI Trusted Publishing (OIDC).
+    permissions:
       id-token: write  # Needed for OIDC authentication
       contents: read   # Needed to check out the code
 
