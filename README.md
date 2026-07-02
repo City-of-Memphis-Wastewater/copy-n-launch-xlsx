@@ -10,11 +10,11 @@ pip install copy-n-launch-xlsx
 
 This program: 
 
-    - Copies a blank spreadsheet file.
+- Copies a blank spreadsheet file.
 
-    - Renames it, with the date in the filename.
+- Renames it, with the date in the filename.
 
-    - Moves the new renamed file to a target folder
+- Moves the new renamed file to a target folder
 
 In this way, the stable file can be updated in a centralized way. 
 Users can safely launch new daily data entry sheets, without needing to choose a file to launch directly.
@@ -23,17 +23,19 @@ Users can safely launch new daily data entry sheets, without needing to choose a
 
 ## Blurb
 
-A new twist on one of the classic data entry problems: Spreadsheet templating.
+Spreadsheet templating isn't a new problem.
 
-Still relevant in 2026? Apparently, because this app is now in daily use by the operators at my wastewater treatment plant. 
+It's been solved many different ways over the years.
 
-And now, the code is open source as well (thank you Memphis taxpayers). 
+This is just one more solution—built around a very simple workflow that's now used every day by operators at my wastewater treatment plant.
 
-BYOS (bring your own spreadsheet).
+Bring your own spreadsheet.
 
-One button. A new dated copy everyday. A simple solution for a simple problem.
+Click one button.
 
-Tested on macOS, WSL, Windows11, and Termux on Android.
+Get today's dated copy, ready for data entry.
+
+The code is open source (thank you, Memphis taxpayers), and it's been tested on macOS, Windows 11, WSL, and Termux on Android.
 
 ---
 
