@@ -1,7 +1,7 @@
 # copy-n-launch-xlsx
 
 <p align="center">
-  <img src="https://github.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx/blob/dev/assets/copy-n-launch-xlsx_gui_v0.2.10.png" width="100%" alt="Screenshot of the GUI">
+  <img src="https://raw.githubusercontent.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx/main/assets/copy-n-launch-xlsx_gui_v0.2.10.png" width="100%" alt="Screenshot of the GUI">
 </p>
 
 The best way to launch this application is to install the CLI using `pipx`, or to download a release binary.
@@ -104,7 +104,7 @@ Or any other information relating to a specific spreadsheet design.
 The specific spreadsheet in question is maintained separately in the Maxson SharePoint. 
 
 <p align="center">
-  <img src="https://github.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx/blob/dev/assets/copy-n-launch-xlsx_workflow-instructions_v0.2.12.png" width="100%" alt="Instruction PNG">
+  <img src="https://raw.githubusercontent.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx/main/assets/copy-n-launch-xlsx_workflow-instructions_v0.2.12.png" width="100%" alt="Instruction PNG">
 </p>
 
 ```instructions
