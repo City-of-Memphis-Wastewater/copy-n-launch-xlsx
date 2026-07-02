@@ -16,3 +16,7 @@ Sheets should use variable names and possibly tables, for later reference and da
 Variable names allow the cell locations to be adjusted and not referenced.
 
 This project should stay private, and it is specific to the Maxson Wastewater Treatment Operator data input.
+
+How To:
+
+Place a spreadsheet named daily_blank.xlsx in the filepath: ~/.copy-n-launch-xlsx/blank/
