@@ -3,7 +3,6 @@ from __future__ import annotations
 from pathlib import Path
 from importlib.resources import files
 from dworshak_config import DworshakConfig
-from dworshak_env import DworshakEnv
 import logging
 
 APP_NAME = "copy-n-launch-xlsx"
@@ -30,8 +29,6 @@ BLANK_DAILY_XLSX = (
 )
 
 config_mngr = DworshakConfig(path= APP_DIR / "config.json")
-env_mngr = DworshakEnv()
-
 logger = logging.getLogger(__name__)
 
 # --- Configuration ---
