@@ -7,8 +7,11 @@ modules:
   - name: copy-n-launch-xlsx
     buildsystem: simple
     build-commands:
+      - pwd
+      - ls -R
+      - ls vendor-wheels
       # 1. Force a standard offline/sandboxed pip wheel installation to app environment path
-      - pip3 install --no-index --find-links="file://${PWD}/vendor-wheels" --no-build-isolation --prefix=/app .
+      - pip3 install --no-index --find-links="file://${PWD}/vendor-wheels" --no-build-isolation --prefix=/app dist/*.whl
       - install -Dm644 LICENSE /app/share/licenses/copy-n-launch-xlsx/LICENSE
     sources:
       - type: dir
