@@ -1,12 +1,18 @@
 # copy-n-launch-xlsx
 
+The best way to launch this application is to install the CLI using `pipx`, or to download a release binary.
+
 ```
-pip install copy-n-launch-xlsx
+pipx install copy-n-launch-xlsx
+cnlx gui
 ```
+
+**Download binaries here:** [Releases](https://github.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx/releases/)
+
 
 ---
 
-## Purpose:
+## Purpose
 
 This program: 
 
@@ -46,7 +52,7 @@ Variable names allow the cell locations to be adjusted and not referenced.
 
 ---
 
-## How To:
+## How To
 
 - Place a spreadsheet named daily_blank.xlsx in the filepath: ~/.copy-n-launch-xlsx/blank/
 
@@ -54,7 +60,9 @@ Blank template:
 
 ~/.copy-n-launch-xlsx/blank/daily_blank.xlsx
 
-Generated files:
+- Hit the single green button.
+
+Automatically generated files:
 
 ~/.copy-n-launch-xlsx/filled/daily-YYYY-MM-DD.xlsx
 
@@ -77,3 +85,7 @@ cnlx helptree
 - PyPI: https://pypi.org/project/typer-helptree/
 
 ---
+
+## Source code
+
+**Source code:** [Repository](https://github.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx/)
