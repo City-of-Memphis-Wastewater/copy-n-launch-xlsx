@@ -12,7 +12,7 @@ RUN apt-get update \
 
 COPY . .
 
-RUN pip install --no-cache-dir -e 
+RUN pip install --no-cache-dir -e .
 
 EXPOSE 8000
 
