@@ -25,7 +25,8 @@ jobs:
       - name: Vendor Python Dependencies for Sandbox Environment
         run: |
           mkdir -p vendor-wheels
-          uv pip download -d vendor-wheels .
+          # Download everything cleanly directly out of your pyproject.toml
+          uv pip install --download-dir vendor-wheels -r pyproject.toml
 
       # This action sets up the flathub remotes, pulls the SDK, and compiles the bundle safely
       - name: Build and Package Flatpak Bundle
