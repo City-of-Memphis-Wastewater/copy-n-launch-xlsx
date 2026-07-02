@@ -17,6 +17,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v7
 
+      - name: Install Flatpak Host Toolchains
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y flatpak flatpak-builder
+
       - name: Set up uv
         uses: astral-sh/setup-uv@v7
         with:
