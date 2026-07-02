@@ -1,6 +1,6 @@
 # copy-n-launch-xlsx
 
-Build a GUI that:
+This program: 
 
     - Copies a blank spreadsheet file.
 
@@ -15,8 +15,28 @@ Users can safely launch new daily data entry sheets, without needing to choose a
 Sheets should use variable names and possibly tables, for later reference and data aggregation.
 Variable names allow the cell locations to be adjusted and not referenced.
 
-This project should stay private, and it is specific to the Maxson Wastewater Treatment Operator data input.
+Any embedded spreadhseet is specific to the Maxson Wastewater Treatment Operator data input.
 
-How To:
+---
 
-Place a spreadsheet named daily_blank.xlsx in the filepath: ~/.copy-n-launch-xlsx/blank/
+## How To:
+
+- Place a spreadsheet named daily_blank.xlsx in the filepath: ~/.copy-n-launch-xlsx/blank/
+
+---
+
+See the `copy-n-launch-xlsx` Typer CLI structure.
+
+```
+cnlx helptree
+```
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/City-of-Memphis-Wastewater/pdflinkcheck/main/assets/copy-n-launch-xlsx_v0.2.9_helptree.svg" width="100%" alt="Screenshot of the CLI helptree">
+</p>
+`helptree` is a utility function for Typer CLIs, imported from the `typer-helptree` library.
+
+- GitHub: https://github.com/City-of-Memphis-Wastewater/typer-helptree
+- PyPI: https://pypi.org/project/typer-helptree/
+
+---
