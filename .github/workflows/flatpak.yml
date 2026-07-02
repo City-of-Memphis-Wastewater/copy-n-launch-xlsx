@@ -45,5 +45,8 @@ jobs:
         with:
           files: copy-n-launch-xlsx.flatpak
           overwrite_files: true
+          # Use the release tag if available, otherwise default to a test tag or draft
+          tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'v0.0.0-draft' }}
+          draft: ${{ github.event_name == 'workflow_dispatch' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
