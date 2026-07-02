@@ -1,5 +1,13 @@
 # copy-n-launch-xlsx
 
+```
+pip install copy-n-launch-xlsx
+```
+
+---
+
+## Purpose:
+
 This program: 
 
     - Copies a blank spreadsheet file.
@@ -11,11 +19,28 @@ This program:
 In this way, the stable file can be updated in a centralized way. 
 Users can safely launch new daily data entry sheets, without needing to choose a file to launch directly.
 
+---
 
-Sheets should use variable names and possibly tables, for later reference and data aggregation.
+## Blurb
+
+A new twist on one of the classic data entry problems: Spreadsheet templating.
+
+Still relevant in 2026? Apparently, because this app is now in daily use by the operators at my wastewater treatment plant. 
+
+And now, the code is open source as well (thank you Memphis taxpayers). 
+
+BYOS (bring your own spreadsheet).
+
+One button. A new dated copy everyday. A simple solution for a simple problem.
+
+Tested on macOS, WSL, Windows11, and Termux on Android.
+
+---
+
+## XLSX Best Practices
+
+Sheets should use Name Manager variable names and possibly tables, for later reference and data aggregation.
 Variable names allow the cell locations to be adjusted and not referenced.
-
-Any embedded spreadhseet is specific to the Maxson Wastewater Treatment Operator data input.
 
 ---
 
@@ -23,6 +48,13 @@ Any embedded spreadhseet is specific to the Maxson Wastewater Treatment Operator
 
 - Place a spreadsheet named daily_blank.xlsx in the filepath: ~/.copy-n-launch-xlsx/blank/
 
+Blank template:
+
+~/.copy-n-launch-xlsx/blank/daily_blank.xlsx
+
+Generated files:
+
+~/.copy-n-launch-xlsx/filled/daily-YYYY-MM-DD.xlsx
 
 ---
 
