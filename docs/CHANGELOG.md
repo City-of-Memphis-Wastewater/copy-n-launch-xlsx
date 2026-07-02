@@ -6,6 +6,14 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.10] - 2026-07-02
+### Added:
+- core.py, FileNotFound instead of sys.exit()
+- Fix type hint in core for CopyResult return.
+- Improve README.md
+
+---
+
 ## [0.2.9] - 2026-07-02
 ### Added:
 - helptree SVG asset and reference in README.
