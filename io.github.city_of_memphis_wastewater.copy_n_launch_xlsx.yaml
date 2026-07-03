@@ -21,6 +21,7 @@ modules:
       - python3 -c "import pygments; print(pygments.__file__)"
       - install -Dm644 LICENSE /app/share/licenses/copy-n-launch-xlsx/LICENSE
       - install -Dm644 src/copy_n_launch_xlsx/data/icons/max-green.svg /app/share/icons/hicolor/scalable/apps/io.github.city_of_memphis_wastewater.copy_n_launch_xlsx.svg
+      - install -Dm644 src/copy_n_launch_xlsx/data/icons/max-green_256x256.svg /app/share/icons/hicolor/256x256/apps/io.github.city_of_memphis_wastewater.copy_n_launch_xlsx.svg
     sources:
       - type: dir
         path: .
