@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+
+  <id>io.github.city_of_memphis_wastewater.copy_n_launch_xlsx</id>
+
+  <name>Copy n Launch XLSX</name>
+
+  <summary>Copy, rename, and launch spreadsheets for daily data entry</summary>
+
+  <description>
+    <p>
+      Copy n Launch XLSX is a GUI tool for automating daily spreadsheet workflows.
+      It copies a template Excel file, applies standardized naming with dates,
+      and opens the resulting file for immediate data entry.
+    </p>
+
+    <p>
+      It is designed for operational environments where consistent spreadsheet
+      generation and predictable file structure are required.
+    </p>
+
+    <p>
+      The tool includes both a graphical interface and a CLI for automation.
+    </p>
+  </description>
+
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>BSD-2-Clause-Patent</project_license>
+
+  <developer id="io.github.city_of_memphis_wastewater">
+    <name>City of Memphis Wastewater</name>
+  </developer>
+
+  <url type="homepage">
+    https://github.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx
+  </url>
+
+  <url type="bugtracker">
+    https://github.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx/issues
+  </url>
+
+  <launchable type="desktop-id">
+    io.github.city_of_memphis_wastewater.copy_n_launch_xlsx.desktop
+  </launchable>
+
+  <screenshots>
+    <screenshot type="default">
+      <image>https://raw.githubusercontent.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx/main/assets/copy-n-launch-xlsx_gui_v0.2.10.png</image>
+      <caption>Main GUI for copying and launching spreadsheets</caption>
+    </screenshot>
+  </screenshots>
+
+  <categories>
+    <category>Office</category>
+    <category>Utility</category>
+  </categories>
+
+  <content_rating type="oars-1.1" />
+
+  <releases>
+    <release version="0.2.13" date="2026-07-02" />
+  </releases>
+
+</component>
