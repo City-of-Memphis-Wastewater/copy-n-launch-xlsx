@@ -31,7 +31,7 @@ os.environ["TERM"] = "xterm-256color"
 
 app = typer.Typer(
     name=APP_NAME,
-    help=f"DESCRIPTION_STR (v{__version__})",
+    help=f"{DESCRIPTION_STR} (v{__version__})",
     add_completion=False,
     invoke_without_command = True,
     no_args_is_help = False,
