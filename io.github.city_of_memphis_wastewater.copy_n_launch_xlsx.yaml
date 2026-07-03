@@ -12,8 +12,13 @@ modules:
       - ls vendor-wheels
       # 1. Force a standard offline/sandboxed pip wheel installation to app environment path
       # - pip3 install --no-index --find-links="file://${PWD}/vendor-wheels" --no-build-isolation --prefix=/app dist/*.whl
-      - pip3 install --ignore-installed --no-index --find-links=vendor-wheels --prefix=/app dist/*.whl
+      - python3 -m pip install --upgrade pip setuptools wheel
+      - python3 -m pip install --ignore-installed --no-index --find-links=vendor-wheels --prefix=/app dist/*.whl
       - python3 -m pip show pygments
+      - python3 -m pip show setuptools
+      - python3 -m pip show wheel
+      - python3 -m pip --version
+      - python3 --version
       - find /app -name 'pygments*'
       - python3 -c "import pygments; print(pygments.__file__)"
       - install -Dm644 LICENSE /app/share/licenses/copy-n-launch-xlsx/LICENSE
