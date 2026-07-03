@@ -1,0 +1,16 @@
+[Desktop Entry]
+Type=Application
+Version=1.0
+
+Name=Copy n Launch XLSX
+Comment=Copy, rename, date, and launch spreadsheets for wastewater daily operations.
+
+Exec=copy-n-launch-xlsx
+
+Icon=io.github.city_of_memphis_wastewater.copy_n_launch_xlsx
+
+Terminal=false
+
+Categories=Office;Utility;
+
+StartupNotify=true
