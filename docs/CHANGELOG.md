@@ -6,9 +6,14 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.14] - 2026-07-03
+### Added:
+- flatpak manifrst with icon, and desktop file.
+
+---
+
 ## [0.2.13] - 2026-07-02
 ### Added:
-- Instructions assets/*.png and section in README.md specific to MAaxson use case.
 - build.yml should now allow Ubuntu PYZ and WHL to be attached to release.
 - .github/workflows/flatpak.yml and the yaml manifest in the project root. Flatpak now succeeding (to build, and to test).
  
