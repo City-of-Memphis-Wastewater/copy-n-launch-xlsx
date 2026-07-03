@@ -6,6 +6,9 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+
+---
+
 ## [0.2.14] - 2026-07-03
 ### Added:
 - flatpak manifrst with icon, and desktop file.
