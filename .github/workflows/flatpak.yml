@@ -62,12 +62,18 @@ jobs:
           run-tests: false
           cache-key: flatpak-builder-${{ github.sha }}
 
-      - name: Smoke test
+      - name: Install for Smoke test
         run: |
           flatpak install --user --bundle --noninteractive ./copy-n-launch-xlsx.flatpak
           flatpak list
           flatpak info io.github.city_of_memphis_wastewater.copy_n_launch_xlsx
+
+      - name: Assert CLI works, smoke test
+        run: |
+          set -e
           flatpak run io.github.city_of_memphis_wastewater.copy_n_launch_xlsx --help
+          flatpak run io.github.city_of_memphis_wastewater.copy_n_launch_xlsx --version
+          flatpak run io.github.city_of_memphis_wastewater.copy_n_launch_xlsx copylaunch --help
 
       - name: Attach Flatpak Asset to GitHub Release
         if: github.event_name == 'release'
