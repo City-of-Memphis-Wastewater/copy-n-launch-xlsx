@@ -43,6 +43,10 @@
     io.github.city_of_memphis_wastewater.copy_n_launch_xlsx.desktop
   </launchable>
 
+  <provides>
+    <id>io.github.city_of_memphis_wastewater.copy_n_launch_xlsx.desktop</id>
+  </provides>
+
   <screenshots>
     <screenshot type="default">
       <image>https://raw.githubusercontent.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx/main/assets/copy-n-launch-xlsx_gui_v0.2.10.png</image>
@@ -51,8 +55,8 @@
   </screenshots>
 
   <categories>
-    <category>Office</category>
-    <category>Utility</category>
+    <category>office</category>
+    <category>utility</category>
   </categories>
 
   <content_rating type="oars-1.1">
