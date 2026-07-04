@@ -69,15 +69,15 @@ jobs:
           #mkdir -p deb/pkg/usr/share/icons/hicolor/1024x1024/apps
           mkdir -p deb/pkg/usr/share/icons/hicolor/scalable/apps
 
-      #- name: Create venv and install package
-      #  run: |
-          #python3 -m venv deb/pkg/opt/copy-n-launch-xlsx/venv
-          #deb/pkg/opt/copy-n-launch-xlsx/venv/bin/pip install .
-    
-      - name: Install Python package into deb root
+      - name: Create venv and install package
         run: |
+          python3 -m venv deb/pkg/opt/copy-n-launch-xlsx/venv
+          deb/pkg/opt/copy-n-launch-xlsx/venv/bin/pip install .
+    
+      #- name: Install Python package into deb root
+      #  run: |
           #uv pip install . --prefix deb/pkg/usr
-          uv pip install . --target deb/pkg/usr/lib/python3/dist-packages
+          #uv pip install . --target deb/pkg/usr/lib/python3/dist-packages
           #uv pip install . --target deb/pkg/opt/copy-n-launch-xlsx
 
       # ------------------------------------------------------------
@@ -93,7 +93,9 @@ jobs:
             # exec /opt/copy-n-launch-xlsx/copy-n-launch-xlsx "$@"
             #export PYTHONPATH=/opt/copy-n-launch-xlsx
             #exec copy-n-launch-xlsx "$@"
-            exec python3 -m copy_n_launch_xlsx "$@"
+            #exec python3 -m copy_n_launch_xlsx "$@"
+            #!/bin/bash
+            exec /opt/copy-n-launch-xlsx/venv/bin/python -m copy_n_launch_xlsx "$@"
             #exec /opt/copy-n-launch-xlsx/venv/bin/copy-n-launch-xlsx "$@"
             EOF
 
