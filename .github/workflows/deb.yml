@@ -176,7 +176,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: deb-${{ steps.meta.outputs.version }}-${{ matrix.arch }}
+          name: copy-n-launch-xlsx-${{ steps.meta.outputs.version }}-${{ matrix.arch }}
           path: deb/*.deb
 
       # ------------------------------------------------------------
