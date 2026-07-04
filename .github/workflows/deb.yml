@@ -69,15 +69,17 @@ jobs:
           #mkdir -p deb/pkg/usr/share/icons/hicolor/1024x1024/apps
           mkdir -p deb/pkg/usr/share/icons/hicolor/scalable/apps
 
-      - name: Create venv and install package
-        run: |
-          python3 -m venv deb/pkg/opt/copy-n-launch-xlsx/venv
-          deb/pkg/opt/copy-n-launch-xlsx/venv/bin/pip install .
-    
-      #- name: Install Python package into deb root
+      #- name: Create venv and install package
       #  run: |
-          #uv pip install . --target deb/pkg/usr/lib/python3/dist-packages
+          #python3 -m venv deb/pkg/opt/copy-n-launch-xlsx/venv
+          #deb/pkg/opt/copy-n-launch-xlsx/venv/bin/pip install .
+    
+      - name: Install Python package into deb root
+        run: |
+          #uv pip install . --prefix deb/pkg/usr
+          uv pip install . --target deb/pkg/usr/lib/python3/dist-packages
           #uv pip install . --target deb/pkg/opt/copy-n-launch-xlsx
+
       # ------------------------------------------------------------
       # Install launcher wrapper
       # ------------------------------------------------------------
@@ -91,7 +93,8 @@ jobs:
             # exec /opt/copy-n-launch-xlsx/copy-n-launch-xlsx "$@"
             #export PYTHONPATH=/opt/copy-n-launch-xlsx
             #exec copy-n-launch-xlsx "$@"
-            exec /opt/copy-n-launch-xlsx/venv/bin/copy-n-launch-xlsx "$@"
+            exec python3 -m copy_n_launch_xlsx "$@"
+            #exec /opt/copy-n-launch-xlsx/venv/bin/copy-n-launch-xlsx "$@"
             EOF
 
           chmod +x deb/pkg/usr/bin/$APP_NAME
@@ -132,21 +135,23 @@ jobs:
       # ------------------------------------------------------------
       # Create DEBIAN control file
       # ------------------------------------------------------------
-      - name: Create DEBIAN control file
+      - name: Generate DEBIAN control file from template
         run: |
+          set -euo pipefail
+
           VERSION="${{ steps.meta.outputs.version }}"
           ARCH="${{ matrix.arch }}"
 
-          cat > deb/pkg/DEBIAN/control << EOF
-            Package: copy-n-launch-xlsx
-            Version: $VERSION
-            Section: utils
-            Priority: optional
-            Architecture: $ARCH
-            Maintainer: City of Memphis Wastewater
-            Description: Copy N Launch XLSX - cross-platform CLI/GUI/web hybrid tool
-            EOF
+          mkdir -p deb/pkg/DEBIAN
 
+          sed -e "s/__VERSION__/${VERSION}/g" \
+              -e "s/__ARCH__/${ARCH}/g" \
+              deb/control.in > deb/pkg/DEBIAN/control
+
+          # echo "" >> deb/pkg/DEBIAN/control
+
+          cat deb/pkg/DEBIAN/control
+          
       # ------------------------------------------------------------
       # Build .deb
       # ------------------------------------------------------------

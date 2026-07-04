@@ -1,0 +1,7 @@
+Package: copy-n-launch-xlsx
+Version: __VERSION__
+Section: utils
+Priority: optional
+Architecture: __ARCH__
+Maintainer: City of Memphis Wastewater
+Description: Copy N Launch XLSX - cross-platform CLI/GUI/web hybrid tool for templating daily spreadsheets for data input.
