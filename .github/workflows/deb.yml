@@ -87,9 +87,9 @@ jobs:
           APP_NAME="copy-n-launch-xlsx"
 
           cat > deb/pkg/usr/bin/$APP_NAME << 'EOF'
-#!/bin/bash
-exec /opt/copy-n-launch-xlsx/copy-n-launch-xlsx "$@"
-EOF
+            #!/bin/bash
+            exec /opt/copy-n-launch-xlsx/copy-n-launch-xlsx "$@"
+            EOF
 
           chmod +x deb/pkg/usr/bin/$APP_NAME
 
@@ -101,15 +101,15 @@ EOF
           APP_NAME="copy-n-launch-xlsx"
 
           cat > deb/pkg/usr/share/applications/$APP_NAME.desktop << EOF
-[Desktop Entry]
-Name=Copy N Launch XLSX
-Exec=$APP_NAME
-Icon=$APP_NAME
-Type=Application
-Categories=Utility;
-Terminal=false
-StartupNotify=true
-EOF
+            [Desktop Entry]
+            Name=Copy N Launch XLSX
+            Exec=$APP_NAME
+            Icon=$APP_NAME
+            Type=Application
+            Categories=Utility;
+            Terminal=false
+            StartupNotify=true
+            EOF
 
       # ------------------------------------------------------------
       # Install icons (Linux hicolor spec)
@@ -135,14 +135,14 @@ EOF
           ARCH="${{ matrix.arch }}"
 
           cat > deb/pkg/DEBIAN/control << EOF
-Package: copy-n-launch-xlsx
-Version: $VERSION
-Section: utils
-Priority: optional
-Architecture: $ARCH
-Maintainer: City of Memphis Wastewater
-Description: Copy N Launch XLSX - cross-platform CLI/GUI/web hybrid tool
-EOF
+            Package: copy-n-launch-xlsx
+            Version: $VERSION
+            Section: utils
+            Priority: optional
+            Architecture: $ARCH
+            Maintainer: City of Memphis Wastewater
+            Description: Copy N Launch XLSX - cross-platform CLI/GUI/web hybrid tool
+            EOF
 
       # ------------------------------------------------------------
       # Build .deb
