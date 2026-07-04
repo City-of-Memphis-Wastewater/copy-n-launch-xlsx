@@ -64,11 +64,22 @@ jobs:
           echo "Wheel count:"
           find vendor-wheels -name '*.whl' | wc -l
 
+      - name: Compute build metadata
+        run: |
+          VERSION=$(uv run python -c "from copy_n_launch_xlsx._version import get_version; print(get_version())")
+          ARCH=$(uname -m)
+          SHA=$(echo $GITHUB_SHA | cut -c1-7)
+
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "ARCH=$ARCH" >> $GITHUB_ENV
+          echo "SHA=$SHA" >> $GITHUB_ENV
+
       - name: Build and Package Flatpak Bundle
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
           manifest-path: io.github.city_of_memphis_wastewater.copy_n_launch_xlsx.yaml
-          bundle: copy-n-launch-xlsx.flatpak
+          #bundle: copy-n-launch-xlsx.flatpak
+          bundle: copy-n-launch-xlsx-${{ env.VERSION }}-${{ env.ARCH }}.flatpak
           run-tests: false
           cache-key: flatpak-builder-${{ github.sha }}
 
