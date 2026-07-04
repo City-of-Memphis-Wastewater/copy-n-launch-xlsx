@@ -162,6 +162,29 @@ jobs:
           fakeroot dpkg-deb --build deb/pkg "deb/$DEB_NAME"
 
       # ------------------------------------------------------------
+      # Smoke test installed package
+      # ------------------------------------------------------------
+      - name: Smoke test .deb package
+        run: |
+          set -euo pipefail
+
+          DEB_FILE=$(ls deb/*.deb | head -n 1)
+
+          echo "Testing package: $DEB_FILE"
+
+          sudo apt-get update
+          sudo apt-get install -y ./deb/*.deb
+
+          echo "Checking CLI exists..."
+          which copy-n-launch-xlsx
+
+          echo "Running CLI smoke test..."
+          copy-n-launch-xlsx --help || true
+
+          echo "Import test..."
+          python3 -c "import copy_n_launch_xlsx; print('import ok')"
+
+      # ------------------------------------------------------------
       # Verify output
       # ------------------------------------------------------------
       - name: Inspect output
