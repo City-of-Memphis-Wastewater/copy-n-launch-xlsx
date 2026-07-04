@@ -1,0 +1,181 @@
+name: Build Debian Package
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  deb:
+    name: Build .deb (${{ matrix.arch }})
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        arch: [amd64]
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          version: "latest"
+
+      - name: Install system packaging tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg-dev fakeroot
+
+      - name: Install Python dependencies
+        run: |
+          uv sync --group dev
+
+      # ------------------------------------------------------------
+      # Build application (reuse your existing system)
+      # ------------------------------------------------------------
+      - name: Build application (PyInstaller)
+        run: |
+          uv run python build_executable.py --mode onedir
+
+      # ------------------------------------------------------------
+      # Extract version metadata
+      # ------------------------------------------------------------
+      - name: Compute version + naming
+        id: meta
+        run: |
+          VERSION=$(uv run python -c "from copy_n_launch_xlsx._version import get_version; print(get_version())")
+
+          ARCH="${{ matrix.arch }}"
+          APP_NAME="copy-n-launch-xlsx"
+
+          DEB_NAME="${APP_NAME}_${VERSION}_${ARCH}.deb"
+
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "arch=$ARCH" >> $GITHUB_OUTPUT
+          echo "deb_name=$DEB_NAME" >> $GITHUB_OUTPUT
+
+      # ------------------------------------------------------------
+      # Create Debian filesystem layout
+      # ------------------------------------------------------------
+      - name: Create package directory structure
+        run: |
+          APP_NAME="copy-n-launch-xlsx"
+
+          mkdir -p deb/pkg/DEBIAN
+          mkdir -p deb/pkg/opt/$APP_NAME
+          mkdir -p deb/pkg/usr/bin
+          mkdir -p deb/pkg/usr/share/applications
+
+          # Icon directories (hicolor standard)
+          mkdir -p deb/pkg/usr/share/icons/hicolor/256x256/apps
+          mkdir -p deb/pkg/usr/share/icons/hicolor/scalable/apps
+
+          # Copy PyInstaller output
+          cp -r dist/* deb/pkg/opt/$APP_NAME/
+
+      # ------------------------------------------------------------
+      # Install launcher wrapper
+      # ------------------------------------------------------------
+      - name: Create launcher script
+        run: |
+          APP_NAME="copy-n-launch-xlsx"
+
+          cat > deb/pkg/usr/bin/$APP_NAME << 'EOF'
+#!/bin/bash
+exec /opt/copy-n-launch-xlsx/copy-n-launch-xlsx "$@"
+EOF
+
+          chmod +x deb/pkg/usr/bin/$APP_NAME
+
+      # ------------------------------------------------------------
+      # Desktop entry
+      # ------------------------------------------------------------
+      - name: Create desktop entry
+        run: |
+          APP_NAME="copy-n-launch-xlsx"
+
+          cat > deb/pkg/usr/share/applications/$APP_NAME.desktop << EOF
+[Desktop Entry]
+Name=Copy N Launch XLSX
+Exec=$APP_NAME
+Icon=$APP_NAME
+Type=Application
+Categories=Utility;
+Terminal=false
+StartupNotify=true
+EOF
+
+      # ------------------------------------------------------------
+      # Install icons (Linux hicolor spec)
+      # ------------------------------------------------------------
+      - name: Install icons
+        run: |
+          APP_NAME="copy-n-launch-xlsx"
+
+          ICON_SRC="src/copy_n_launch_xlsx/data/icons"
+
+          cp "$ICON_SRC/max-green_256x256.png" \
+            "deb/pkg/usr/share/icons/hicolor/256x256/apps/$APP_NAME.png"
+
+          cp "$ICON_SRC/max-green.svg" \
+            "deb/pkg/usr/share/icons/hicolor/scalable/apps/$APP_NAME.svg"
+
+      # ------------------------------------------------------------
+      # Create DEBIAN control file
+      # ------------------------------------------------------------
+      - name: Create DEBIAN control file
+        run: |
+          VERSION="${{ steps.meta.outputs.version }}"
+          ARCH="${{ matrix.arch }}"
+
+          cat > deb/pkg/DEBIAN/control << EOF
+Package: copy-n-launch-xlsx
+Version: $VERSION
+Section: utils
+Priority: optional
+Architecture: $ARCH
+Maintainer: City of Memphis Wastewater
+Description: Copy N Launch XLSX - cross-platform CLI/GUI/web hybrid tool
+EOF
+
+      # ------------------------------------------------------------
+      # Build .deb
+      # ------------------------------------------------------------
+      - name: Build Debian package
+        run: |
+          DEB_NAME="${{ steps.meta.outputs.deb_name }}"
+
+          fakeroot dpkg-deb --build deb/pkg "deb/$DEB_NAME"
+
+      # ------------------------------------------------------------
+      # Verify output
+      # ------------------------------------------------------------
+      - name: Inspect output
+        run: |
+          echo "Generated Debian package:"
+          ls -lah deb/
+
+      # ------------------------------------------------------------
+      # Upload artifact
+      # ------------------------------------------------------------
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: deb-${{ steps.meta.outputs.version }}-${{ matrix.arch }}
+          path: deb/*.deb
+
+      # ------------------------------------------------------------
+      # Attach to GitHub Release
+      # ------------------------------------------------------------
+      - name: Publish release asset
+        uses: softprops/action-gh-release@v3
+        with:
+          files: deb/*.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
