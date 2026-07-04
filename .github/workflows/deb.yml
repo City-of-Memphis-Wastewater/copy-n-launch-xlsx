@@ -37,13 +37,6 @@ jobs:
           uv sync --group dev
 
       # ------------------------------------------------------------
-      # Build application (reuse your existing system)
-      # ------------------------------------------------------------
-      - name: Build application (PyInstaller)
-        run: |
-          uv run python build_executable.py --mode onedir
-
-      # ------------------------------------------------------------
       # Extract version metadata
       # ------------------------------------------------------------
       - name: Compute version + naming
@@ -174,6 +167,7 @@ jobs:
       # Attach to GitHub Release
       # ------------------------------------------------------------
       - name: Publish release asset
+        if: github.event_name == 'release'
         uses: softprops/action-gh-release@v3
         with:
           files: deb/*.deb
