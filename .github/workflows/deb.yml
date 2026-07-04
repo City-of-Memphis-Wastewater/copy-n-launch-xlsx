@@ -78,32 +78,21 @@ jobs:
       # ------------------------------------------------------------
       # Install launcher wrapper
       # ------------------------------------------------------------
-      - name: Create launcher script
+      - name: Install launcher
         run: |
-          APP_NAME="copy-n-launch-xlsx"
-          cat > deb/pkg/usr/bin/copy-n-launch-xlsx << 'EOF'
-          #!/bin/bash
-          exec /opt/copy-n-launch-xlsx/venv/bin/python -m copy_n_launch_xlsx "$@"
-          EOF
+          install -Dm755 \
+            deb/launcher.sh \
+            deb/pkg/usr/bin/copy-n-launch-xlsx
           chmod +x deb/pkg/usr/bin/copy-n-launch-xlsx
           
       # ------------------------------------------------------------
       # Desktop entry
       # ------------------------------------------------------------
-      - name: Create desktop entry
+      - name: Install desktop entry
         run: |
-          APP_NAME="copy-n-launch-xlsx"
-
-          cat > deb/pkg/usr/share/applications/$APP_NAME.desktop << EOF
-            [Desktop Entry]
-            Name=Copy N Launch XLSX
-            Exec=$APP_NAME
-            Icon=$APP_NAME
-            Type=Application
-            Categories=Utility;
-            Terminal=false
-            StartupNotify=true
-            EOF
+          install -Dm644 \
+            deb/copy-n-launch-xlsx.desktop \
+            deb/pkg/usr/share/applications/copy-n-launch-xlsx.desktop
 
       # ------------------------------------------------------------
       # Install icons (Linux hicolor spec)
@@ -168,9 +157,10 @@ jobs:
 
           echo "Running CLI smoke test..."
           copy-n-launch-xlsx --help || true
+          copy-n-launch-xlsx --version
 
           echo "Import test..."
-          python3 -c "import copy_n_launch_xlsx; print('import ok')"
+          /opt/copy-n-launch-xlsx/venv/bin/python -c "import copy_n_launch_xlsx; print('import ok')"
 
       # ------------------------------------------------------------
       # Verify output

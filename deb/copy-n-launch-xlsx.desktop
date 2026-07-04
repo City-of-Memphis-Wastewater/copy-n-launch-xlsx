@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Copy N Launch XLSX
+Exec=copy-n-launch-xlsx
+Icon=copy-n-launch-xlsx
+Type=Application
+Categories=Utility;
+Terminal=false
+StartupNotify=true
