@@ -69,23 +69,27 @@ jobs:
           VERSION=$(uv run python -c "from copy_n_launch_xlsx._version import get_version; print(get_version())")
           ARCH=$(uname -m)
           SHA=$(echo $GITHUB_SHA | cut -c1-7)
+          FILENAME="copy-n-launch-xlsx-${VERSION}-${ARCH}.flatpak"
 
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "ARCH=$ARCH" >> $GITHUB_ENV
           echo "SHA=$SHA" >> $GITHUB_ENV
-
+          echo "FILENAME=$FILENAME" >> $GITHUB_ENV
+          
       - name: Build and Package Flatpak Bundle
         uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
           manifest-path: io.github.city_of_memphis_wastewater.copy_n_launch_xlsx.yaml
           #bundle: copy-n-launch-xlsx.flatpak
-          bundle: copy-n-launch-xlsx-${{ env.VERSION }}-${{ env.ARCH }}.flatpak
+          #bundle: copy-n-launch-xlsx-${{ env.VERSION }}-${{ env.ARCH }}.flatpak
+          bundle: ${{ env.FILENAME }}
           run-tests: false
           cache-key: flatpak-builder-${{ github.sha }}
 
       - name: Install for Smoke test
         run: |
-          flatpak install --user --bundle --noninteractive ./copy-n-launch-xlsx.flatpak
+          #flatpak install --user --bundle --noninteractive ./copy-n-launch-xlsx.flatpak
+          flatpak install --user --bundle --noninteractive ./${{ env.FILENAME }}
           flatpak list
           flatpak info io.github.city_of_memphis_wastewater.copy_n_launch_xlsx
 
