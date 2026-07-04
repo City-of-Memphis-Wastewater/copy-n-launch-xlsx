@@ -6,12 +6,15 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
-
+## [0.2.15] - 2026-07-04
+### Added:
+- Flatpak file with more useful filename, includong architecture and cnlx version.
+- still vendoring deps, rather than using requirements.txt (generwt3d by uv export) then converting to typical flatpak python dep JSON using the flatpak builder tools python package.
 ---
 
 ## [0.2.14] - 2026-07-03
 ### Added:
-- flatpak manifrst with icon, and desktop file.
+- flatpak manifest with icon, and desktop file.
 
 ---
 
