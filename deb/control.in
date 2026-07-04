@@ -2,6 +2,7 @@ Package: copy-n-launch-xlsx
 Version: __VERSION__
 Section: utils
 Depends: python3
+#Depends: libc6
 Priority: optional
 Architecture: __ARCH__
 Maintainer: City of Memphis Wastewater
