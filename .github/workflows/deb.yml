@@ -66,9 +66,18 @@ jobs:
           mkdir -p deb/pkg/usr/share/applications
 
           # Icon directories (hicolor standard)
-          mkdir -p deb/pkg/usr/share/icons/hicolor/1024x1024/apps
+          #mkdir -p deb/pkg/usr/share/icons/hicolor/1024x1024/apps
           mkdir -p deb/pkg/usr/share/icons/hicolor/scalable/apps
 
+      - name: Create venv and install package
+        run: |
+          uv run python3 -m venv deb/pkg/opt/copy-n-launch-xlsx/venv
+          deb/pkg/opt/copy-n-launch-xlsx/venv/bin/pip install .
+    
+      #- name: Install Python package into deb root
+      #  run: |
+          #uv pip install . --target deb/pkg/usr/lib/python3/dist-packages
+          #uv pip install . --target deb/pkg/opt/copy-n-launch-xlsx
       # ------------------------------------------------------------
       # Install launcher wrapper
       # ------------------------------------------------------------
@@ -78,7 +87,10 @@ jobs:
 
           cat > deb/pkg/usr/bin/$APP_NAME << 'EOF'
             #!/bin/bash
-            exec /opt/copy-n-launch-xlsx/copy-n-launch-xlsx "$@"
+            # exec python3 -m copy_n_launch_xlsx "$@"
+            # exec /opt/copy-n-launch-xlsx/copy-n-launch-xlsx "$@"
+            #export PYTHONPATH=/opt/copy-n-launch-xlsx
+            exec copy-n-launch-xlsx "$@"
             EOF
 
           chmod +x deb/pkg/usr/bin/$APP_NAME
@@ -110,8 +122,8 @@ jobs:
 
           ICON_SRC="src/copy_n_launch_xlsx/data/icons"
 
-          cp "$ICON_SRC/max-green_1024x1024.png" \
-            "deb/pkg/usr/share/icons/hicolor/1024x1024/apps/$APP_NAME.png"
+          #cp "$ICON_SRC/max-green_1024x1024.png" \
+          #  "deb/pkg/usr/share/icons/hicolor/1024x1024/apps/$APP_NAME.png"
 
           cp "$ICON_SRC/max-green.svg" \
             "deb/pkg/usr/share/icons/hicolor/scalable/apps/$APP_NAME.svg"
