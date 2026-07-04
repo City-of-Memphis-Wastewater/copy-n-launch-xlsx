@@ -4,7 +4,7 @@ runtime-version: '24.08' # Stable Freedesktop baseline
 sdk: org.freedesktop.Sdk
 command: copy-n-launch-xlsx
 modules:
-  - python3-requirements.json
+  #- python3-requirements.json
   - name: copy-n-launch-xlsx
     buildsystem: simple
     build-commands:
