@@ -12,7 +12,7 @@ modules:
       #- ls -R
       #- ls vendor-wheels
       # - python3 -m pip install --upgrade pip setuptools wheel
-      - python3 -m pip install build
+      #- python3 -m pip install build
       - python3 -m build
       - python3 -m pip install --ignore-installed --no-index --find-links=vendor-wheels --prefix=/app dist/*.whl
       - python3 -m pip show pygments
