@@ -69,9 +69,6 @@ jobs:
           mkdir -p deb/pkg/usr/share/icons/hicolor/256x256/apps
           mkdir -p deb/pkg/usr/share/icons/hicolor/scalable/apps
 
-          # Copy PyInstaller output
-          cp -r dist/* deb/pkg/opt/$APP_NAME/
-
       # ------------------------------------------------------------
       # Install launcher wrapper
       # ------------------------------------------------------------
