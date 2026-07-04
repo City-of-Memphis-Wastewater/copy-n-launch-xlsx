@@ -28,42 +28,14 @@ jobs:
 
 
       - name: Get Flatpak Builder Tools
+        if: false
         run: |
           git clone https://github.com/flatpak/flatpak-builder-tools.git
 
-      - name: Generate Flatpak Python module
+      - name: generate requirements.txt
         run: |
-          uv export --format requirements-txt > requirements.txt
-
-          python3 flatpak-builder-tools/pip/flatpak-pip-generator \
-            --requirements-file requirements.txt
-            
-      - name: Install flatpak-pip-generator
-        if: false
-        run: |
-          uv tool install flatpak-pip-generator
-
-      - name: Generate requirements.txt from pyproject.toml using uv
-        if: false
-        run: |
-          #python3 -m pip install flatpak-pip-generator
-
-          # Export locked dependencies from uv
-          uv export --format requirements-txt > requirements.txt
-
-          # Generate the Flatpak dependency module
-          #flatpak-pip-generator \
-          #  --requirements-file requirements.txt
-
-          ## Build your application wheel
-          #uv build
+          uv export --format requirements-txt --no-editable --no-dev
           
-      - name: Generate Flatpak Python module
-        if: false
-        run: |
-          ~/.local/bin/flatpak-pip-generator \
-            --requirements-file requirements.txt
-
       - name: Vendor Python Dependencies for Sandbox Environment
         run: |
           mkdir -p vendor-wheels
