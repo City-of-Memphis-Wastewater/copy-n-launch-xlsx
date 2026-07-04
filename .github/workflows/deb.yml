@@ -66,7 +66,7 @@ jobs:
           mkdir -p deb/pkg/usr/share/applications
 
           # Icon directories (hicolor standard)
-          mkdir -p deb/pkg/usr/share/icons/hicolor/256x256/apps
+          mkdir -p deb/pkg/usr/share/icons/hicolor/1024x1024/apps
           mkdir -p deb/pkg/usr/share/icons/hicolor/scalable/apps
 
       # ------------------------------------------------------------
@@ -110,8 +110,8 @@ jobs:
 
           ICON_SRC="src/copy_n_launch_xlsx/data/icons"
 
-          cp "$ICON_SRC/max-green_256x256.png" \
-            "deb/pkg/usr/share/icons/hicolor/256x256/apps/$APP_NAME.png"
+          cp "$ICON_SRC/max-green_1024x1024.png" \
+            "deb/pkg/usr/share/icons/hicolor/1024x1024/apps/$APP_NAME.png"
 
           cp "$ICON_SRC/max-green.svg" \
             "deb/pkg/usr/share/icons/hicolor/scalable/apps/$APP_NAME.svg"
