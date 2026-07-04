@@ -86,10 +86,16 @@ jobs:
           run-tests: false
           cache-key: flatpak-builder-${{ github.sha }}
 
+      - name: Debug output files
+        run: |
+          find . -name "*.flatpak" -ls
+          
       - name: Install for Smoke test
         run: |
           #flatpak install --user --bundle --noninteractive ./copy-n-launch-xlsx.flatpak
-          flatpak install --user --bundle --noninteractive ./${{ env.FILENAME }}
+          #flatpak install --user --bundle --noninteractive ./${{ env.FILENAME }}
+          FLATPAK_FILE=$(find . -name "*.flatpak" | head -n 1)
+          flatpak install --user --bundle --noninteractive "$FLATPAK_FILE"
           flatpak list
           flatpak info io.github.city_of_memphis_wastewater.copy_n_launch_xlsx
 
@@ -104,7 +110,8 @@ jobs:
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v3
         with:
-          files: ${{ env.FILENAME }}
+          #files: ${{ env.FILENAME }}
+          files: "*.flatpak"
           overwrite_files: true
           # Use the release tag if available, otherwise default to a test tag or draft
           tag_name: ${{ github.ref_type == 'tag' && github.ref_name || 'v0.0.0-draft' }}
