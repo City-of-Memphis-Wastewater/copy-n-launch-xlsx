@@ -6,6 +6,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.16] - 2026-07-04
+### Added:
+- deb.yml now does a full .deb build and adds to artifacts, with stable necessary files pulled in from ./deb/
+
+---
+
 ## [0.2.15] - 2026-07-04
 ### Added:
 - Flatpak file with more useful filename, includong architecture and cnlx version.
