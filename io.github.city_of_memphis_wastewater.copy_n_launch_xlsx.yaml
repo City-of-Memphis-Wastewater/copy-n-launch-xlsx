@@ -4,6 +4,7 @@ runtime-version: '24.08' # Stable Freedesktop baseline
 sdk: org.freedesktop.Sdk
 command: copy-n-launch-xlsx
 modules:
+  - python3-requirements.json
   - name: copy-n-launch-xlsx
     buildsystem: simple
     build-commands:
@@ -11,12 +12,18 @@ modules:
       #- ls -R
       #- ls vendor-wheels
       # - python3 -m pip install --upgrade pip setuptools wheel
+      - python3 -m pip install build
+      - python3 -m build
       - python3 -m pip install --ignore-installed --no-index --find-links=vendor-wheels --prefix=/app dist/*.whl
       - python3 -m pip show pygments
       - python3 -m pip show setuptools
       - python3 -m pip show wheel
       - python3 -m pip --version
       - python3 --version
+      - python3 --version
+      - python3 -c "import sys; print(sys.executable)"
+      - python3 -c "import tkinter; print('Tk', tkinter.TkVersion)"
+      - python3 -c "import _tkinter; print(_tkinter.__file__)"
       - find /app -name 'pygments*'
       - python3 -c "import pygments; print(pygments.__file__)"
       - install -Dm644 LICENSE /app/share/licenses/copy-n-launch-xlsx/LICENSE

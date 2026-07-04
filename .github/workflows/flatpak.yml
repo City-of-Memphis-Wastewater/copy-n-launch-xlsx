@@ -26,6 +26,29 @@ jobs:
         with:
           version: "latest"
 
+      - name: Install flatpak-pip-generator
+        run: |
+          uv tool install flatpak-pip-generator
+
+      - name: Generate requirements.txt from pyproject.toml using uv
+        run: |
+          #python3 -m pip install flatpak-pip-generator
+
+          # Export locked dependencies from uv
+          uv export --format requirements-txt > requirements.txt
+
+          # Generate the Flatpak dependency module
+          #flatpak-pip-generator \
+          #  --requirements-file requirements.txt
+
+          ## Build your application wheel
+          #uv build
+          
+      - name: Generate Flatpak Python module
+        run: |
+          ~/.local/bin/flatpak-pip-generator \
+            --requirements-file requirements.txt
+
       - name: Vendor Python Dependencies for Sandbox Environment
         run: |
           mkdir -p vendor-wheels
