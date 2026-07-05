@@ -55,7 +55,10 @@ Changelog = "https://raw.githubusercontent.com/city-of-memphis-wastewater/copy-n
 copy-n-launch-xlsx = "copy_n_launch_xlsx.__main__:app"
 cnlx = "copy_n_launch_xlsx.__main__:app"
 
-#[project.optional-dependencies]
+[project.optional-dependencies]
+kivy = [
+    "kivy>=2.3.1"
+]
 
 # add with `uv sync --group dev`
 [dependency-groups]
