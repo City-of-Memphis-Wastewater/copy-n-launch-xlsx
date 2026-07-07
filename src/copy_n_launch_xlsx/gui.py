@@ -81,7 +81,7 @@ class GuiApp:
 
         # --- 2. Widget Construction ---
         self._create_widgets()
-        #self._initialize_menubar()
+        self._initialize_menubar()
 
     def _initialize_vars(self):
         """Build necessary tk variables."""
