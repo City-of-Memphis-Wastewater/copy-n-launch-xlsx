@@ -9,10 +9,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ## [0.2.17] - 2026-07-07
 ### Added:
-- Yesterday and Tomorrow launch functions and buttons.
+- Add functions and buttons to options bar to launch yesterday's and tomorrow's files. 
+- Add option button to show filled files in files explorer.
 
 ### Changed: 
 - Core function name shorted to copy_and_launch
+- Move "About" button, to prevent overlap of the options menu over the quintessential Launch button.
 
 ### Internal:
 
