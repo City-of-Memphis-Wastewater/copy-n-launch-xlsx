@@ -124,9 +124,9 @@ class GuiApp:
         tools_menu = tk.Menu(menubar, tearoff=0)
         menubar.add_cascade(label="Options", menu=tools_menu)
 
-        tools_menu.add_command(label="Open Spreadsheet from Yesterday", command=lambda: self._launch_sheet(launch_yesterday_if_exists))
-        tools_menu.add_command(label="Open Spreadsheet for Tomorrow", command=lambda: self._launch_sheet(launch_tomorrow))
-        #tools_menu.add_command(label="Toggle Theme", command=self._toggle_theme)
+        tools_menu.add_command(label="Open File from Yesterday", command=lambda: self._launch_sheet(launch_yesterday_if_exists))
+        tools_menu.add_command(label="Open File for Tomorrow", command=lambda: self._launch_sheet(launch_tomorrow))
+        tools_menu.add_command(label="Show Filled Files ", command=lambda: self._show_target_files_in_system_explorer())
 
         #tools_menu.add_separator()
         #tools_menu.add_command(label="Readme", command=self._show_readme)
@@ -137,8 +137,7 @@ class GuiApp:
 
     # --- UI Component Building ---
 
-    def _magic_button(self):
-        return None# self._show_system_explorer_gui()
+
     
     def _about_button(self):
         messagebox.showinfo(
@@ -222,7 +221,7 @@ class GuiApp:
                 f"An unexpected error occurred:\n\n{str(e)}"
             )
 
-    def _show_system_explorer_gui(self) -> None:
+    def _show_target_files_in_system_explorer(self) -> None:
         """
         Opens the system file explorer to the directory containing
         the exported files, with GUI error handling.
