@@ -5,6 +5,8 @@ from importlib.resources import files
 from dworshak_config import DworshakConfig
 import logging
 
+from .context import SERVICE
+
 APP_NAME = "copy-n-launch-xlsx"
 APP_NAME_PRETTY = "Copy n' Launch XLSX"
 SRC_FOLDER_NAME = "copy_n_launch_xlsx" 
@@ -62,7 +64,7 @@ def get_icns_icon() -> Path:
 # can i use a string to effectively define the dir where i want the copied and renamed sheet to land?
 # it can be in
 def pull_in_configured_path_or_use_default():
-    config_mngr.set(service="copy-n-launch",item="filled-sheet-dir",value="",overwrite=False) # creates file and defauly value if it doesn't exist
+    config_mngr.set(service=SERVICE,item="filled-sheet-dir",value="",overwrite=False) # creates file and defauly value if it doesn't exist
     configured_str = config_mngr.get(service="copy-n-launch",item="filled-sheet-dir") # allows retrieval of edited value
 
     # If the user left it blank, or it's purely whitespace, use the default path

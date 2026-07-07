@@ -127,6 +127,7 @@ class GuiApp:
         tools_menu.add_command(label="Open File from Yesterday", command=lambda: self._launch_sheet(launch_yesterday_if_exists))
         tools_menu.add_command(label="Open File for Tomorrow", command=lambda: self._launch_sheet(launch_tomorrow))
         tools_menu.add_command(label="Show Filled Files ", command=lambda: self._show_target_files_in_system_explorer())
+        tools_menu.add_command(label="Launch Configured Website ", command=lambda: self._launch_configured_website())
 
         #tools_menu.add_separator()
         #tools_menu.add_command(label="Readme", command=self._show_readme)
@@ -136,8 +137,8 @@ class GuiApp:
         messagebox.showinfo("Readme", "Copy 'n Launch XLSX utility.")
 
     # --- UI Component Building ---
-
-
+    def _launch_configured_website(self):
+        pass
     
     def _about_button(self):
         messagebox.showinfo(
