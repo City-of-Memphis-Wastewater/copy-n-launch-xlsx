@@ -7,6 +7,15 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.18] - 2026-07-07
+### Added:
+- Add option button to launch a website, with url configured in config.json using dworshak-config.
+ 
+### Changed: 
+- Ensure consistent dworshak-config service value reference, from context.py.
+
+---
+
 ## [0.2.17] - 2026-07-07
 ### Added:
 - Add functions and buttons to options bar to launch yesterday's and tomorrow's files. 
