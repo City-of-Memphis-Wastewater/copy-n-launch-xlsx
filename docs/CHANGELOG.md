@@ -11,10 +11,12 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 ### Added:
 - Add functions and buttons to options bar to launch yesterday's and tomorrow's files. 
 - Add option button to show filled files in files explorer.
-
+- Add option button to launch a website, with url configured in config.json using dworshak-config.
+ 
 ### Changed: 
 - Core function name shorted to copy_and_launch
 - Move "About" button, to prevent overlap of the options menu over the quintessential Launch button.
+- Ensure consistent dworshak-config service value reference, from context.py.
 
 ### Internal:
 

@@ -64,19 +64,21 @@ def get_icns_icon() -> Path:
 # can i use a string to effectively define the dir where i want the copied and renamed sheet to land?
 # it can be in
 def pull_in_configured_path_or_use_default():
+    configured_target_dir_str = config_mngr.get(service=SERVICE,item="filled-sheet-dir") # allows retrieval of edited value
+    logger.debug(f"{configured_target_dir_str=}")
     config_mngr.set(service=SERVICE,item="filled-sheet-dir",value="",overwrite=False) # creates file and defauly value if it doesn't exist
-    configured_str = config_mngr.get(service="copy-n-launch",item="filled-sheet-dir") # allows retrieval of edited value
-
+    configured_target_dir_str = config_mngr.get(service=SERVICE,item="filled-sheet-dir") # allows retrieval of edited value
+    logger.debug(f"{configured_target_dir_str=}")
     # If the user left it blank, or it's purely whitespace, use the default path
-    if not configured_str or not str(configured_str).strip():
+    if not configured_target_dir_str or not str(configured_target_dir_str).strip():
         return DEFAULT_FILLED_SHEETS_DIR
 
     # Expand variables like ~ and resolve to absolute clean paths safely
-    resolved_path = Path(str(configured_str).strip()).expanduser().resolve()
+    resolved_path = Path(str(configured_target_dir_str).strip()).expanduser().resolve()
     
     # Validation fallback if they typed a relative path or junk string
     if not resolved_path.is_absolute():
-        logger.warning(f"Configured path '{configured_str}' is invalid or relative. Using default.")
+        logger.warning(f"Configured path '{configured_target_dir_str}' is invalid or relative. Using default.")
         return DEFAULT_FILLED_SHEETS_DIR
 
     return resolved_path
