@@ -199,7 +199,7 @@ jobs:
 
       # --- STAGE TARGETS INTERNALLY ---
       - name: Upload Intermediary Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: build-artifacts-${{ matrix.os }}-${{ matrix.mode }}
           path: dist/upload/*
