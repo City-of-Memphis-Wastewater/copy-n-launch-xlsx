@@ -36,9 +36,9 @@ json-repair==0.44.1 ; python_full_version < '3.10' \
     --hash=sha256:1130eb9733b868dac1340b43cb2effebb519ae6d52dd2d0728c6cca517f1e0b4 \
     --hash=sha256:51d82532c3b8263782a301eb7904c75dce5fee8c0d1aba490287fc0ab779ac50
     # via dworshak-config
-json-repair==0.61.0 ; python_full_version >= '3.10' \
-    --hash=sha256:48759cc6c3052814c797d1d56787d9e1d451603a8760a55d619e97d2f49353d6 \
-    --hash=sha256:ee9fe5f95fcb2713d72d4495b67b794b62ff2cd24d6dba3bfb3173d9f7ab0f7d
+json-repair==0.61.2 ; python_full_version >= '3.10' \
+    --hash=sha256:779a0cdb48f609d6eb669273023cf4c92b5ac6d80a496eb919ee93c84c351ec8 \
+    --hash=sha256:b63ae5ad44c8720158e24bdd7e33506f7036174c287831b187a51619a6f58a34
     # via dworshak-config
 markdown-it-py==3.0.0 ; python_full_version < '3.10' \
     --hash=sha256:355216845c60bd96232cd8d8c40e8f9765cc86f46880e43a8fd22dc1a1a8cab1 \
@@ -60,9 +60,9 @@ pygments==2.20.0 \
     --hash=sha256:6757cd03768053ff99f3039c1a36d6c0aa0b263438fcab17520b30a303a82b5f \
     --hash=sha256:81a9e26dd42fd28a23a2d169d86d7ac03b46e2f8b59ed4698fb4785f946d0176
     # via rich
-pyhabitat==1.3.2 \
-    --hash=sha256:648cca0b9d95869f106730f61d94f15d23bb260526bb3695b6d8fd703b5ac3ec \
-    --hash=sha256:77c3ca6ef86d766ca47740b0195a197cc2502b567c0c61aebbcfd66197379dae
+pyhabitat==1.3.3 \
+    --hash=sha256:8ed761505d2a4d0a9cedeffcc1575da38d974ac6142750802936d7e0799a3b4b \
+    --hash=sha256:c8a3dcc510543b782be0a82d329137b1a62e50a7c1a9e814f49861e2e4784f6d
     # via
     #   copy-n-launch-xlsx
     #   typer-helptree
