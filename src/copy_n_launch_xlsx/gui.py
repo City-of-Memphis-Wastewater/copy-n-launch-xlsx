@@ -25,6 +25,7 @@ from .paths import (
             get_icon_path,
             REPO_URL
             )
+from .external_web_launch import launch_configured_website
 
 logger=logging.getLogger(__name__)
 
@@ -138,6 +139,7 @@ class GuiApp:
 
     # --- UI Component Building ---
     def _launch_configured_website(self):
+        launch_configured_website()
         pass
     
     def _about_button(self):
