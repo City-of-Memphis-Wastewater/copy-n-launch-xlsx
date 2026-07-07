@@ -19,7 +19,7 @@ from .paths import APP_NAME
 from .context import DESCRIPTION_STR
 from .logging_setup import configure_logging_for_application
 from ._version import __version__
-from .core import copy_then_rename_and_move_then_try_launch
+from .core import copy_then_launch
 from .webapp import run_webapp
 
 console = Console(stderr=True)
@@ -69,7 +69,7 @@ def copyrenamelaunch(
     """
     Run the core function.
     """
-    result = copy_then_rename_and_move_then_try_launch()
+    result = copy_then_launch()
     destination = result.destination
 
     if result.is_new:

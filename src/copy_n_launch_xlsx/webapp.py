@@ -30,7 +30,7 @@ import socketserver
 import base64
 import pyhabitat
 
-from .core import copy_then_rename_and_move_then_try_launch
+from .core import copy_then_launch
 from .paths import (
             APP_NAME, 
             get_target_copy_dir,
@@ -331,7 +331,7 @@ class WebHandler(BaseHTTPRequestHandler):
             return
 
         try:
-            result = copy_then_rename_and_move_then_try_launch()
+            result = copy_then_launch()
             destination = result.destination
 
             self.send_html(success_page(destination))

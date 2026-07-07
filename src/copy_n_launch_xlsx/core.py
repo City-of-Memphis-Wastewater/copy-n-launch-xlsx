@@ -8,15 +8,14 @@ import logging
 from typing import Optional
 from dataclasses import dataclass
 import pyhabitat
-from datetime import date
+from datetime import date, timedelta
 from openpyxl.workbook.defined_name import DefinedName
 import sys
-
-logger = logging.getLogger(__name__)
 
 from .paths import BLANK_DAILY_XLSX, get_target_copy_dir
 
 FILENAME_FORMAT = "daily_%Y-%m-%d.xlsx"
+logger = logging.getLogger(__name__)
 
 @dataclass
 class CopyResult:
@@ -43,11 +42,15 @@ def build_filename(day: date | None = None) -> str:
     return filename
 
 
-def copy_then_rename_and_move_then_try_launch() -> CopyResult:
+def copy_then_launch(day: date | None = None) -> CopyResult:
+    """Copies the blank template and launches it for a specific day (defaults to today)."""
+    if day is None:
+        day = date.today()
+
     target_dir = get_target_copy_dir()
     target_dir.mkdir(parents=True, exist_ok=True)
 
-    destination = target_dir / build_filename()
+    destination = target_dir / build_filename(day=day)
     logger.debug(f"{destination=}")
     # Check if the file is already there
     if destination.exists():
@@ -68,20 +71,19 @@ def copy_then_rename_and_move_then_try_launch() -> CopyResult:
     wb = openpyxl.load_workbook(destination)
 
     # future edits go here
-    set_date_in_spreadsheet(wb)
+    set_date_in_spreadsheet(wb, day)
     wb.save(destination)
-    
 
     pyhabitat.launch_file(destination)
 
-    #return destination
     return CopyResult(destination=destination,is_new=True)
 
 
-def set_date_in_spreadsheet(wb):
-
-    today_str = date.today().strftime("%m/%d/%Y")
-
+def set_date_in_spreadsheet(wb, day: date | None = None):
+    if day is None:
+        day = date.today()
+    day_str = day.strftime("%m/%d/%Y")
+    
     if "date" in wb.defined_names:
         defn = wb.defined_names["date"]
         
@@ -95,12 +97,33 @@ def set_date_in_spreadsheet(wb):
             
             if sheet_name in wb.sheetnames:
                 ws = wb[sheet_name]
-                ws[cell_coord] = today_str
-                logger.debug(f"Successfully updated cell {cell_coord} on sheet '{sheet_name}' to {today_str}.")
+                ws[cell_coord] = day_str
+                logger.debug(f"Successfully updated cell {cell_coord} on sheet '{sheet_name}' to {day_str}.")
         else:
-            defn.value = f'="{today_str}"'
-            logger.debug(f"Updated global value expression for named range 'date' to {today_str}.")
+            defn.value = f'="{day_str}"'
+            logger.debug(f"Updated global value expression for named range 'date' to {day_str}.")
     else:
-        new_name = DefinedName("date", attr_text=f'="{today_str}"')
+        new_name = DefinedName("date", attr_text=f'="{day_str}"')
         wb.defined_names.add(new_name)
-        logger.debug(f"Named range 'date' not found. Created global expression variable set to {today_str}.")
+        logger.debug(f"Named range 'date' not found. Created global expression variable set to {day_str}.")
+
+def launch_tomorrow() -> CopyResult:
+    """Dedicated function to build/launch the file for the day after today."""
+    tomorrow = date.today() + timedelta(days=1)
+    logger.info(f"Targeting tomorrow's file: {tomorrow}")
+    return copy_then_launch(day=tomorrow)
+
+
+def launch_yesterday_if_exists() -> CopyResult | None:
+    """Launches yesterday's file ONLY if it already exists. Does not create it."""
+    yesterday = date.today() - timedelta(days=1)
+    target_dir = get_target_copy_dir()
+    destination = target_dir / build_filename(yesterday)
+    
+    if destination.exists():
+        logger.info(f"Yesterday's file found at {destination}. Launching.")
+        pyhabitat.launch_file(destination)
+        return CopyResult(destination=destination, is_new=False)
+    
+    logger.warning(f"Yesterday's file ({destination}) does not exist. Skipping launch.")
+    return None

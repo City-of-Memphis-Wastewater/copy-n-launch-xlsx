@@ -9,7 +9,7 @@ from ._version import __version__
 __all__ = [
     "__version__",
     "get_target_copy_dir",
-    "copy_then_rename_and_move_then_try_launch",
+    "copy_then_launch",
     "CopyResult",
     "__gui_easteregg_enabled__", # Re-added for REPL discovery
 ]
@@ -25,9 +25,9 @@ def __getattr__(name: str):
         from .paths import get_target_copy_dir
         return get_target_copy_dir
 
-    if name == "copy_then_rename_and_move_then_try_launch":
-        from .core import copy_then_rename_and_move_then_try_launch
-        return copy_then_rename_and_move_then_try_launch
+    if name == "copy_then_launch":
+        from .core import copy_then_launch
+        return copy_then_launch
 
     if name == "CopyResult":
         from .core import CopyResult

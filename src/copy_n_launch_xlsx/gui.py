@@ -16,7 +16,7 @@ import logging
 from copy_n_launch_xlsx.paths import SRC_FOLDER_NAME
 from ._version import get_version, __version__
 from .tk_utils import center_window_on_primary
-from .core import copy_then_rename_and_move_then_try_launch
+from .core import copy_then_launch, launch_tomorrow, launch_yesterday_if_exists
 from .paths import (
             APP_NAME, 
             get_target_copy_dir, 
@@ -122,8 +122,10 @@ class GuiApp:
         self.root.config(menu=menubar)
 
         tools_menu = tk.Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Tools", menu=tools_menu)
+        menubar.add_cascade(label="Options", menu=tools_menu)
 
+        tools_menu.add_command(label="Open Spreadsheet from Yesterday", command=lambda: self._launch_sheet(launch_yesterday_if_exists))
+        tools_menu.add_command(label="Open Spreadsheet for Tomorrow", command=lambda: self._launch_sheet(launch_tomorrow))
         #tools_menu.add_command(label="Toggle Theme", command=self._toggle_theme)
 
         #tools_menu.add_separator()
@@ -150,23 +152,45 @@ class GuiApp:
         control_frame = ttk.Frame(self.root, padding=(4, 2, 4, 2))
         control_frame.pack(fill='x', pady=(2, 2))
 
-        self.btn_open_browser_to_files = ttk.Button(control_frame, text="About", command=lambda: self._about_button(), width=12) # Magic Button
-        self.btn_open_browser_to_files.grid(row=1, column=2, columnspan=2, pady=6, sticky='ew', padx=(0, 3))
+        self.btn_open_browser_to_files = ttk.Button(control_frame, text="About", command=lambda: self._about_button(), width=8) 
+        self.btn_open_browser_to_files.grid(row=1, column=0, columnspan=1, pady=6, sticky='ew', padx=(0, 3))
 
         # === Row 3: Action Buttons ===
-        run_analysis_btn = ttk.Button(control_frame, text="▶ Launch Daily Spreadsheet", command=self._launch_sheet, style='Accent.TButton', width=16) #
-        run_analysis_btn.grid(row=1, column=0, columnspan=2, pady=6, sticky='ew', padx=(0, 3))
+        run_analysis_btn = ttk.Button(control_frame, text="▶ Launch Spreadsheet for Today", command=self._launch_sheet, style='Accent.TButton', width=16) #
+        run_analysis_btn.grid(row=1, column=1, columnspan=2, pady=6, sticky='ew', padx=(0, 3))
 
         # Grid configuration
         control_frame.grid_columnconfigure(0, weight=1)
         control_frame.grid_columnconfigure(1, weight=1)
         control_frame.grid_columnconfigure(2, weight=1)
 
-    def _launch_sheet(self):
+    def _launch_sheet(self, launch_func=None):
+        """
+        Executes a file launch process.
+        
+        :param launch_func: The core function to execute. Defaults to today's copy_then_launch.
+        """
+        # Fallback to today if no function is specified (e.g., from the main GUI button)
+        if launch_func is None:
+            launch_func = copy_then_launch
         try:
-            result = copy_then_rename_and_move_then_try_launch()
+            result = launch_func()
+            # 1. Explicitly catch any action that returned None (e.g., Yesterday doesn't exist)
+            if result is None:
+                if launch_func is launch_yesterday_if_exists:
+                    messagebox.showwarning(
+                        "Not Found",
+                        "Yesterday's spreadsheet does not exist."
+                    )
+                else:
+                    messagebox.showwarning(
+                        "No Action Taken",
+                        "The request returned no target file destination."
+                    )
+                return
+            
             destination = result.destination
-
+            
             if result.is_new:
                 logger.debug(f"Created\n{destination}\n")
                 messagebox.showinfo(
@@ -177,7 +201,7 @@ class GuiApp:
                 logger.debug(f"File exists\n{destination}\n")
                 messagebox.showinfo(
                     "File exists",
-                    f"File exists\n\n{destination}"
+                    f"Opening existing daily file:\n\n{destination}"
                 )
             else:
                 logger.debug(f"Edge case\n{destination}\n")
@@ -185,16 +209,17 @@ class GuiApp:
                     "Edge case",
                     f"Edge case\n\n{destination}"
                 )
-        except FileExistsError as e:
-            messagebox.showwarning(
-                "Already Exists",
-                f"Today's spreadsheet already exists.\n\n{e}",
-            )
-
-        except Exception as e:
+        except FileNotFoundError as e:
+            logger.error(f"Template/Directory not found: {e}")
             messagebox.showerror(
-                "Error",
-                str(e),
+                "Missing File",
+                f"Could not locate a required file or directory:\n\n{str(e)}"
+            )
+        except Exception as e:
+            logger.exception("Unexpected error during file launch pipeline.")
+            messagebox.showerror(
+                "Application Error",
+                f"An unexpected error occurred:\n\n{str(e)}"
             )
 
     def _show_system_explorer_gui(self) -> None:
