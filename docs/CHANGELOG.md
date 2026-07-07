@@ -7,6 +7,15 @@ The format is (read: strives to be) based on [Keep a Changelog](https://keepacha
 
 ---
 
+## [0.2.17] - 2026-07-07
+### Added:
+- Yesterday and Tomorrow launch functions and buttons.
+
+### Changed: 
+- Core function name shorted to copy_and_launch
+
+### Internal:
+
 - Add kivy dir tree and placeholder elements. 
 - Add kivy as an optional dir.
 
