@@ -158,7 +158,7 @@ class GuiApp:
         self.btn_open_browser_to_files.grid(row=1, column=0, columnspan=1, pady=6, sticky='ew', padx=(0, 3))
 
         # === Row 3: Action Buttons ===
-        run_analysis_btn = ttk.Button(control_frame, text="▶ Launch Spreadsheet for Today", command=self._launch_sheet, style='Accent.TButton', width=16) #
+        run_analysis_btn = ttk.Button(control_frame, text="▶ Open Spreadsheet for Today", command=self._launch_sheet, style='Accent.TButton', width=16) #
         run_analysis_btn.grid(row=1, column=1, columnspan=2, pady=6, sticky='ew', padx=(0, 3))
 
         # Grid configuration
