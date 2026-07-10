@@ -107,6 +107,12 @@ def set_date_in_spreadsheet(wb, day: date | None = None):
         wb.defined_names.add(new_name)
         logger.debug(f"Named range 'date' not found. Created global expression variable set to {day_str}.")
 
+def launch_today() -> CopyResult:
+    """Dedicated function to build/launch the file for today."""
+    today = date.today()
+    logger.info(f"Targeting today's file: {today}")
+    return copy_then_launch(day=today)
+
 def launch_tomorrow() -> CopyResult:
     """Dedicated function to build/launch the file for the day after today."""
     tomorrow = date.today() + timedelta(days=1)
@@ -117,6 +123,7 @@ def launch_tomorrow() -> CopyResult:
 def launch_yesterday_if_exists() -> CopyResult | None:
     """Launches yesterday's file ONLY if it already exists. Does not create it."""
     yesterday = date.today() - timedelta(days=1)
+    #logger.info(f"Targeting yesterdays's file: {yesterday}")
     target_dir = get_target_copy_dir()
     destination = target_dir / build_filename(yesterday)
     

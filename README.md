@@ -120,8 +120,11 @@ This will generate the fresh daily sheet, automatically dated and empty, ready f
 At any time, you can save and close the current spreadsheet.
 Hitting the green Launch Daily Spreadsheet button will reopen it, or generate a new one as necessary.
 ```
-
 ---
+
+## Video Overview
+
+https://www.youtube.com/watch?v=zTn1x_3OvDQ
 
 ## Source code
 

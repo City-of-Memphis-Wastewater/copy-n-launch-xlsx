@@ -65,7 +65,6 @@ def get_icns_icon() -> Path:
 # it can be in
 def pull_in_configured_path_or_use_default():
     configured_target_dir_str = config_mngr.get(service=SERVICE,item="filled-sheet-dir") # allows retrieval of edited value
-    logger.debug(f"{configured_target_dir_str=}")
     config_mngr.set(service=SERVICE,item="filled-sheet-dir",value="",overwrite=False) # creates file and defauly value if it doesn't exist
     configured_target_dir_str = config_mngr.get(service=SERVICE,item="filled-sheet-dir") # allows retrieval of edited value
     logger.debug(f"{configured_target_dir_str=}")
