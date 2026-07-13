@@ -36,9 +36,9 @@ json-repair==0.44.1 ; python_full_version < '3.10' \
     --hash=sha256:1130eb9733b868dac1340b43cb2effebb519ae6d52dd2d0728c6cca517f1e0b4 \
     --hash=sha256:51d82532c3b8263782a301eb7904c75dce5fee8c0d1aba490287fc0ab779ac50
     # via dworshak-config
-json-repair==0.61.2 ; python_full_version >= '3.10' \
-    --hash=sha256:779a0cdb48f609d6eb669273023cf4c92b5ac6d80a496eb919ee93c84c351ec8 \
-    --hash=sha256:b63ae5ad44c8720158e24bdd7e33506f7036174c287831b187a51619a6f58a34
+json-repair==0.61.4 ; python_full_version >= '3.10' \
+    --hash=sha256:1056d5468a6d4e8bb4498b3244f996c795e2d457fbb30465d71249d3ef7b481a \
+    --hash=sha256:d78c212c1d72606bee30a7886820c9d6f7dbd659883dc2397304735a59f7bf86
     # via dworshak-config
 markdown-it-py==3.0.0 ; python_full_version < '3.10' \
     --hash=sha256:355216845c60bd96232cd8d8c40e8f9765cc86f46880e43a8fd22dc1a1a8cab1 \
@@ -60,9 +60,9 @@ pygments==2.20.0 \
     --hash=sha256:6757cd03768053ff99f3039c1a36d6c0aa0b263438fcab17520b30a303a82b5f \
     --hash=sha256:81a9e26dd42fd28a23a2d169d86d7ac03b46e2f8b59ed4698fb4785f946d0176
     # via rich
-pyhabitat==1.3.3 \
-    --hash=sha256:8ed761505d2a4d0a9cedeffcc1575da38d974ac6142750802936d7e0799a3b4b \
-    --hash=sha256:c8a3dcc510543b782be0a82d329137b1a62e50a7c1a9e814f49861e2e4784f6d
+pyhabitat==1.3.9 \
+    --hash=sha256:145d48e7dbdff6d278c218472c1ab3b616d93ec9b3669450dcd706f2608d0e27 \
+    --hash=sha256:e8b5b11f1624682836d3011fa7bfc30ca5defe98a3e2c60e9129df4d53da65c6
     # via
     #   copy-n-launch-xlsx
     #   typer-helptree
@@ -89,7 +89,7 @@ typer==0.26.8 ; python_full_version >= '3.10' \
     # via
     #   copy-n-launch-xlsx
     #   typer-helptree
-typer-helptree==0.2.10.5 \
-    --hash=sha256:2b41f7006a4fac6e1c7b490c635b4d8f7f558597743611de3afe2b10f89e7ba0 \
-    --hash=sha256:fa311a2c20cd2d38de53d38823c637972adedca18553e74f9c66743f2a842256
+typer-helptree==0.2.11 \
+    --hash=sha256:173dca5b27f93fc67060484ff468243317d75b94ca3538365d7ecc87bd2bb725 \
+    --hash=sha256:b497d78f78fb815496655224be5f5d545355157c0a898731ad9908ab76083d57
     # via copy-n-launch-xlsx
