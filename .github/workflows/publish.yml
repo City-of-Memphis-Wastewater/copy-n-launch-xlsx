@@ -49,21 +49,15 @@ jobs:
         #run: source .venv/bin/activate && python -m build
         run: uv build
 
-      - name: Run sanity check (using the installed package)
-        # Use the global `uv run` if you don't want to activate, but since we activated above:
+      - name: Sanity check the built sdist
         run: |
           source .venv/bin/activate
           uv pip uninstall -y copy-n-launch-xlsx || true
           uv pip install dist/copy*.whl
           # Use project's installed CLI command
-          cnlx copylaunch --help
-      # Optional: Also test the sdist (extra safety)
-      - name: Sanity check the built sdist
-        run: |
-          source .venv/bin/activate
-          uv pip uninstall -y copy-n-launch-xlsx || true
-          uv pip install dist/copy*.tar.gz
           cnlx --help
+          cnlx copylaunch --help
+
       # --- PUBLISH ---
       - name: Publish package distributions to PyPI
         # This action uses the OIDC token to securely authenticate and upload.
