@@ -41,7 +41,7 @@ jobs:
         # NOTE: `uv pip install .` installs the package itself and its dependencies
         run: uv sync --group dev
 
-      - name: Ensure updated copies of packaged data files
+      - name: Ensure updated copies of packaged data files # truly necessary?
         run: uv run python src/copy_n_launch_xlsx/datacopy.py
 
       - name: Build S-Dist and Wheel
@@ -53,10 +53,9 @@ jobs:
         run: |
           source .venv/bin/activate
           uv pip uninstall -y copy-n-launch-xlsx || true
-          uv pip install dist/copy*.whl
+          uv pip install dist/copy-n-launch-xlsx*.whl
           # Use project's installed CLI command
           cnlx --help
-          cnlx copylaunch --help
 
       # --- PUBLISH ---
       - name: Publish package distributions to PyPI
