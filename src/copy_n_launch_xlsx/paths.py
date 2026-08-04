@@ -15,15 +15,8 @@ LOGO_FILENAME_PNG = "max-green_1024x1024.png"
 LOGO_FILENAME_ICNS = "max-green.icns"
 LOGO_FILENAME_ICO = "max-green_256x256.ico"
 DEFAULT_FILLED_SHEETS_DIR = APP_DIR / "filled_daily"
-REPO_URL = "https://github.com/City-of-Memphis-Wastewater/copy-n-launch-xlsx"
+REPO_URL = f"https://github.com/City-of-Memphis-Wastewater/{APP_NAME}"
 
-'''
-BLANK_DAILY_XLSX = (
-    files("copy_n_launch_xlsx")
-    / "data"
-    / "xlsx"
-    / "daily_blank.xlsx"
-)'''
 BLANK_DAILY_XLSX = (
     APP_DIR
     / "blank"
@@ -49,8 +42,7 @@ APP_DIR.mkdir(parents=True, exist_ok=True)
 LOG_FILE_PATH = APP_DIR / f"{APP_NAME}_errors.log"
 
 def get_icon_path(filename: str) -> Path:
-    return files("copy_n_launch_xlsx.data.icons").joinpath(filename)
-
+    return files(f"{SRC_FOLDER_NAME}.data.icons").joinpath(filename)
 
 def get_png_icon() -> Path:
     return Path(get_icon_path(LOGO_FILENAME_PNG))

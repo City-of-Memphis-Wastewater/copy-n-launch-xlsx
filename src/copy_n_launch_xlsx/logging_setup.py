@@ -3,9 +3,9 @@ from __future__ import annotations
 import logging
 import sys
 import traceback
-from .paths import LOG_FILE_PATH
+from .paths import LOG_FILE_PATH, SRC_FOLDER_NAME
 
-logger = logging.getLogger("copy_n_launch_xlsx")
+logger = logging.getLogger(SRC_FOLDER_NAME)
 
 def configure_logging_for_application(debug: bool = False, verbose: bool = False) -> None:
     """Configures the application-level logger using standard built-in formats."""
