@@ -1,0 +1,15 @@
+name: Build AppImage
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  appimage:
+    uses: City-of-Memphis-Wastewater/maxson-build-utils/.github/workflows/reusable-appimage.yml@dev
+    with:
+      app_dir: "dist/onedir/copy-n-launch-xlsx"
+      exe_name: "copy-n-launch-xlsx"
+      pretty_name: "Copy & Launch XLSX"
+      icon_path: "assets/icon.png"

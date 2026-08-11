@@ -10,13 +10,18 @@ RUN apt-get update \
     && apt-get install -y --no-install-recommends bash curl git \
     && rm -rf /var/lib/apt/lists/*
 
+# Install uv binary directly from official image
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
+
 COPY . .
 
-RUN pip install --no-cache-dir -e .
+# Sync main dependencies + dev group into system environment
+RUN uv sync --system --group dev
+#RUN pip install --no-cache-dir -e
 
 EXPOSE 8000
 
 ENTRYPOINT ["/bin/bash"]
 
 LABEL org.opencontainers.image.source=https://github.com/city-of-memphis-wastewater/copy-n-launch-xlsx
-LABEL org.opencontainers.image.description="Stable spreadsheet copy, renaming, and dating, for municipal wastewater operator daily data entry. Comes with a CLI, GUI, a webapp, and a Python library."
+LABEL org.opencontainers.image.description="Developer environment for copy-n-launch-xlsx, a CLI and GUI tool for launching templated spreadsheets."
