@@ -1,0 +1,17 @@
+name: Build AppImage
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  appimage:
+    # Explicitly grant write access so the called reusable workflow can inherit it
+    permissions:
+      contents: write
+    uses: City-of-Memphis-Wastewater/maxson-build-utils/.github/workflows/reusable-appimage.yml@main
+    with:
+      build_script: "build_executable.py"
+      pretty_name: "Copy & Launch XLSX"
+      icon_path: "src/copy_n_launch_xlsx/data/icons/placeholder_1024x1024.png"
