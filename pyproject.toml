@@ -69,6 +69,7 @@ dev = [
     #"ruff>=0.7.0 ; platform_system == 'Linux' and platform_machine != 'aarch64'", # to avoid on termux
     "pytest>=8.0.0",
     "pytest-cov>=4.1.0",
+    "maxson-build-utils>=0.1.10",
 ]
 
 
